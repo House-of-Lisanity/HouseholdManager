@@ -1,0 +1,83 @@
+// Dynamic list grids (used by CalendarPreferences)
+
+// Buffer rules grid
+.buffer-rule-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-sm;
+  align-items: center;
+}
+
+.buffer-rule-header,
+.location-rule-header {
+  font-weight: 600;
+  color: $color-text-light;
+  margin-bottom: $spacing-xs;
+  font-size: 0.9rem;
+}
+
+// Locations grid
+.location-rule {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-sm;
+  align-items: center;
+}
+
+// Add/Remove buttons for dynamic lists
+.add-button {
+  background: none;
+  border: 1px dashed $color-border;
+  color: $color-primary;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  font-size: 0.875rem;
+  margin-top: $spacing-sm;
+  transition: border-color $transition-speed, background-color $transition-speed;
+
+  &:hover {
+    border-color: $color-primary;
+    background-color: $color-bg-light;
+  }
+}
+
+.remove-button {
+  background: none;
+  border: 1px solid $color-border;
+  color: $color-danger;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  transition: border-color $transition-speed, background-color $transition-speed;
+
+  &:hover {
+    border-color: $color-danger;
+    background-color: rgba($color-danger, 0.05);
+  }
+}
+
+// Mobile: stack grids vertically
+@media (max-width: $breakpoint-mobile) {
+  .buffer-rule-grid {
+    grid-template-columns: 1fr 1fr;
+
+    select {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .location-rule {
+    grid-template-columns: 1fr auto;
+  }
+
+  // Keep remove button accessible on mobile
+  .remove-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

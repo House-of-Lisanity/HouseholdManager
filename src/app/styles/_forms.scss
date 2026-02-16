@@ -1,0 +1,200 @@
+@import './variables';
+
+.form-section {
+  background-color: white;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: $spacing-lg;
+    color: $color-dark;
+    border-bottom: 2px solid $color-primary;
+    padding-bottom: $spacing-sm;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    margin: $spacing-md 0 $spacing-sm 0;
+    color: $color-dark;
+  }
+}
+
+.section-description {
+  color: $color-text-lighter;
+  margin-bottom: $spacing-md;
+  font-size: 0.95rem;
+}
+
+.form-group {
+  margin-bottom: $spacing-lg;
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: $spacing-sm;
+    color: $color-text-light;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    font-size: 1rem;
+    font-family: inherit;
+    margin-bottom: $spacing-sm;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+  }
+
+  textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-sm;
+}
+
+.meal-entry {
+  background-color: $color-bg-light;
+  padding: $spacing-md;
+  border-radius: $radius-sm;
+  margin-bottom: $spacing-md;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: $color-bg-light;
+  border-radius: $radius-sm;
+  margin-bottom: $spacing-sm;
+  border: 1px solid $color-border-light;
+
+  &.expiring {
+    background-color: $color-warning;
+    border-color: $color-warning-border;
+  }
+
+  .expires {
+    color: $color-warning-text;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-left: $spacing-sm;
+  }
+}
+
+.pantry-category {
+  margin-bottom: $spacing-lg;
+}
+
+.event-group {
+  margin-bottom: $spacing-lg;
+
+  h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    color: $color-text-light;
+  }
+}
+
+// Buttons
+.add-button,
+.save-button {
+  background-color: $color-secondary;
+  color: white;
+  padding: 0.75rem $spacing-lg;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color $transition-speed;
+
+  &:hover {
+    background-color: $color-secondary-dark;
+  }
+}
+
+.remove-button {
+  background-color: $color-danger;
+  color: white;
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color $transition-speed;
+
+  &:hover {
+    background-color: $color-danger-dark;
+  }
+}
+
+.cancel-button {
+  background-color: $color-gray;
+  color: white;
+  padding: 0.75rem $spacing-lg;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color $transition-speed;
+
+  &:hover {
+    background-color: $color-gray-dark;
+  }
+}
+
+.add-form {
+  background-color: $color-success-bg;
+  padding: $spacing-lg;
+  border-radius: $radius-sm;
+  margin-top: $spacing-md;
+  border: 1px solid $color-secondary;
+}
+
+.form-buttons {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+}
+
+.submit-button {
+  background-color: $color-primary;
+  color: white;
+  padding: $spacing-md $spacing-xl;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color $transition-speed;
+
+  &:hover {
+    background-color: $color-primary-dark;
+  }
+
+  &:disabled {
+    background-color: $color-gray;
+    cursor: not-allowed;
+  }
+}

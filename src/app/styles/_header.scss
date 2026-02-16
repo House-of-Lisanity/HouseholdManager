@@ -1,0 +1,37 @@
+@import './variables';
+
+.header {
+  background-color: $color-dark;
+  color: white;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-xl;
+  border-radius: $radius-md;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: $spacing-sm;
+  }
+
+  p {
+    font-size: 1rem;
+    opacity: 0.9;
+  }
+}
+
+.settings-button {
+  background-color: $color-gray-dark;
+  color: white;
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color $transition-speed;
+
+  &:hover {
+    background-color: #6c7a7b;
+  }
+}

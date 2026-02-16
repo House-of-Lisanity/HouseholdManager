@@ -1,0 +1,391 @@
+// Workout Log page: planned cards, log form, exercise grids, logged cards
+
+// Page header
+.workout-log-header {
+  margin-bottom: $spacing-lg;
+
+  h2 {
+    margin: 0 0 $spacing-xs 0;
+  }
+
+  &__week {
+    color: $color-text-lighter;
+    font-size: 0.875rem;
+    margin: 0;
+  }
+}
+
+// Section containers
+.workout-log-section {
+  margin-bottom: $spacing-xl;
+
+  h3 {
+    margin: 0 0 $spacing-md 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: $color-dark;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+}
+
+// Planned workout cards
+.planned-workout-card {
+  background-color: white;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-lg;
+  transition: box-shadow $transition-speed;
+
+  &:hover {
+    box-shadow: $shadow-sm;
+  }
+
+  &--logged {
+    background-color: $color-success-bg;
+    border-color: $color-secondary;
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $spacing-xs $spacing-sm;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__type {
+    font-weight: 600;
+  }
+
+  &__meta {
+    color: $color-text-lighter;
+    font-size: 0.875rem;
+  }
+
+  &__details {
+    font-size: 0.875rem;
+    color: $color-text-light;
+    margin: 0 0 $spacing-sm;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    flex-wrap: wrap;
+  }
+
+  &__date-input {
+    font-size: 0.875rem;
+    padding: $spacing-xs $spacing-sm;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    min-height: 36px;
+  }
+}
+
+// Log action buttons
+.log-button {
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  min-height: 44px;
+  transition: background-color $transition-speed;
+
+  &--primary {
+    background-color: $color-secondary;
+    color: white;
+
+    &:hover {
+      background-color: $color-secondary-dark;
+    }
+  }
+
+  &--secondary {
+    background-color: $color-primary;
+    color: white;
+
+    &:hover {
+      background-color: $color-primary-dark;
+    }
+  }
+}
+
+// Completion type badges
+.badge {
+  display: inline-block;
+  padding: 0.125rem $spacing-sm;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  &--as_planned {
+    background-color: $color-success-bg;
+    color: $color-secondary-dark;
+  }
+
+  &--modified {
+    background-color: #ebf5fb;
+    color: $color-primary-dark;
+  }
+
+  &--unplanned {
+    background-color: $color-bg-lighter;
+    color: $color-gray-dark;
+  }
+}
+
+// Planned comparison box (shows what was planned)
+.planned-comparison {
+  border-left: 3px solid $color-primary;
+  background-color: #ebf5fb;
+  padding: $spacing-sm $spacing-md;
+  margin-bottom: $spacing-md;
+  border-radius: 0 $radius-sm $radius-sm 0;
+  font-size: 0.875rem;
+
+  strong {
+    display: block;
+    margin-bottom: $spacing-xs;
+    color: $color-primary-dark;
+  }
+
+  p {
+    margin: 0;
+    color: $color-text-light;
+  }
+}
+
+// Workout log form
+.workout-log-form {
+  background-color: white;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+
+  &__exercises {
+    margin: $spacing-lg 0;
+
+    h4 {
+      margin: 0 0 $spacing-md 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: $color-dark;
+    }
+  }
+}
+
+// Individual exercise log entry
+.exercise-log-entry {
+  border: 1px solid $color-border-light;
+  border-radius: $radius-sm;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__name {
+    flex: 1;
+    font-weight: 500;
+  }
+
+  &__notes {
+    margin-top: $spacing-sm;
+    width: 100%;
+  }
+}
+
+// Set grid (within exercise entry)
+.set-grid {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 1fr 6rem 2rem;
+  gap: $spacing-xs $spacing-sm;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+
+  &__header {
+    display: contents;
+
+    span {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: $color-text-light;
+    }
+  }
+
+  &__row {
+    display: contents;
+  }
+
+  &__number {
+    text-align: center;
+    font-size: 0.85rem;
+    color: $color-text-lighter;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    min-width: 0;
+  }
+
+  select {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+// Inline add buttons (add set, add exercise)
+.add-inline-button {
+  background: none;
+  border: 1px dashed $color-border;
+  border-radius: $radius-sm;
+  color: $color-primary;
+  padding: $spacing-xs $spacing-sm;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color $transition-speed, border-color $transition-speed;
+  min-height: 36px;
+
+  &:hover {
+    background-color: $color-bg-light;
+    border-color: $color-primary;
+  }
+}
+
+// Logged workout cards
+.logged-workout-card {
+  background-color: white;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-lg;
+  transition: box-shadow $transition-speed;
+
+  &:hover {
+    box-shadow: $shadow-sm;
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $spacing-xs $spacing-sm;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__date {
+    font-weight: 600;
+  }
+
+  &__meta {
+    color: $color-text-lighter;
+    font-size: 0.85rem;
+  }
+
+  &__body {
+    margin-bottom: $spacing-sm;
+    font-size: 0.9375rem;
+  }
+
+  &__exercises {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 $spacing-sm;
+
+    li {
+      font-size: 0.875rem;
+      color: $color-text-light;
+      padding: $spacing-xs 0;
+    }
+  }
+
+  &__details {
+    font-size: 0.875rem;
+    color: $color-text-light;
+    margin: 0 0 $spacing-sm;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__notes {
+    font-size: 0.85rem;
+    color: $color-gray-dark;
+    font-style: italic;
+    margin: 0 0 $spacing-sm;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+    margin-top: $spacing-sm;
+  }
+}
+
+// Empty state text
+.empty-state {
+  color: $color-text-lighter;
+  font-style: italic;
+  padding: $spacing-md 0;
+}
+
+// Error message
+.error-message {
+  color: $color-danger;
+  font-size: 0.9rem;
+  margin-bottom: $spacing-md;
+}
+
+// Status feedback message
+.status-message {
+  background-color: $color-success-bg;
+  color: $color-secondary-dark;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-sm;
+  font-size: 0.9rem;
+  margin-bottom: $spacing-md;
+}
+
+// Mobile overrides
+@media (max-width: $breakpoint-mobile) {
+  .planned-workout-card__actions {
+    flex-direction: column;
+
+    .log-button {
+      width: 100%;
+    }
+  }
+
+  .set-grid {
+    grid-template-columns: 2rem 1fr 1fr 2rem;
+    gap: $spacing-xs;
+
+    // Hide type column on mobile
+    &__header span:nth-child(4),
+    &__row select {
+      display: none;
+    }
+  }
+
+  .workout-log-form {
+    padding: $spacing-md;
+  }
+}

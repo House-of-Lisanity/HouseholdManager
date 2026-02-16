@@ -1,0 +1,123 @@
+// Workouts page: entry cards, add form, equipment lists, 1RM grid
+
+// Workout entry cards in schedule list
+.workout-entry {
+  &__info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: $spacing-xs $spacing-sm;
+  }
+
+  &__meta {
+    color: $color-text-lighter;
+    font-size: 0.875rem;
+  }
+
+  &__details {
+    margin: $spacing-xs 0 0;
+    font-size: 0.875rem;
+    color: $color-text-light;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__notes {
+    margin: $spacing-xs 0 0;
+    font-size: 0.8rem;
+    color: $color-gray-dark;
+    font-style: italic;
+  }
+}
+
+// Equipment lists (profile)
+.equipment-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-md;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-sm;
+    padding: $spacing-sm $spacing-md;
+    background-color: $color-bg-light;
+    border: 1px solid $color-border-light;
+    border-radius: $radius-sm;
+    min-height: 44px;
+
+    span {
+      font-size: 0.9rem;
+    }
+  }
+
+  &__add {
+    display: flex;
+    gap: $spacing-sm;
+    margin-top: $spacing-xs;
+
+    input {
+      flex: 1;
+    }
+  }
+}
+
+// 1RM / Lift maxes grid (profile)
+.lift-max-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-sm;
+  align-items: center;
+}
+
+.lift-max-header {
+  font-weight: 600;
+  color: $color-text-light;
+  margin-bottom: $spacing-xs;
+  font-size: 0.9rem;
+}
+
+// Inline checkbox label (pinned to day)
+.checkbox-inline {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  min-height: 44px;
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: $color-primary;
+    cursor: pointer;
+  }
+
+  span {
+    font-size: 0.9rem;
+    user-select: none;
+  }
+}
+
+// Mobile overrides
+@media (max-width: $breakpoint-mobile) {
+  .lift-max-grid {
+    grid-template-columns: 1fr auto;
+
+    input:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .equipment-list__add {
+    flex-direction: column;
+
+    button {
+      min-height: 44px;
+    }
+  }
+}

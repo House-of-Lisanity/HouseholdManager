@@ -1,0 +1,18 @@
+// Import all partial SCSS files
+@import "styles/variables";
+@import "styles/base";
+@import "styles/navigation";
+@import "styles/header";
+@import "styles/forms";
+@import "styles/results";
+@import "styles/settings";
+@import "styles/profile";
+@import "styles/workouts";
+@import "styles/workout-log";
+
+// Mobile responsive overrides
+@media (max-width: $breakpoint-mobile) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
