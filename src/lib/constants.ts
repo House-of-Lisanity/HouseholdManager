@@ -34,3 +34,36 @@ export const MEAL_SLOTS = ["Breakfast", "Lunch", "Dinner", "Snack"] as const;
 export function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
+
+// To Do
+export const TODO_CATEGORIES = [
+  "Home",
+  "Health & Fitness",
+  "Finance",
+  "Personal",
+  "Errands",
+] as const;
+
+export const HOME_ROOMS = [
+  "Kitchen",
+  "Bathroom",
+  "Bedroom",
+  "Living Room",
+  "Office",
+  "Garage",
+  "Yard",
+  "Other",
+] as const;
+
+export const WEEKLY_PRIORITIES = [
+  { value: "must", label: "Must Do" },
+  { value: "want", label: "Want To" },
+  { value: "if_time", label: "If Time" },
+] as const;
+
+export const RECURRING_FREQUENCIES = [
+  { value: "weekly", label: "Weekly" },
+  { value: "biweekly", label: "Every 2 Weeks" },
+  { value: "monthly", label: "Monthly" },
+  { value: "quarterly", label: "Quarterly" },
+] as const;

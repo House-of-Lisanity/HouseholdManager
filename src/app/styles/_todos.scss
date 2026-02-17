@@ -1,0 +1,453 @@
+// To Do List — backlog page with category grouping, table layout, and inline weekly tagging
+
+// Header actions row
+.todo-header__actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+  flex-wrap: wrap;
+}
+
+.todo-header__toggle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: $color-text-light;
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+}
+
+// Section containers
+.todo-section {
+  margin-bottom: $spacing-xl;
+
+  h3 {
+    margin: 0 0 $spacing-md 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: $color-dark;
+  }
+}
+
+.todo-section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.todo-section--recurring {
+  border-top: 1px solid $color-border-light;
+  padding-top: $spacing-lg;
+}
+
+.todo-section--completed {
+  opacity: 0.7;
+  border-top: 1px solid $color-border-light;
+  padding-top: $spacing-lg;
+}
+
+// Category group (collapsible section)
+.category-group {
+  margin-bottom: $spacing-lg;
+}
+
+.category-group__toggle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-sm 0;
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+
+  &:hover {
+    .category-group__name {
+      color: $color-primary;
+    }
+  }
+}
+
+.category-group__arrow {
+  font-size: 1rem;
+  color: $color-text-lighter;
+  width: 16px;
+  text-align: center;
+}
+
+.category-group__name {
+  font-weight: 600;
+  color: $color-dark;
+  transition: color $transition-speed;
+}
+
+.category-group__count {
+  font-size: 0.85rem;
+  color: $color-text-lighter;
+  font-weight: 400;
+}
+
+.category-group__table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// Table layout for to-do items
+.todo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  thead {
+    border-bottom: 2px solid $color-border-light;
+  }
+
+  th {
+    text-align: left;
+    padding: $spacing-xs $spacing-sm;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: $color-text-lighter;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: $spacing-xs $spacing-sm;
+    vertical-align: middle;
+    border-bottom: 1px solid $color-border-light;
+  }
+
+  tbody tr:hover {
+    background-color: $color-bg-lighter;
+  }
+}
+
+.todo-table__th--check {
+  width: 32px;
+}
+
+.todo-table__th--sortable {
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+// Table row cells
+.todo-row {
+  &--completed {
+    opacity: 0.5;
+
+    .todo-row__title {
+      text-decoration: line-through;
+    }
+  }
+}
+
+.todo-row__check {
+  width: 32px;
+  text-align: center;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+}
+
+.todo-row__title {
+  font-weight: 500;
+
+  .badge {
+    margin-left: $spacing-xs;
+    vertical-align: middle;
+  }
+}
+
+.todo-row__room,
+.todo-row__location {
+  color: $color-text-lighter;
+  font-size: 0.85rem;
+}
+
+.todo-row__priority {
+  min-width: 100px;
+}
+
+.todo-row__priority-select {
+  padding: $spacing-xs;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-sm;
+  font-size: 0.85rem;
+  background-color: white;
+  cursor: pointer;
+  min-height: 36px;
+
+  &--must {
+    background-color: #fdecea;
+    border-color: $color-danger;
+    color: $color-danger-dark;
+  }
+
+  &--want {
+    background-color: #ebf5fb;
+    border-color: $color-primary;
+    color: $color-primary-dark;
+  }
+
+  &--if_time {
+    background-color: $color-bg-lighter;
+    border-color: $color-gray;
+    color: $color-gray-dark;
+  }
+}
+
+.todo-row__hours {
+  width: 70px;
+
+  input {
+    width: 60px;
+    padding: $spacing-xs;
+    border: 1px solid $color-border-light;
+    border-radius: $radius-sm;
+    font-size: 0.85rem;
+    min-height: 36px;
+  }
+}
+
+.todo-row__actions {
+  white-space: nowrap;
+}
+
+.todo-row__btn {
+  padding: $spacing-xs $spacing-sm;
+  border: none;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  font-size: 0.8rem;
+  min-height: 36px;
+  min-width: 44px;
+  background: none;
+  transition: background-color $transition-speed;
+
+  &--edit {
+    color: $color-primary;
+
+    &:hover {
+      background-color: #ebf5fb;
+    }
+  }
+
+  &--delete {
+    color: $color-danger;
+
+    &:hover {
+      background-color: #fdecea;
+    }
+  }
+}
+
+// Recurring card
+.recurring-card {
+  background-color: white;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-sm;
+  transition: box-shadow $transition-speed;
+
+  &:hover {
+    box-shadow: $shadow-sm;
+  }
+}
+
+.recurring-card__header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.recurring-card__title {
+  font-weight: 600;
+}
+
+.recurring-card__category {
+  font-size: 0.85rem;
+  color: $color-text-lighter;
+}
+
+.recurring-card__meta {
+  font-size: 0.85rem;
+  color: $color-text-lighter;
+  margin: $spacing-xs 0;
+  display: flex;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.recurring-card__due {
+  color: $color-warning-text;
+  font-weight: 600;
+}
+
+.recurring-card__location {
+  color: $color-text-lighter;
+}
+
+.recurring-card__notes {
+  font-size: 0.85rem;
+  color: $color-gray-dark;
+  font-style: italic;
+  margin: $spacing-xs 0;
+}
+
+.recurring-card__actions {
+  display: flex;
+  gap: $spacing-sm;
+  margin-top: $spacing-sm;
+}
+
+// To-do form
+.todo-form {
+  background-color: white;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+.todo-form__checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  font-size: 0.9375rem;
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+}
+
+.todo-form__inline-add {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+
+  input {
+    flex: 1;
+  }
+}
+
+// Badge variants for to-do priorities and recurring frequencies
+.badge--project {
+  background-color: #e8daef;
+  color: #6c3483;
+}
+
+.badge--must {
+  background-color: #fdecea;
+  color: $color-danger-dark;
+}
+
+.badge--want {
+  background-color: #ebf5fb;
+  color: $color-primary-dark;
+}
+
+.badge--if_time {
+  background-color: $color-bg-lighter;
+  color: $color-gray-dark;
+}
+
+.badge--weekly {
+  background-color: $color-success-bg;
+  color: $color-secondary-dark;
+}
+
+.badge--biweekly {
+  background-color: #ebf5fb;
+  color: $color-primary-dark;
+}
+
+.badge--monthly {
+  background-color: #fef9e7;
+  color: #d4ac0d;
+}
+
+.badge--quarterly {
+  background-color: #e8daef;
+  color: #6c3483;
+}
+
+// Add button (shared style for both todo and recurring)
+.add-button {
+  padding: $spacing-sm $spacing-md;
+  background-color: $color-primary;
+  color: white;
+  border: none;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  font-size: 0.9rem;
+  min-height: 44px;
+  transition: background-color $transition-speed;
+
+  &:hover {
+    background-color: $color-primary-dark;
+  }
+}
+
+// Mobile overrides
+@media (max-width: $breakpoint-mobile) {
+  .todo-header__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .todo-form {
+    padding: $spacing-md;
+  }
+
+  .todo-form__inline-add {
+    flex-wrap: wrap;
+  }
+
+  .recurring-card {
+    padding: $spacing-md;
+  }
+
+  // On mobile, hide less-critical columns for readability
+  .todo-row__location {
+    display: none;
+  }
+
+  .todo-table th:nth-child(4),
+  .todo-table td:nth-child(4) {
+    display: none;
+  }
+
+  .todo-row__btn {
+    padding: $spacing-xs;
+    font-size: 0.75rem;
+  }
+}

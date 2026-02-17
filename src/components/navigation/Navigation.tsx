@@ -22,6 +22,7 @@ function isDropdown(entry: NavEntry): entry is NavDropdown {
 
 const NAV_ENTRIES: NavEntry[] = [
   { href: "/calendar", label: "Calendar" },
+  { href: "/todos", label: "To Do" },
   { href: "/meals", label: "Meals" },
   { href: "/workouts", label: "Workouts" },
   {
