@@ -1,7 +1,7 @@
 import {
   WeeklyFormInput,
   PantryItem,
-  CustomMeal,
+  MealEntry,
   GymSession,
   OneOffItem,
   RecurringItem,
@@ -54,40 +54,51 @@ function formatPantryForPrompt(items: PantryItem[]): string {
   return output;
 }
 
-function formatCustomMeals(
-  meals: CustomMeal[],
+function formatMealEntries(
+  meals: MealEntry[],
   pantryItems: PantryItem[]
-): string {
-  if (meals.length === 0) {
-    return "No custom meals specified.";
-  }
+): { pinned: string; available: string } {
+  const pinned = meals.filter((m) => m.pinnedToDay && m.day);
+  const available = meals.filter((m) => !m.pinnedToDay || !m.day);
 
-  let output = "";
-  meals.forEach((meal) => {
-    output += `\n${meal.mealName}:\n`;
-    output += `  Preferred Day: ${meal.preferredDay}\n`;
-    if (meal.recipeLink) {
-      output += `  Recipe: ${meal.recipeLink}\n`;
+  const formatMeal = (meal: MealEntry): string => {
+    let line = `\n${meal.mealName}:\n`;
+    line += `  Slot: ${meal.mealSlot}\n`;
+    if (meal.day) line += `  Day: ${meal.day}\n`;
+    if (meal.recipeUrl) line += `  Recipe: ${meal.recipeUrl}\n`;
+    if (meal.nutrition) {
+      const parts: string[] = [];
+      if (meal.nutrition.calories) parts.push(`${meal.nutrition.calories} cal`);
+      if (meal.nutrition.protein) parts.push(`${meal.nutrition.protein}g protein`);
+      if (meal.nutrition.carbs) parts.push(`${meal.nutrition.carbs}g carbs`);
+      if (meal.nutrition.fat) parts.push(`${meal.nutrition.fat}g fat`);
+      if (parts.length > 0) line += `  Nutrition: ${parts.join(", ")}\n`;
     }
-
-    const ingredientMatches = categorizeIngredients(
-      meal.ingredientsList,
-      pantryItems
-    );
-    const fromPantry = ingredientMatches.filter((m) => m.inPantry);
-    const toBuy = ingredientMatches.filter((m) => !m.inPantry);
-
-    if (fromPantry.length > 0) {
-      output += `  From Pantry: ${fromPantry
-        .map((m) => m.ingredient)
-        .join(", ")}\n`;
+    if (meal.ingredients) {
+      const ingredientMatches = categorizeIngredients(
+        meal.ingredients,
+        pantryItems
+      );
+      const fromPantry = ingredientMatches.filter((m) => m.inPantry);
+      const toBuy = ingredientMatches.filter((m) => !m.inPantry);
+      if (fromPantry.length > 0) {
+        line += `  From Pantry: ${fromPantry.map((m) => m.ingredient).join(", ")}\n`;
+      }
+      if (toBuy.length > 0) {
+        line += `  Need to Buy: ${toBuy.map((m) => m.ingredient).join(", ")}\n`;
+      }
     }
-    if (toBuy.length > 0) {
-      output += `  Need to Buy: ${toBuy.map((m) => m.ingredient).join(", ")}\n`;
-    }
-  });
+    return line;
+  };
 
-  return output;
+  return {
+    pinned: pinned.length > 0
+      ? pinned.map(formatMeal).join("")
+      : "No pinned meals.",
+    available: available.length > 0
+      ? available.map(formatMeal).join("")
+      : "No additional meals specified.",
+  };
 }
 
 function formatGymSessions(sessions: GymSession[]): string {
@@ -191,19 +202,11 @@ function formatRecurringItems(items: RecurringItem[]): string {
 export function buildPromptFromFormData(formData: WeeklyFormInput): string {
   const templateJSON = JSON.stringify(WEEKLY_TEMPLATE, null, 2);
 
-  const tovalaMealsText = formData.tovalaMeals
-    .map(
-      (meal) =>
-        `${meal.day}: ${meal.mealName} (${meal.protein}g protein, ${meal.calories} cal)`
-    )
-    .filter((text) => !text.includes(": (g protein,"))
-    .join("\n");
-
-  const pantryText = formatPantryForPrompt(formData.pantryItems);
-  const customMealsText = formatCustomMeals(
-    formData.customMeals,
+  const mealsText = formatMealEntries(
+    formData.meals || [],
     formData.pantryItems
   );
+  const pantryText = formatPantryForPrompt(formData.pantryItems);
   const gymSessionsText = formatGymSessions(formData.gymSessions);
   const oneOffItemsText = formatOneOffItems(formData.oneOffItems);
   const recurringItemsText = formatRecurringItems(formData.recurringItems);
@@ -273,11 +276,11 @@ ${formData.locations
 
 ===== MEALS =====
 
-FIXED TOVALA DINNERS:
-${tovalaMealsText || "None specified"}
+PINNED MEALS (must stay on assigned day/slot):
+${mealsText.pinned}
 
-CUSTOM MEALS FOR THIS WEEK:
-${customMealsText}
+AVAILABLE MEALS (AI assigns day/slot):
+${mealsText.available}
 
 CURRENT PANTRY INVENTORY:
 ${pantryText}
@@ -316,11 +319,11 @@ PREFERENCES THIS WEEK:
 
 4. MEAL PLANNING:
    - Prioritize pantry items, especially those expiring soon
-   - Use the exact Tovala meals listed - do NOT substitute or suggest different Tovala meals
-   - Incorporate custom meals on preferred days (or any day if "Any day")
-   - For other meals: EITHER use simple pantry-based meals (e.g., "1/2 cup cottage cheese + 1/4 cup almonds") with average nutritional values, OR search online for real recipes with actual links
+   - Use pinned meals exactly as specified on their assigned day and slot
+   - Incorporate available (unpinned) meals on appropriate days/slots
+   - For open slots: EITHER use simple pantry-based meals (e.g., "1/2 cup cottage cheese + 1/4 cup almonds") with average nutritional values, OR search online for real recipes with actual links
    - When suggesting a recipe-based meal, include the recipe link in brackets: "Meal Name [recipe URL]"
-   - Get protein/calorie counts from the actual recipe when possible, or use verified nutritional databases
+   - Use provided nutrition data for user meals; get nutrition from recipes or verified databases for AI-suggested meals
    - All ingredients for suggested meals should appear in the shopping list (either "from pantry" or "to buy")
    - Meet daily protein target of ${formData.targetProtein}g
    - Consider post-workout protein timing (25-30g within 1-2 hours)
@@ -394,8 +397,9 @@ IMPORTANT CONSTRAINTS:
 - Generate realistic time blocks based on actual schedule anchors
 - Don't over-schedule - leave breathing room
 - Respect all buffer times
-- Match custom meals to preferred days when possible
-- Use fuzzy matching for pantry ingredients in custom meals
+- Place pinned meals on their assigned day/slot exactly
+- Schedule unpinned meals on appropriate days
+- Use fuzzy matching for pantry ingredients in user meals
 - Balance workout intensity with rest days
 - Consider travel time for events/appointments
 - When suggesting recipe-based meals, search for real recipes and include actual links

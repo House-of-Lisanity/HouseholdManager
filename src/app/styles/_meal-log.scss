@@ -1,0 +1,250 @@
+// Meal Log page: planned cards, log form, logged cards, daily summary
+
+// Page header
+.meal-log-header {
+  margin-bottom: $spacing-lg;
+
+  h2 {
+    margin: 0 0 $spacing-xs 0;
+  }
+}
+
+// Section containers
+.meal-log-section {
+  margin-bottom: $spacing-xl;
+
+  h3 {
+    margin: 0 0 $spacing-md 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: $color-dark;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+}
+
+// Planned meal cards
+.planned-meal-card {
+  background-color: white;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-lg;
+  transition: box-shadow $transition-speed;
+
+  &:hover {
+    box-shadow: $shadow-sm;
+  }
+
+  &--logged {
+    background-color: $color-success-bg;
+    border-color: $color-secondary;
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $spacing-xs $spacing-sm;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__name {
+    font-weight: 600;
+  }
+
+  &__meta {
+    color: $color-text-lighter;
+    font-size: 0.875rem;
+  }
+
+  &__nutrition {
+    font-size: 0.875rem;
+    color: $color-text-light;
+    margin: 0 0 $spacing-sm;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    flex-wrap: wrap;
+  }
+
+  &__date-input {
+    font-size: 0.875rem;
+    padding: $spacing-xs $spacing-sm;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    min-height: 36px;
+  }
+}
+
+// Meal log form
+.meal-log-form {
+  background-color: white;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+
+  &__estimate-row {
+    display: flex;
+    gap: $spacing-sm;
+    align-items: flex-start;
+
+    textarea {
+      flex: 1;
+    }
+
+    .log-button {
+      white-space: nowrap;
+      align-self: flex-start;
+      margin-top: 0;
+    }
+  }
+
+  &__estimate-status {
+    font-size: 0.85rem;
+    color: $color-warning-text;
+    margin: $spacing-xs 0 0;
+  }
+}
+
+// Logged meal cards
+.logged-meal-card {
+  background-color: white;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-lg;
+  transition: box-shadow $transition-speed;
+
+  &:hover {
+    box-shadow: $shadow-sm;
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $spacing-xs $spacing-sm;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__date {
+    font-weight: 600;
+  }
+
+  &__meta {
+    color: $color-text-lighter;
+    font-size: 0.85rem;
+  }
+
+  &__body {
+    margin-bottom: $spacing-sm;
+    font-size: 0.9375rem;
+  }
+
+  &__description {
+    font-size: 0.875rem;
+    color: $color-text-light;
+    margin: 0 0 $spacing-sm;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__nutrition {
+    font-size: 0.85rem;
+    color: $color-text-lighter;
+    margin: 0 0 $spacing-sm;
+  }
+
+  &__notes {
+    font-size: 0.85rem;
+    color: $color-gray-dark;
+    font-style: italic;
+    margin: 0 0 $spacing-sm;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+    margin-top: $spacing-sm;
+  }
+}
+
+// Daily nutrition summary
+.daily-nutrition-summary {
+  background-color: $color-bg-light;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-md;
+  padding: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-xl;
+
+  h4 {
+    margin: 0 0 $spacing-sm 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: $color-dark;
+  }
+
+  &__rows {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm $spacing-lg;
+  }
+
+  &__row {
+    display: flex;
+    gap: $spacing-xs;
+    align-items: baseline;
+  }
+
+  &__label {
+    font-size: 0.85rem;
+    color: $color-text-lighter;
+  }
+
+  &__value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $color-dark;
+  }
+
+  &__target {
+    font-weight: 400;
+    color: $color-text-lighter;
+  }
+}
+
+// Mobile overrides
+@media (max-width: $breakpoint-mobile) {
+  .planned-meal-card__actions {
+    flex-direction: column;
+
+    .log-button {
+      width: 100%;
+    }
+  }
+
+  .meal-log-form {
+    padding: $spacing-md;
+
+    &__estimate-row {
+      flex-direction: column;
+
+      .log-button {
+        width: 100%;
+      }
+    }
+  }
+
+  .daily-nutrition-summary__rows {
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+}

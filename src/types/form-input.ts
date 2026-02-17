@@ -5,7 +5,7 @@ import {
   BufferRule,
   Location,
 } from "./schedule";
-import { PantryItem, TovalaMeal, CustomMeal } from "./meals";
+import { PantryItem, MealEntry } from "./meals";
 import { WorkoutEntry, LiftMax, EventNight } from "./health";
 
 // ============================================================================
@@ -80,8 +80,8 @@ export interface CalendarFormInput {
 }
 
 export interface MealsFormInput {
-  tovalaMeals: TovalaMeal[];
-  customMeals: CustomMeal[];
+  weeklyFocus: string;
+  meals: MealEntry[];
 }
 
 export interface WorkoutsFormInput {
@@ -124,8 +124,7 @@ export interface WeeklyFormInput {
   locations: Location[];
 
   // Meals & nutrition
-  tovalaMeals: TovalaMeal[];
-  customMeals: CustomMeal[];
+  meals: MealEntry[];
   pantryItems: PantryItem[];
   targetProtein: string;
   dailyAlcohol: string;

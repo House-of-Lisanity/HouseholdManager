@@ -29,6 +29,8 @@ export const WORKOUT_TYPES = [
 
 export const LOCATIONS = ["Gym", "Home", "CrossFit Box"] as const;
 
+export const MEAL_SLOTS = ["Breakfast", "Lunch", "Dinner", "Snack"] as const;
+
 export function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }

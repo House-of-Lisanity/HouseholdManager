@@ -18,3 +18,6 @@ export * from './template';
 
 // Workout Logging
 export * from './workout-log';
+
+// Meal Logging
+export * from './meal-log';

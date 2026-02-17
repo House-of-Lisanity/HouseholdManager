@@ -3,9 +3,11 @@ import {
   CalendarPlanResult,
   MealsFormInput,
   MealsPlanResult,
+  NutritionInfo,
   WorkoutsFormInput,
   WorkoutsPlanResult,
 } from "@/types";
+import { ScrapedRecipe } from "@/lib/recipe-scraper";
 
 // Calendar — generate
 export async function generateCalendarPlan(
@@ -39,6 +41,40 @@ export async function generateMealsPlan(
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
     throw new Error(data.error || "Failed to generate meal plan");
+  }
+
+  return response.json();
+}
+
+// Recipe — parse URL for nutrition data
+export async function parseRecipeUrl(url: string): Promise<ScrapedRecipe> {
+  const response = await fetch("/api/parse-recipe", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to parse recipe");
+  }
+
+  return response.json();
+}
+
+// Meal log — estimate nutrition from freeform text
+export async function estimateNutrition(
+  description: string
+): Promise<NutritionInfo> {
+  const response = await fetch("/api/estimate-nutrition", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ description }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to estimate nutrition");
   }
 
   return response.json();

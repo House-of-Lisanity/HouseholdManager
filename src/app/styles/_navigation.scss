@@ -28,6 +28,10 @@
 
 .nav__item {
   margin: 0;
+
+  &--dropdown {
+    position: relative;
+  }
 }
 
 .nav__link {
@@ -53,6 +57,39 @@
     &:focus-visible {
       background-color: $color-primary-dark;
     }
+  }
+}
+
+// Dropdown toggle button — matches nav__link appearance
+.nav__dropdown-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+// Dropdown menu
+.nav__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  list-style: none;
+  margin: $spacing-xs 0 0;
+  padding: $spacing-xs 0;
+  background-color: $color-darker;
+  border-radius: $radius-sm;
+  min-width: 160px;
+  box-shadow: $shadow-sm;
+  z-index: 200;
+
+  li {
+    margin: 0;
+  }
+
+  .nav__link {
+    border-radius: 0;
+    white-space: nowrap;
+    width: 100%;
   }
 }
 
@@ -88,6 +125,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  // Dropdown opens upward on mobile (nav is at bottom)
+  .nav__dropdown {
+    top: auto;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0 0 $spacing-xs;
   }
 
   // Add bottom padding to body so content isn't hidden behind nav

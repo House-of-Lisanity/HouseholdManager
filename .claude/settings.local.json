@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npm install:*)",
       "Bash(npx next build:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(grep:*)"
     ],
     "additionalDirectories": [
       "c:\\Users\\lisaj\\Code\\WeeklyPlanner"

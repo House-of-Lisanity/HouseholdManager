@@ -1,28 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { TovalaMeal, MealsPlanResult } from "@/types";
+import { MealsPlanResult } from "@/types";
 import { useMealsForm } from "@/hooks/useMealsForm";
 import { generateMealsPlan } from "@/lib/api-client";
-import TovalaMealsSection from "@/components/sections/TovalaMealsSection";
-import CustomMealsSection from "@/components/sections/CustomMealsSection";
+import MealScheduleSection from "@/components/sections/MealScheduleSection";
 import MealsResults from "@/components/results/MealsResults";
+import WeekNavigation from "@/components/shared/WeekNavigation";
 
 export default function MealsPage() {
-  const { formData, updateField, weekOf, loading } = useMealsForm();
+  const { formData, updateField, weekOf, setWeekOf, loading } =
+    useMealsForm();
   const [result, setResult] = useState<MealsPlanResult | null>(null);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const handleTovalaMealChange = (
-    index: number,
-    field: keyof TovalaMeal,
-    value: string
-  ) => {
-    const updated = [...formData.tovalaMeals];
-    updated[index] = { ...updated[index], [field]: value };
-    updateField("tovalaMeals", updated);
-  };
 
   const handleGenerate = async () => {
     setGenerating(true);
@@ -57,6 +48,7 @@ export default function MealsPage() {
   return (
     <div className="container">
       <h2>Meals</h2>
+      <WeekNavigation weekOf={weekOf} onChange={setWeekOf} />
 
       {error && (
         <div className="error">
@@ -64,14 +56,20 @@ export default function MealsPage() {
         </div>
       )}
 
-      <TovalaMealsSection
-        meals={formData.tovalaMeals}
-        onUpdate={handleTovalaMealChange}
-      />
+      <div className="form-group">
+        <label htmlFor="meal-weekly-focus">Weekly Focus</label>
+        <textarea
+          id="meal-weekly-focus"
+          placeholder="What's your meal focus this week? e.g., high protein, meal prep Sunday, use up pantry items..."
+          value={formData.weeklyFocus}
+          onChange={(e) => updateField("weeklyFocus", e.target.value)}
+          rows={3}
+        />
+      </div>
 
-      <CustomMealsSection
-        meals={formData.customMeals}
-        onUpdate={(meals) => updateField("customMeals", meals)}
+      <MealScheduleSection
+        meals={formData.meals}
+        onUpdate={(meals) => updateField("meals", meals)}
       />
 
       <button

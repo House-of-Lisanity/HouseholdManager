@@ -1,0 +1,91 @@
+// Meals page: entry cards in schedule list, fetch nutrition, nutrition grid
+
+// Meal entry cards in schedule list
+.meal-entry {
+  &__info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: $spacing-xs $spacing-sm;
+  }
+
+  &__meta {
+    color: $color-text-lighter;
+    font-size: 0.875rem;
+  }
+
+  &__nutrition {
+    margin: $spacing-xs 0 0;
+    font-size: 0.875rem;
+    color: $color-text-light;
+  }
+
+  &__notes {
+    margin: $spacing-xs 0 0;
+    font-size: 0.8rem;
+    color: $color-gray-dark;
+    font-style: italic;
+  }
+}
+
+// Recipe URL + fetch button row
+.fetch-nutrition-row {
+  display: flex;
+  gap: $spacing-sm;
+  align-items: flex-start;
+
+  input {
+    flex: 1;
+  }
+}
+
+.fetch-button {
+  background-color: $color-primary;
+  color: white;
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 44px;
+  transition: background-color $transition-speed;
+
+  &:hover:not(:disabled) {
+    background-color: $color-primary-dark;
+  }
+
+  &:disabled {
+    background-color: $color-gray;
+    cursor: not-allowed;
+  }
+}
+
+.fetch-status {
+  margin-top: $spacing-xs;
+  font-size: 0.85rem;
+  color: $color-text-lighter;
+}
+
+// Nutrition 2-col grid inside form
+.form-grid--nutrition {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-sm;
+}
+
+// Mobile overrides
+@media (max-width: $breakpoint-mobile) {
+  .form-grid--nutrition {
+    grid-template-columns: 1fr;
+  }
+
+  .fetch-nutrition-row {
+    flex-direction: column;
+
+    .fetch-button {
+      width: 100%;
+    }
+  }
+}

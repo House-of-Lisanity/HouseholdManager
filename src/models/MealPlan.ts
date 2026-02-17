@@ -2,19 +2,23 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IMealPlan extends Document {
   weekOf: string;
-  tovalaMeals: {
-    day: string;
-    mealName: string;
-    protein: string;
-    calories: string;
-    notes: string;
-  }[];
-  customMeals: {
+  weeklyFocus: string;
+  meals: {
     id: string;
     mealName: string;
-    preferredDay: string;
-    recipeLink?: string;
-    ingredientsList: string;
+    mealSlot: string;
+    day: string;
+    pinnedToDay: boolean;
+    recipeUrl?: string;
+    nutrition?: {
+      calories?: string;
+      protein?: string;
+      carbs?: string;
+      fat?: string;
+      servings?: string;
+    };
+    ingredients?: string;
+    notes?: string;
   }[];
   updatedAt: Date;
 }
@@ -22,22 +26,24 @@ export interface IMealPlan extends Document {
 const MealPlanSchema = new Schema<IMealPlan>(
   {
     weekOf: { type: String, required: true, index: true, unique: true },
-    tovalaMeals: [
-      {
-        day: String,
-        mealName: String,
-        protein: String,
-        calories: String,
-        notes: String,
-      },
-    ],
-    customMeals: [
+    weeklyFocus: { type: String, default: "" },
+    meals: [
       {
         id: String,
         mealName: String,
-        preferredDay: String,
-        recipeLink: String,
-        ingredientsList: String,
+        mealSlot: String,
+        day: String,
+        pinnedToDay: Boolean,
+        recipeUrl: String,
+        nutrition: {
+          calories: String,
+          protein: String,
+          carbs: String,
+          fat: String,
+          servings: String,
+        },
+        ingredients: String,
+        notes: String,
       },
     ],
   },

@@ -2,34 +2,26 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { MealsFormInput } from "@/types";
-
-function getCurrentWeekOf(): string {
-  const now = new Date();
-  const day = now.getDay();
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - ((day + 6) % 7));
-  return monday.toISOString().split("T")[0];
-}
+import { getWeekOf } from "@/lib/workout-log-helpers";
 
 const DEFAULT_MEALS: MealsFormInput = {
-  tovalaMeals: [
-    { day: "", mealName: "", protein: "", calories: "", notes: "" },
-    { day: "", mealName: "", protein: "", calories: "", notes: "" },
-    { day: "", mealName: "", protein: "", calories: "", notes: "" },
-    { day: "", mealName: "", protein: "", calories: "", notes: "" },
-  ],
-  customMeals: [],
+  weeklyFocus: "",
+  meals: [],
 };
 
 export function useMealsForm() {
   const [formData, setFormData] = useState<MealsFormInput>(DEFAULT_MEALS);
-  const [weekOf, setWeekOf] = useState(getCurrentWeekOf);
+  const [weekOf, setWeekOf] = useState(() => getWeekOf());
   const [loading, setLoading] = useState(true);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isInitialLoad = useRef(true);
 
-  // Load from MongoDB on mount
+  // Load from MongoDB on mount and when weekOf changes
   useEffect(() => {
+    isInitialLoad.current = true;
+    setLoading(true);
+    setFormData(DEFAULT_MEALS);
+
     async function load() {
       try {
         const res = await fetch(`/api/meals?weekOf=${weekOf}`);
@@ -73,11 +65,14 @@ export function useMealsForm() {
   }, [formData, weekOf]);
 
   const updateField = useCallback(
-    (field: keyof MealsFormInput, value: unknown) => {
+    <K extends keyof MealsFormInput>(
+      field: K,
+      value: MealsFormInput[K]
+    ) => {
       setFormData((prev) => ({ ...prev, [field]: value }));
     },
     []
   );
 
-  return { formData, updateField, weekOf, loading };
+  return { formData, updateField, weekOf, setWeekOf, loading };
 }

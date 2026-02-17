@@ -8,18 +8,22 @@ export interface PantryItem {
   notes?: string;
 }
 
-export interface TovalaMeal {
-  day: string;
-  mealName: string;
-  protein: string;
-  calories: string;
-  notes: string;
+export interface NutritionInfo {
+  calories?: string;
+  protein?: string;
+  carbs?: string;
+  fat?: string;
+  servings?: string;
 }
 
-export interface CustomMeal {
+export interface MealEntry {
   id: string;
   mealName: string;
-  preferredDay: string;
-  recipeLink?: string;
-  ingredientsList: string;
+  mealSlot: string;
+  day: string;
+  pinnedToDay: boolean;
+  recipeUrl?: string;
+  nutrition?: NutritionInfo;
+  ingredients?: string;
+  notes?: string;
 }
