@@ -102,7 +102,6 @@ export default function WorkoutsGrid({
                     onChange={(e) =>
                       onUpdateField(dayIndex, "workoutDetails", e.target.value)
                     }
-                    rows={3}
                   />
                 </div>
                 {day.aiNotes && (

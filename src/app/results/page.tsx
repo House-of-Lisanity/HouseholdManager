@@ -11,6 +11,7 @@ import ViewToggle from "@/components/results/ViewToggle";
 import CalendarGrid from "@/components/results/CalendarGrid";
 import MealsGrid from "@/components/results/MealsGrid";
 import WorkoutsGrid from "@/components/results/WorkoutsGrid";
+import ShoppingListSection from "@/components/results/ShoppingListSection";
 import SectionPrintButton from "@/components/results/SectionPrintButton";
 
 export default function ResultsPage() {
@@ -48,6 +49,7 @@ export default function ResultsPage() {
         selectedDayIndex={selectedDayIndex}
         onUpdateStrategyNotes={state.updateStrategyNotes}
         onUpdateTimeBlock={state.updateTimeBlockDescription}
+        onUpdateTimeBlockTimes={state.updateTimeBlockTimes}
         onUpdateListItem={state.updateCalendarListItem}
         onUpdateHobby={state.updateHobby}
       />
@@ -56,9 +58,7 @@ export default function ResultsPage() {
         data={state.meals}
         viewMode={viewMode}
         selectedDayIndex={selectedDayIndex}
-        onUpdateProteinTarget={state.updateProteinTarget}
         onUpdateMeal={state.updateMealField}
-        onUpdateShoppingItem={state.updateShoppingItem}
       />
 
       <WorkoutsGrid
@@ -67,6 +67,11 @@ export default function ResultsPage() {
         selectedDayIndex={selectedDayIndex}
         onUpdateSummary={state.updateWorkoutSummary}
         onUpdateField={state.updateWorkoutField}
+      />
+
+      <ShoppingListSection
+        data={state.meals.shoppingList}
+        onUpdateItem={state.updateShoppingItem}
       />
 
       <div className="result-actions">

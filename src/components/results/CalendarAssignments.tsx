@@ -44,9 +44,8 @@ export default function CalendarAssignments({
               <div className="cal-assignments__group">
                 <strong>Big Rocks</strong>
                 {day.bigRocks.map((item, ii) => (
-                  <input
+                  <textarea
                     key={ii}
-                    type="text"
                     className="editable-field"
                     value={item}
                     onChange={(e) =>
@@ -61,9 +60,8 @@ export default function CalendarAssignments({
               <div className="cal-assignments__group">
                 <strong>Chores</strong>
                 {day.choresAssigned.map((item, ii) => (
-                  <input
+                  <textarea
                     key={ii}
-                    type="text"
                     className="editable-field"
                     value={item}
                     onChange={(e) =>
@@ -77,8 +75,7 @@ export default function CalendarAssignments({
             {day.hobbyAssigned && (
               <div className="cal-assignments__group">
                 <strong>Hobby</strong>
-                <input
-                  type="text"
+                <textarea
                   className="editable-field"
                   value={day.hobbyAssigned}
                   onChange={(e) => onUpdateHobby(dayIndex, e.target.value)}

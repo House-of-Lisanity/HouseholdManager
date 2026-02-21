@@ -2,6 +2,8 @@ export interface TimeBlock {
   startTime: string;
   endTime: string;
   description: string;
+  shortLabel: string;
+  pinned?: boolean;
 }
 
 export interface DaySchedule {

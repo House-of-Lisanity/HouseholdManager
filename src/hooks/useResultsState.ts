@@ -45,6 +45,26 @@ export function useResultsState(
       ),
     }));
 
+  const updateTimeBlockTimes = (
+    dayIndex: number,
+    blockIndex: number,
+    startTime: string,
+    endTime: string
+  ) =>
+    setCalendar((prev) => ({
+      ...prev,
+      dailySchedules: prev.dailySchedules.map((day, di) =>
+        di === dayIndex
+          ? {
+              ...day,
+              timeBlocks: day.timeBlocks.map((block, bi) =>
+                bi === blockIndex ? { ...block, startTime, endTime } : block
+              ),
+            }
+          : day
+      ),
+    }));
+
   const updateCalendarListItem = (
     dayIndex: number,
     field: "bigRocks" | "choresAssigned",
@@ -75,9 +95,6 @@ export function useResultsState(
 
   // --- Meals updaters ---
 
-  const updateProteinTarget = (value: string) =>
-    setMeals((prev) => ({ ...prev, proteinTarget: value }));
-
   const updateMealField = (dayIndex: number, field: MealField, value: string) =>
     setMeals((prev) => ({
       ...prev,
@@ -87,13 +104,12 @@ export function useResultsState(
     }));
 
   const updateShoppingItem = (
-    listType: "fromPantry" | "toBuy",
     catIndex: number,
     itemIndex: number,
     value: string
   ) =>
     setMeals((prev) => {
-      const list: ShoppingListSection[] = prev.shoppingList[listType].map(
+      const toBuy: ShoppingListSection[] = prev.shoppingList.toBuy.map(
         (section, ci) =>
           ci === catIndex
             ? {
@@ -106,7 +122,7 @@ export function useResultsState(
       );
       return {
         ...prev,
-        shoppingList: { ...prev.shoppingList, [listType]: list },
+        shoppingList: { ...prev.shoppingList, toBuy },
       };
     });
 
@@ -133,9 +149,9 @@ export function useResultsState(
     workouts,
     updateStrategyNotes,
     updateTimeBlockDescription,
+    updateTimeBlockTimes,
     updateCalendarListItem,
     updateHobby,
-    updateProteinTarget,
     updateMealField,
     updateShoppingItem,
     updateWorkoutSummary,

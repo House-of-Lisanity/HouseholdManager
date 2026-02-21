@@ -269,12 +269,22 @@ $block-default-border: #64748b;
   margin: 1px 2px;
   padding: 2px $spacing-xs;
   border-radius: 3px;
+  border: none;
   border-left: 3px solid $block-default-border;
   background: $block-default-bg;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   z-index: 1;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: box-shadow $transition-speed;
+
+  &:hover {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  }
 
   &--work { background: $block-work-bg; border-left-color: $block-work-border; }
   &--exercise { background: $block-exercise-bg; border-left-color: $block-exercise-border; }
@@ -283,29 +293,149 @@ $block-default-border: #64748b;
   &--routine { background: $block-routine-bg; border-left-color: $block-routine-border; }
 }
 
-.cal-block__time {
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: $color-text-lighter;
-  line-height: 1;
-  margin-bottom: 1px;
+// Grid row lines (subtle horizontal gridlines)
+.cal-grid__row-line {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 0;
+  pointer-events: none;
 }
 
-.cal-block__text {
-  width: 100%;
-  border: none;
-  background: transparent;
+.cal-block__label {
   font-size: 0.75rem;
-  font-family: inherit;
+  font-weight: 600;
   color: $color-text;
-  resize: none;
-  padding: 0;
-  line-height: 1.3;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-  &:focus {
-    outline: 1px solid $color-primary;
-    border-radius: 2px;
-    background: rgba(255, 255, 255, 0.7);
+.cal-block--pinned {
+  border-left-width: 4px;
+  position: relative;
+
+  &::after {
+    content: "📌";
+    position: absolute;
+    top: 1px;
+    right: 2px;
+    font-size: 0.6rem;
+    line-height: 1;
+  }
+}
+
+.cal-block--selected {
+  outline: 2px solid $color-primary;
+  outline-offset: -1px;
+  box-shadow: 0 0 0 3px rgba($color-primary, 0.15);
+}
+
+// ==========================================
+// Block Detail Modal
+// ==========================================
+
+.block-detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-md;
+}
+
+.block-detail {
+  background: white;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+}
+
+.block-detail__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.block-detail__title {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+
+  strong {
+    font-size: 1rem;
+    color: $color-dark;
+  }
+}
+
+.block-detail__time-range {
+  font-size: 0.9rem;
+  color: $color-text-light;
+}
+
+.block-detail__pinned-badge {
+  display: inline-block;
+  padding: 1px $spacing-sm;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: $color-bg-light;
+  color: $color-text-lighter;
+  border: 1px solid $color-border;
+}
+
+.block-detail__close {
+  padding: $spacing-sm $spacing-md;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $color-text-light;
+  cursor: pointer;
+
+  &:hover {
+    background: $color-bg-lighter;
+  }
+}
+
+.block-detail__body {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.block-detail__field {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.block-detail__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $color-text-lighter;
+}
+
+.block-detail__time-inputs {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+
+  .editable-field {
+    width: auto;
+    max-width: 140px;
+  }
+
+  span {
+    font-size: 0.85rem;
+    color: $color-text-lighter;
   }
 }
 
@@ -358,6 +488,9 @@ $block-default-border: #64748b;
     font-size: 0.8rem;
     padding: 2px $spacing-xs;
     margin-bottom: 2px;
+    field-sizing: content;
+    min-height: 1lh;
+    resize: none;
   }
 }
 
@@ -412,7 +545,8 @@ $block-default-border: #64748b;
   .editable-field {
     font-size: 0.8rem;
     padding: $spacing-xs;
-    min-height: 50px;
+    field-sizing: content;
+    min-height: 2lh;
   }
 
   &:nth-child(even) {
@@ -431,7 +565,6 @@ $block-default-border: #64748b;
 
   &--day {
     grid-template-columns: 1fr;
-    max-width: 500px;
   }
 }
 
@@ -471,6 +604,8 @@ $block-default-border: #64748b;
   .editable-field {
     font-size: 0.8rem;
     padding: 2px $spacing-xs;
+    field-sizing: content;
+    min-height: 1lh;
   }
 }
 

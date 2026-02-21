@@ -1,5 +1,5 @@
 import React from "react";
-import { MealsPlanResult, DayMeals, ShoppingListSection } from "@/types";
+import { MealsPlanResult, DayMeals } from "@/types";
 import { ViewMode } from "@/hooks/useViewMode";
 import SectionPrintButton from "./SectionPrintButton";
 
@@ -16,23 +16,14 @@ interface MealsGridProps {
   data: MealsPlanResult;
   viewMode: ViewMode;
   selectedDayIndex: number;
-  onUpdateProteinTarget: (value: string) => void;
   onUpdateMeal: (dayIndex: number, field: MealField, value: string) => void;
-  onUpdateShoppingItem: (
-    listType: "fromPantry" | "toBuy",
-    catIndex: number,
-    itemIndex: number,
-    value: string
-  ) => void;
 }
 
 export default function MealsGrid({
   data,
   viewMode,
   selectedDayIndex,
-  onUpdateProteinTarget,
   onUpdateMeal,
-  onUpdateShoppingItem,
 }: MealsGridProps) {
   const visibleDays =
     viewMode === "week" ? data.dailyMeals : [data.dailyMeals[selectedDayIndex]];
@@ -46,17 +37,6 @@ export default function MealsGrid({
       <div className="results-section__header">
         <h2>Meals</h2>
         <SectionPrintButton section="meals" label="Print Meals" />
-      </div>
-
-      <div className="results-section__summary">
-        <strong>Protein Target:</strong>
-        <input
-          type="text"
-          className="editable-field editable-field--inline"
-          value={data.proteinTarget}
-          onChange={(e) => onUpdateProteinTarget(e.target.value)}
-        />
-        <span> per day</span>
       </div>
 
       <div className={`meals-grid ${viewMode === "day" ? "meals-grid--day" : ""}`}>
@@ -82,7 +62,6 @@ export default function MealsGrid({
                     onChange={(e) =>
                       onUpdateMeal(dayIndex, slot.field, e.target.value)
                     }
-                    rows={2}
                   />
                 </div>
               );
@@ -90,43 +69,6 @@ export default function MealsGrid({
           </React.Fragment>
         ))}
       </div>
-
-      {data.shoppingList && (
-        <div className="shopping-section">
-          <h3>Shopping List</h3>
-          <div className="shopping-columns">
-            {(["fromPantry", "toBuy"] as const).map((listType) => (
-              <div key={listType} className="shopping-column">
-                <h4>{listType === "fromPantry" ? "From Pantry" : "To Buy"}</h4>
-                {data.shoppingList[listType].map((section, catIndex) => (
-                  <div key={catIndex} className="shopping-category">
-                    <strong>{section.category}:</strong>
-                    <ul>
-                      {section.items.map((item, itemIndex) => (
-                        <li key={itemIndex}>
-                          <input
-                            type="text"
-                            className="editable-field"
-                            value={item}
-                            onChange={(e) =>
-                              onUpdateShoppingItem(
-                                listType,
-                                catIndex,
-                                itemIndex,
-                                e.target.value
-                              )
-                            }
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </section>
   );
 }

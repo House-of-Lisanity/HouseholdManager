@@ -97,17 +97,26 @@
 
   // Section-level print filtering
   body[data-print-section="calendar"] .results-section--meals,
-  body[data-print-section="calendar"] .results-section--workouts {
+  body[data-print-section="calendar"] .results-section--workouts,
+  body[data-print-section="calendar"] .results-section--shopping {
     display: none !important;
   }
 
   body[data-print-section="meals"] .results-section--calendar,
-  body[data-print-section="meals"] .results-section--workouts {
+  body[data-print-section="meals"] .results-section--workouts,
+  body[data-print-section="meals"] .results-section--shopping {
     display: none !important;
   }
 
   body[data-print-section="workouts"] .results-section--calendar,
-  body[data-print-section="workouts"] .results-section--meals {
+  body[data-print-section="workouts"] .results-section--meals,
+  body[data-print-section="workouts"] .results-section--shopping {
+    display: none !important;
+  }
+
+  body[data-print-section="shopping"] .results-section--calendar,
+  body[data-print-section="shopping"] .results-section--meals,
+  body[data-print-section="shopping"] .results-section--workouts {
     display: none !important;
   }
 }

@@ -1,6 +1,6 @@
 import React from "react";
 
-type PrintSection = "calendar" | "meals" | "workouts" | "all";
+type PrintSection = "calendar" | "meals" | "workouts" | "shopping" | "all";
 
 interface SectionPrintButtonProps {
   section: PrintSection;
