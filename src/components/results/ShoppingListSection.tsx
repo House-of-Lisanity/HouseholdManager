@@ -1,20 +1,49 @@
 import React from "react";
-import { MealsPlanResult } from "@/types";
+import { MealsPlanResult, ShoppingItem } from "@/types";
+import { STORE_CONFIGS } from "@/lib/constants";
+import { useShoppingList } from "@/hooks/useShoppingList";
 import SectionPrintButton from "./SectionPrintButton";
+import StoreBoard from "./StoreBoard";
 
 interface ShoppingListSectionProps {
   data: MealsPlanResult["shoppingList"];
-  onUpdateItem: (
-    catIndex: number,
-    itemIndex: number,
-    value: string
-  ) => void;
 }
 
-export default function ShoppingListSection({
-  data,
-  onUpdateItem,
-}: ShoppingListSectionProps) {
+function formatPrintItem(item: ShoppingItem): string {
+  return item.quantity ? `${item.quantity} — ${item.name}` : item.name;
+}
+
+function groupByCategory(items: ShoppingItem[]): Record<string, ShoppingItem[]> {
+  const groups: Record<string, ShoppingItem[]> = {};
+  for (const item of items) {
+    if (!groups[item.category]) groups[item.category] = [];
+    groups[item.category].push(item);
+  }
+  return groups;
+}
+
+function PrintStoreGroup({ label, items }: { label: string; items: ShoppingItem[] }) {
+  const grouped = groupByCategory(items);
+  return (
+    <div className="shopping-print-view__store">
+      <h4>{label}</h4>
+      {Object.entries(grouped).map(([cat, catItems]) => (
+        <div key={cat} className="shopping-print-view__category">
+          <strong>{cat}:</strong>
+          <ul>
+            {catItems.map((item) => (
+              <li key={item.id}>{formatPrintItem(item)}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function ShoppingListSection({ data }: ShoppingListSectionProps) {
+  const shop = useShoppingList(data.toBuy);
+
   if (!data) return null;
 
   return (
@@ -24,26 +53,29 @@ export default function ShoppingListSection({
         <SectionPrintButton section="shopping" label="Print Shopping" />
       </div>
 
-      <div className="shopping-list">
-        {data.toBuy.map((section, catIndex) => (
-          <div key={catIndex} className="shopping-category">
-            <strong>{section.category}:</strong>
-            <ul>
-              {section.items.map((item, itemIndex) => (
-                <li key={itemIndex}>
-                  <input
-                    type="text"
-                    className="editable-field"
-                    value={item}
-                    onChange={(e) =>
-                      onUpdateItem(catIndex, itemIndex, e.target.value)
-                    }
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+      <StoreBoard
+        unsortedItems={shop.unsortedItems}
+        itemsByStore={shop.itemsByStore}
+        categories={shop.categories}
+        onToggleStore={shop.toggleStore}
+        onMoveToStore={shop.moveToStore}
+        onUpdateName={shop.updateItemName}
+        onUpdateCategory={shop.updateItemCategory}
+        onRenameCategory={shop.renameCategory}
+        onAddItem={shop.addItem}
+        onDeleteItem={shop.deleteItem}
+      />
+
+      {/* Print-only view: grouped by store then category */}
+      <div className="shopping-print-view">
+        {STORE_CONFIGS.map((cfg) => {
+          const storeItems = shop.itemsByStore[cfg.id];
+          if (storeItems.length === 0) return null;
+          return <PrintStoreGroup key={cfg.id} label={cfg.label} items={storeItems} />;
+        })}
+        {shop.unsortedItems.length > 0 && (
+          <PrintStoreGroup label="Unsorted" items={shop.unsortedItems} />
+        )}
       </div>
     </section>
   );

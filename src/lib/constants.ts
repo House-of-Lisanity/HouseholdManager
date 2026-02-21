@@ -67,3 +67,13 @@ export const RECURRING_FREQUENCIES = [
   { value: "monthly", label: "Monthly" },
   { value: "quarterly", label: "Quarterly" },
 ] as const;
+
+// Shopping Store Types
+import { StoreConfig } from "@/types/shopping";
+
+export const STORE_CONFIGS: StoreConfig[] = [
+  { id: "bigBox", label: "Big Box", shortLabel: "BB" },
+  { id: "warehouse", label: "Warehouse Club", shortLabel: "WH" },
+  { id: "grocery", label: "Grocery", shortLabel: "GR" },
+  { id: "specialty", label: "Specialty", shortLabel: "SP" },
+];

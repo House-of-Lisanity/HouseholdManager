@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MealsPlanResult, DayMeals, ShoppingListSection } from "@/types";
+import { MealsPlanResult, DayMeals, ShoppingListSection, ShoppingIngredient } from "@/types";
 
 interface MealsResultsProps {
   result: MealsPlanResult;
@@ -33,7 +33,7 @@ export default function MealsResults({ result, onBack }: MealsResultsProps) {
             ? {
                 ...section,
                 items: section.items.map((item, ii) =>
-                  ii === itemIndex ? value : item
+                  ii === itemIndex ? { ...item, name: value } : item
                 ),
               }
             : section
@@ -114,10 +114,13 @@ export default function MealsResults({ result, onBack }: MealsResultsProps) {
                     <ul>
                       {section.items.map((item, itemIndex) => (
                         <li key={itemIndex}>
+                          {item.quantity && (
+                            <span className="shopping-item__qty">{item.quantity} </span>
+                          )}
                           <input
                             type="text"
                             className="editable-field"
-                            value={item}
+                            value={item.name}
                             onChange={(e) =>
                               updateShoppingItem(
                                 listType,

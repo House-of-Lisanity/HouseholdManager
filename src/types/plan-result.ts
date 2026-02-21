@@ -22,9 +22,16 @@ export interface DayMeals {
   snacks: string;
 }
 
+export interface ShoppingIngredient {
+  name: string;
+  quantity?: string;
+  form?: string;
+  notes?: string;
+}
+
 export interface ShoppingListSection {
   category: string;
-  items: string[];
+  items: ShoppingIngredient[];
 }
 
 // Legacy combined result (kept during migration)

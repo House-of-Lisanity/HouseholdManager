@@ -22,5 +22,8 @@ export * from './workout-log';
 // Meal Logging
 export * from './meal-log';
 
+// Shopping
+export * from './shopping';
+
 // To Do
 export * from './todo';

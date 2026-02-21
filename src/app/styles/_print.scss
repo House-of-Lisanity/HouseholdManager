@@ -66,6 +66,19 @@
     box-shadow: none !important;
   }
 
+  // Hide interactive store board in print, show print-friendly view
+  .store-board__columns,
+  .shopping-item__assign-btn,
+  .shopping-item__delete-btn,
+  .store-column__add-btn,
+  .store-column__add-row {
+    display: none !important;
+  }
+
+  .shopping-print-view {
+    display: block !important;
+  }
+
   // Keep shopping list columns side-by-side
   .shopping-columns {
     grid-template-columns: 1fr 1fr;

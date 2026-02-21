@@ -69,10 +69,7 @@ export default function ResultsPage() {
         onUpdateField={state.updateWorkoutField}
       />
 
-      <ShoppingListSection
-        data={state.meals.shoppingList}
-        onUpdateItem={state.updateShoppingItem}
-      />
+      <ShoppingListSection data={state.meals.shoppingList} />
 
       <div className="result-actions">
         <button className="new-plan-button" onClick={() => router.back()}>

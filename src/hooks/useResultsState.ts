@@ -7,7 +7,6 @@ import {
   WorkoutsPlanResult,
   DayMeals,
   WorkoutDayResult,
-  ShoppingListSection,
 } from "@/types";
 
 type MealField = keyof Pick<DayMeals, "breakfast" | "lunch" | "dinner" | "snacks">;
@@ -103,29 +102,6 @@ export function useResultsState(
       ),
     }));
 
-  const updateShoppingItem = (
-    catIndex: number,
-    itemIndex: number,
-    value: string
-  ) =>
-    setMeals((prev) => {
-      const toBuy: ShoppingListSection[] = prev.shoppingList.toBuy.map(
-        (section, ci) =>
-          ci === catIndex
-            ? {
-                ...section,
-                items: section.items.map((item, ii) =>
-                  ii === itemIndex ? value : item
-                ),
-              }
-            : section
-      );
-      return {
-        ...prev,
-        shoppingList: { ...prev.shoppingList, toBuy },
-      };
-    });
-
   // --- Workouts updaters ---
 
   const updateWorkoutSummary = (value: string) =>
@@ -153,7 +129,6 @@ export function useResultsState(
     updateCalendarListItem,
     updateHobby,
     updateMealField,
-    updateShoppingItem,
     updateWorkoutSummary,
     updateWorkoutField,
   };

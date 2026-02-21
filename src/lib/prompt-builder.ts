@@ -331,7 +331,10 @@ PREFERENCES THIS WEEK:
 5. SHOPPING LIST:
    - FROM PANTRY: List pantry items that will be used in meals
    - TO BUY: List items needed for meals (including custom meal ingredients not in pantry)
-   - Group items by category: protein, dairy, produce, grains, frozen, pantry staples, etc.
+   - Group items by category: produce, dairy, meat & seafood, frozen, grains, pantry staples, etc.
+   - Return each item as a structured object with: name (lowercase canonical food name), quantity (readable string with unit), form (fresh/frozen/canned/dried — only when it matters), notes (optional usage context)
+   - Use canonical food names: "chicken breast" not "Chicken Breast", "spinach" not "Baby Spinach (organic)"
+   - If the same ingredient is needed in different forms (e.g., fresh spinach AND frozen spinach), list them as separate items with the form field set
 
 OUTPUT FORMAT:
 Return a JSON object with this structure:
@@ -373,21 +376,32 @@ Return a JSON object with this structure:
     "fromPantry": [
       {
         "category": "Protein",
-        "items": ["Chicken breast (using 1 lb)", "Greek yogurt (6 cups)"]
+        "items": [
+          { "name": "chicken breast", "quantity": "1 lb" },
+          { "name": "greek yogurt", "quantity": "6 cups" }
+        ]
       },
       {
         "category": "Dairy",
-        "items": ["Cottage cheese (2 cups)"]
+        "items": [
+          { "name": "cottage cheese", "quantity": "2 cups" }
+        ]
       }
     ],
     "toBuy": [
       {
-        "category": "Protein",
-        "items": ["Salmon fillet (4 oz)", "Ground beef (1 lb)"]
+        "category": "Meat & Seafood",
+        "items": [
+          { "name": "salmon fillet", "quantity": "4 oz" },
+          { "name": "ground beef", "quantity": "1 lb" }
+        ]
       },
       {
         "category": "Produce",
-        "items": ["Asparagus (1 bunch)"]
+        "items": [
+          { "name": "asparagus", "quantity": "1 bunch" },
+          { "name": "spinach", "quantity": "1 bag", "form": "fresh" }
+        ]
       }
     ]
   }
