@@ -23,7 +23,6 @@ export default function WeekNavigation({ weekOf, onChange }: WeekNavigationProps
       <button
         className="week-nav__button"
         onClick={() => onChange(shiftWeek(weekOf, 1))}
-        disabled={isCurrentWeek}
         aria-label="Next week"
       >
         Next &rarr;
@@ -33,7 +32,7 @@ export default function WeekNavigation({ weekOf, onChange }: WeekNavigationProps
           className="week-nav__today"
           onClick={() => onChange(currentWeek)}
         >
-          Today
+          This Week
         </button>
       )}
     </div>

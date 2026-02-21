@@ -1,16 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { WorkoutsPlanResult, WorkoutDayResult } from "@/types";
 
 interface WorkoutsResultsProps {
   result: WorkoutsPlanResult;
   onBack: () => void;
+  onDataChange?: (data: WorkoutsPlanResult) => void;
 }
 
 export default function WorkoutsResults({
   result,
   onBack,
+  onDataChange,
 }: WorkoutsResultsProps) {
   const [data, setData] = useState<WorkoutsPlanResult>(result);
+  const isInitial = useRef(true);
+
+  useEffect(() => {
+    if (isInitial.current) {
+      isInitial.current = false;
+      return;
+    }
+    onDataChange?.(data);
+  }, [data, onDataChange]);
 
   const updateWorkout = (
     dayIndex: number,
@@ -115,7 +126,7 @@ export default function WorkoutsResults({
 
       <div className="result-actions">
         <button className="new-plan-button" onClick={onBack}>
-          Back to Form
+          Edit Inputs
         </button>
         <button
           className="print-button"

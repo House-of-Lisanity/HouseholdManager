@@ -1,17 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CalendarPlanResult, DaySchedule } from "@/types";
 import { formatTo12Hour } from "@/lib/format-time";
 
 interface CalendarResultsProps {
   result: CalendarPlanResult;
   onBack: () => void;
+  onDataChange?: (data: CalendarPlanResult) => void;
 }
 
 export default function CalendarResults({
   result,
   onBack,
+  onDataChange,
 }: CalendarResultsProps) {
   const [data, setData] = useState<CalendarPlanResult>(result);
+  const isInitial = useRef(true);
+
+  useEffect(() => {
+    if (isInitial.current) {
+      isInitial.current = false;
+      return;
+    }
+    onDataChange?.(data);
+  }, [data, onDataChange]);
 
   const updateDay = (dayIndex: number, updates: Partial<DaySchedule>) => {
     setData((prev) => ({
@@ -169,7 +180,7 @@ export default function CalendarResults({
 
       <div className="result-actions">
         <button className="new-plan-button" onClick={onBack}>
-          Back to Form
+          Edit Inputs
         </button>
         <button
           className="print-button"

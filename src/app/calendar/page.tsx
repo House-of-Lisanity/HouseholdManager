@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarPlanResult } from "@/types";
 import { useCalendarForm } from "@/hooks/useCalendarForm";
+import { useSavedResult } from "@/hooks/useSavedResult";
 import { generateCalendarPlan } from "@/lib/api-client";
 import WeekNavigation from "@/components/shared/WeekNavigation";
 import EventsSection from "@/components/sections/EventsSection";
@@ -11,9 +12,14 @@ import CalendarResults from "@/components/results/CalendarResults";
 
 export default function CalendarPage() {
   const router = useRouter();
-  const { formData, updateField, weekOf, setWeekOf, loading } =
+  const { formData, updateField, weekOf, setWeekOf, loading: formLoading } =
     useCalendarForm();
-  const [result, setResult] = useState<CalendarPlanResult | null>(null);
+  const {
+    result,
+    setResult,
+    saveResult,
+    loading: resultLoading,
+  } = useSavedResult<CalendarPlanResult>("calendar", weekOf);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,7 +37,7 @@ export default function CalendarPage() {
     }
   };
 
-  if (loading) {
+  if (formLoading || resultLoading) {
     return (
       <div className="container">
         <p>Loading calendar...</p>
@@ -42,7 +48,13 @@ export default function CalendarPage() {
   if (result) {
     return (
       <div className="container">
-        <CalendarResults result={result} onBack={() => setResult(null)} />
+        <WeekNavigation weekOf={weekOf} onChange={setWeekOf} />
+        <CalendarResults
+          key={weekOf}
+          result={result}
+          onBack={() => setResult(null)}
+          onDataChange={saveResult}
+        />
       </div>
     );
   }

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MealsPlanResult } from "@/types";
 import { useMealsForm } from "@/hooks/useMealsForm";
+import { useSavedResult } from "@/hooks/useSavedResult";
 import { generateMealsPlan } from "@/lib/api-client";
 import MealScheduleSection from "@/components/sections/MealScheduleSection";
 import MealsResults from "@/components/results/MealsResults";
@@ -11,9 +12,14 @@ import WeekNavigation from "@/components/shared/WeekNavigation";
 
 export default function MealsPage() {
   const router = useRouter();
-  const { formData, updateField, weekOf, setWeekOf, loading } =
+  const { formData, updateField, weekOf, setWeekOf, loading: formLoading } =
     useMealsForm();
-  const [result, setResult] = useState<MealsPlanResult | null>(null);
+  const {
+    result,
+    setResult,
+    saveResult,
+    loading: resultLoading,
+  } = useSavedResult<MealsPlanResult>("meals", weekOf);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,7 +37,7 @@ export default function MealsPage() {
     }
   };
 
-  if (loading) {
+  if (formLoading || resultLoading) {
     return (
       <div className="container">
         <p>Loading meals...</p>
@@ -42,7 +48,13 @@ export default function MealsPage() {
   if (result) {
     return (
       <div className="container">
-        <MealsResults result={result} onBack={() => setResult(null)} />
+        <WeekNavigation weekOf={weekOf} onChange={setWeekOf} />
+        <MealsResults
+          key={weekOf}
+          result={result}
+          onBack={() => setResult(null)}
+          onDataChange={saveResult}
+        />
       </div>
     );
   }

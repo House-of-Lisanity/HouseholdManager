@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MealsPlanResult, DayMeals, ShoppingListSection, ShoppingIngredient } from "@/types";
 
 interface MealsResultsProps {
   result: MealsPlanResult;
   onBack: () => void;
+  onDataChange?: (data: MealsPlanResult) => void;
 }
 
 type MealField = keyof Pick<DayMeals, "breakfast" | "lunch" | "dinner" | "snacks">;
 
-export default function MealsResults({ result, onBack }: MealsResultsProps) {
+export default function MealsResults({ result, onBack, onDataChange }: MealsResultsProps) {
   const [data, setData] = useState<MealsPlanResult>(result);
+  const isInitial = useRef(true);
+
+  useEffect(() => {
+    if (isInitial.current) {
+      isInitial.current = false;
+      return;
+    }
+    onDataChange?.(data);
+  }, [data, onDataChange]);
 
   const updateMeal = (dayIndex: number, field: MealField, value: string) => {
     setData((prev) => ({
@@ -143,7 +153,7 @@ export default function MealsResults({ result, onBack }: MealsResultsProps) {
 
       <div className="result-actions">
         <button className="new-plan-button" onClick={onBack}>
-          Back to Form
+          Edit Inputs
         </button>
         <button
           className="print-button"

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { WorkoutsPlanResult } from "@/types";
 import { useWorkoutsForm } from "@/hooks/useWorkoutsForm";
+import { useSavedResult } from "@/hooks/useSavedResult";
 import { generateWorkoutsPlan } from "@/lib/api-client";
 import WorkoutScheduleSection from "@/components/sections/WorkoutScheduleSection";
 import WorkoutsResults from "@/components/results/WorkoutsResults";
@@ -11,8 +12,14 @@ import WeekNavigation from "@/components/shared/WeekNavigation";
 
 export default function WorkoutsPage() {
   const router = useRouter();
-  const { formData, updateField, weekOf, setWeekOf, loading } = useWorkoutsForm();
-  const [result, setResult] = useState<WorkoutsPlanResult | null>(null);
+  const { formData, updateField, weekOf, setWeekOf, loading: formLoading } =
+    useWorkoutsForm();
+  const {
+    result,
+    setResult,
+    saveResult,
+    loading: resultLoading,
+  } = useSavedResult<WorkoutsPlanResult>("workouts", weekOf);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +37,7 @@ export default function WorkoutsPage() {
     }
   };
 
-  if (loading) {
+  if (formLoading || resultLoading) {
     return (
       <div className="container">
         <p>Loading workouts...</p>
@@ -41,7 +48,13 @@ export default function WorkoutsPage() {
   if (result) {
     return (
       <div className="container">
-        <WorkoutsResults result={result} onBack={() => setResult(null)} />
+        <WeekNavigation weekOf={weekOf} onChange={setWeekOf} />
+        <WorkoutsResults
+          key={weekOf}
+          result={result}
+          onBack={() => setResult(null)}
+          onDataChange={saveResult}
+        />
       </div>
     );
   }

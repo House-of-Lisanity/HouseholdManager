@@ -80,6 +80,31 @@ export async function estimateNutrition(
   return response.json();
 }
 
+// All sections — generate missing plans in parallel
+type Section = "calendar" | "meals" | "workouts";
+
+export async function generateAllPlans(
+  weekOf: string,
+  skip: Section[] = []
+): Promise<{
+  calendar: CalendarPlanResult | null;
+  meals: MealsPlanResult | null;
+  workouts: WorkoutsPlanResult | null;
+}> {
+  const response = await fetch("/api/generate/all", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ weekOf, skip }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to generate plans");
+  }
+
+  return response.json();
+}
+
 // Workouts — generate
 export async function generateWorkoutsPlan(
   formData: WorkoutsFormInput,
