@@ -63,6 +63,9 @@ export default function WorkoutScheduleSection({
               {" · "}
               {workout.day || "Any Day"}
               {workout.day && workout.pinnedToDay && " (pinned)"}
+              {workout.startTime && workout.endTime && (
+                <>{" · "}{workout.startTime} – {workout.endTime}</>
+              )}
             </span>
           </div>
           {workout.details && (

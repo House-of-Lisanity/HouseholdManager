@@ -61,7 +61,6 @@ export interface WorkoutDayResult {
   location: string;
   workoutDetails: string;
   focusAreas: string;
-  suggestedPostWorkoutMeal?: string;
   aiNotes?: string;
 }
 

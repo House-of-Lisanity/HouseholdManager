@@ -21,6 +21,8 @@ export default function WorkoutEntryForm({
     location: "Gym",
     day: "",
     pinnedToDay: false,
+    startTime: "",
+    endTime: "",
     details: "",
     notes: "",
   });
@@ -32,6 +34,8 @@ export default function WorkoutEntryForm({
       location: entry.location || "Gym",
       day: entry.day || "",
       pinnedToDay: entry.pinnedToDay || false,
+      startTime: entry.pinnedToDay ? entry.startTime || "" : "",
+      endTime: entry.pinnedToDay ? entry.endTime || "" : "",
       details: entry.details || "",
       notes: entry.notes || "",
     });
@@ -114,6 +118,35 @@ export default function WorkoutEntryForm({
           </div>
         )}
       </div>
+
+      {entry.pinnedToDay && (
+        <div className="form-grid form-grid--2col">
+          <div className="form-group">
+            <label htmlFor="workout-start-time">Start Time</label>
+            <input
+              id="workout-start-time"
+              type="text"
+              placeholder="e.g., 4:00 PM"
+              value={entry.startTime || ""}
+              onChange={(e) =>
+                setEntry((prev) => ({ ...prev, startTime: e.target.value }))
+              }
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="workout-end-time">End Time</label>
+            <input
+              id="workout-end-time"
+              type="text"
+              placeholder="e.g., 5:30 PM"
+              value={entry.endTime || ""}
+              onChange={(e) =>
+                setEntry((prev) => ({ ...prev, endTime: e.target.value }))
+              }
+            />
+          </div>
+        </div>
+      )}
 
       <div className="form-group">
         <label htmlFor="workout-details">

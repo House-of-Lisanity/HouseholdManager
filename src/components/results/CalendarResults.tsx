@@ -1,5 +1,5 @@
-import React from "react";
-import { CalendarPlanResult } from "@/types";
+import React, { useState } from "react";
+import { CalendarPlanResult, DaySchedule } from "@/types";
 import { formatTo12Hour } from "@/lib/format-time";
 
 interface CalendarResultsProps {
@@ -11,22 +11,62 @@ export default function CalendarResults({
   result,
   onBack,
 }: CalendarResultsProps) {
+  const [data, setData] = useState<CalendarPlanResult>(result);
+
+  const updateDay = (dayIndex: number, updates: Partial<DaySchedule>) => {
+    setData((prev) => ({
+      ...prev,
+      dailySchedules: prev.dailySchedules.map((day, i) =>
+        i === dayIndex ? { ...day, ...updates } : day
+      ),
+    }));
+  };
+
+  const updateTimeBlock = (
+    dayIndex: number,
+    blockIndex: number,
+    description: string
+  ) => {
+    const day = data.dailySchedules[dayIndex];
+    const timeBlocks = day.timeBlocks.map((b, i) =>
+      i === blockIndex ? { ...b, description } : b
+    );
+    updateDay(dayIndex, { timeBlocks });
+  };
+
+  const updateListItem = (
+    dayIndex: number,
+    field: "bigRocks" | "choresAssigned",
+    itemIndex: number,
+    value: string
+  ) => {
+    const day = data.dailySchedules[dayIndex];
+    const list = day[field].map((item, i) => (i === itemIndex ? value : item));
+    updateDay(dayIndex, { [field]: list });
+  };
+
   return (
     <div className="plan-result">
       <div className="plan-header">
         <h2>Weekly Calendar</h2>
-        <p>Week of {result.weekOf}</p>
+        <p>Week of {data.weekOf}</p>
       </div>
 
-      {result.strategyNotes && (
+      {data.strategyNotes && (
         <div className="plan-summary">
-          <p>
-            <strong>Strategy:</strong> {result.strategyNotes}
-          </p>
+          <strong>Strategy:</strong>
+          <textarea
+            className="editable-field"
+            value={data.strategyNotes}
+            onChange={(e) =>
+              setData((prev) => ({ ...prev, strategyNotes: e.target.value }))
+            }
+            rows={2}
+          />
         </div>
       )}
 
-      {result.dailySchedules.map((daySchedule, dayIndex) => (
+      {data.dailySchedules.map((daySchedule, dayIndex) => (
         <div key={dayIndex} className="day-section">
           <h3 className="day-header">{daySchedule.day}</h3>
 
@@ -44,13 +84,16 @@ export default function CalendarResults({
                   {daySchedule.timeBlocks.map((block, blockIndex) => (
                     <tr key={blockIndex}>
                       <td className="time-cell">
-                        {formatTo12Hour(block.startTime)} -{" "}
+                        {formatTo12Hour(block.startTime)} –{" "}
                         {formatTo12Hour(block.endTime)}
                       </td>
                       <td>
                         <textarea
                           className="editable-field"
-                          defaultValue={block.description}
+                          value={block.description}
+                          onChange={(e) =>
+                            updateTimeBlock(dayIndex, blockIndex, e.target.value)
+                          }
                           rows={1}
                         />
                       </td>
@@ -69,7 +112,10 @@ export default function CalendarResults({
                           <input
                             type="text"
                             className="editable-field"
-                            defaultValue={rock}
+                            value={rock}
+                            onChange={(e) =>
+                              updateListItem(dayIndex, "bigRocks", i, e.target.value)
+                            }
                           />
                         </li>
                       ))}
@@ -86,7 +132,15 @@ export default function CalendarResults({
                           <input
                             type="text"
                             className="editable-field"
-                            defaultValue={chore}
+                            value={chore}
+                            onChange={(e) =>
+                              updateListItem(
+                                dayIndex,
+                                "choresAssigned",
+                                i,
+                                e.target.value
+                              )
+                            }
                           />
                         </li>
                       ))}
@@ -100,7 +154,10 @@ export default function CalendarResults({
                     <input
                       type="text"
                       className="editable-field"
-                      defaultValue={daySchedule.hobbyAssigned}
+                      value={daySchedule.hobbyAssigned}
+                      onChange={(e) =>
+                        updateDay(dayIndex, { hobbyAssigned: e.target.value })
+                      }
                     />
                   </div>
                 )}
@@ -110,9 +167,18 @@ export default function CalendarResults({
         </div>
       ))}
 
-      <button className="new-plan-button" onClick={onBack}>
-        Back to Form
-      </button>
+      <div className="result-actions">
+        <button className="new-plan-button" onClick={onBack}>
+          Back to Form
+        </button>
+        <button
+          className="print-button"
+          onClick={() => window.print()}
+          aria-label="Print calendar plan"
+        >
+          Print
+        </button>
+      </div>
     </div>
   );
 }

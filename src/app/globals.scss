@@ -5,6 +5,7 @@
 @import "styles/header";
 @import "styles/forms";
 @import "styles/results";
+@import "styles/results-grid";
 @import "styles/settings";
 @import "styles/profile";
 @import "styles/workouts";
@@ -12,6 +13,7 @@
 @import "styles/meals";
 @import "styles/meal-log";
 @import "styles/todos";
+@import "styles/print";
 
 // Mobile responsive overrides
 @media (max-width: $breakpoint-mobile) {

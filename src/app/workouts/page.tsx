@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { WorkoutsPlanResult } from "@/types";
 import { useWorkoutsForm } from "@/hooks/useWorkoutsForm";
 import { generateWorkoutsPlan } from "@/lib/api-client";
@@ -9,6 +10,7 @@ import WorkoutsResults from "@/components/results/WorkoutsResults";
 import WeekNavigation from "@/components/shared/WeekNavigation";
 
 export default function WorkoutsPage() {
+  const router = useRouter();
   const { formData, updateField, weekOf, setWeekOf, loading } = useWorkoutsForm();
   const [result, setResult] = useState<WorkoutsPlanResult | null>(null);
   const [generating, setGenerating] = useState(false);
@@ -78,6 +80,13 @@ export default function WorkoutsPage() {
         disabled={generating}
       >
         {generating ? "Generating..." : "Generate Workout Plan"}
+      </button>
+      <button
+        type="button"
+        className="preview-button"
+        onClick={() => router.push("/results")}
+      >
+        Preview with Sample Data
       </button>
     </div>
   );

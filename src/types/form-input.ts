@@ -57,26 +57,10 @@ export interface UserProfile {
 
 export interface CalendarFormInput {
   weekOf: string;
-  mustDo1: string;
-  mustDo2: string;
-  mustDo3: string;
-  hobby1: string;
-  hobby2: string;
-  hobby3: string;
-  weekendProject1: string;
-  weekendProject2: string;
-  weekendProject3: string;
-  weekendProject1Duration: string;
-  weekendProject2Duration: string;
-  weekendProject3Duration: string;
-  chore1: string;
-  chore2: string;
-  chore3: string;
-  gymSessions: GymSession[];
   oneOffItems: OneOffItem[];
   recurringItems: RecurringItem[];
   eventNights: EventNight[];
-  scheduleConflicts: string;
+  weeklyNotes: string;
 }
 
 export interface MealsFormInput {

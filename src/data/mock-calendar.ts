@@ -1,0 +1,108 @@
+import { CalendarPlanResult } from "@/types";
+
+export const MOCK_CALENDAR_RESULT: CalendarPlanResult = {
+  weekOf: "2026-02-22",
+  strategyNotes:
+    "Focus on bathroom renovation this week. Inspector coming Tuesday — keep morning clear. Meal prep Sunday evening for busy weekdays. Prioritize glute/posterior chain work in gym sessions.",
+  dailySchedules: [
+    {
+      day: "Sunday",
+      timeBlocks: [
+        { startTime: "08:00", endTime: "09:00", description: "Morning routine + coffee" },
+        { startTime: "09:00", endTime: "10:00", description: "CrossFit WOD at CF Box" },
+        { startTime: "10:30", endTime: "12:00", description: "Grocery shopping" },
+        { startTime: "12:00", endTime: "12:30", description: "Lunch" },
+        { startTime: "13:00", endTime: "15:00", description: "Bathroom renovation — tile work" },
+        { startTime: "16:00", endTime: "18:00", description: "Meal prep for the week" },
+      ],
+      bigRocks: ["Grocery run for the week", "Meal prep"],
+      choresAssigned: ["Clean kitchen counters", "Take out recycling"],
+      hobbyAssigned: "Crochet — 30 min",
+    },
+    {
+      day: "Monday",
+      timeBlocks: [
+        { startTime: "06:30", endTime: "07:30", description: "Morning routine" },
+        { startTime: "08:00", endTime: "12:00", description: "Work block — deep focus" },
+        { startTime: "12:00", endTime: "12:30", description: "Lunch" },
+        { startTime: "12:30", endTime: "13:00", description: "Short walk" },
+        { startTime: "13:00", endTime: "17:00", description: "Work block — meetings" },
+        { startTime: "17:30", endTime: "18:30", description: "Gym — lower body lifting" },
+        { startTime: "19:00", endTime: "19:30", description: "Dinner" },
+      ],
+      bigRocks: ["Finish quarterly report"],
+      choresAssigned: ["Vacuum living room"],
+      hobbyAssigned: "Read — 20 min before bed",
+    },
+    {
+      day: "Tuesday",
+      timeBlocks: [
+        { startTime: "06:30", endTime: "07:30", description: "Morning routine" },
+        { startTime: "08:00", endTime: "10:00", description: "Home — wait for inspector" },
+        { startTime: "10:00", endTime: "12:00", description: "Work block" },
+        { startTime: "12:00", endTime: "12:30", description: "Lunch" },
+        { startTime: "13:00", endTime: "17:00", description: "Work block" },
+        { startTime: "17:30", endTime: "18:15", description: "Gym — cardio session" },
+      ],
+      bigRocks: ["Inspector visit (morning)"],
+      choresAssigned: ["Wipe down bathroom after inspection"],
+      hobbyAssigned: "",
+    },
+    {
+      day: "Wednesday",
+      timeBlocks: [
+        { startTime: "06:30", endTime: "07:30", description: "Morning routine" },
+        { startTime: "08:00", endTime: "12:00", description: "Work block — deep focus" },
+        { startTime: "12:00", endTime: "12:30", description: "Lunch" },
+        { startTime: "13:00", endTime: "16:30", description: "Work block" },
+        { startTime: "17:00", endTime: "18:00", description: "CrossFit WOD at CF Box" },
+        { startTime: "19:00", endTime: "19:30", description: "Dinner" },
+      ],
+      bigRocks: ["Review project proposal"],
+      choresAssigned: ["Load dishwasher", "Wipe kitchen table"],
+      hobbyAssigned: "Crochet — 30 min",
+    },
+    {
+      day: "Thursday",
+      timeBlocks: [
+        { startTime: "06:30", endTime: "07:30", description: "Morning routine" },
+        { startTime: "08:00", endTime: "12:00", description: "Work block" },
+        { startTime: "12:00", endTime: "12:30", description: "Lunch" },
+        { startTime: "13:00", endTime: "17:00", description: "Work block — client calls" },
+        { startTime: "17:30", endTime: "18:30", description: "Gym — upper body lifting" },
+        { startTime: "19:00", endTime: "20:30", description: "Bathroom renovation — grouting" },
+      ],
+      bigRocks: ["Bathroom grouting"],
+      choresAssigned: ["Take out trash"],
+      hobbyAssigned: "Read — 20 min before bed",
+    },
+    {
+      day: "Friday",
+      timeBlocks: [
+        { startTime: "06:30", endTime: "07:30", description: "Morning routine" },
+        { startTime: "08:00", endTime: "12:00", description: "Work block — wrap up week" },
+        { startTime: "12:00", endTime: "12:30", description: "Lunch" },
+        { startTime: "13:00", endTime: "15:00", description: "Work block — light tasks" },
+        { startTime: "15:30", endTime: "16:30", description: "CrossFit WOD at CF Box" },
+        { startTime: "17:00", endTime: "18:00", description: "Errands — hardware store for grout sealer" },
+      ],
+      bigRocks: ["Pick up grout sealer"],
+      choresAssigned: ["Vacuum bedroom"],
+      hobbyAssigned: "",
+    },
+    {
+      day: "Saturday",
+      timeBlocks: [
+        { startTime: "08:00", endTime: "09:00", description: "Morning routine + coffee" },
+        { startTime: "09:00", endTime: "12:00", description: "Bathroom renovation — seal grout + finishing touches" },
+        { startTime: "12:00", endTime: "12:30", description: "Lunch" },
+        { startTime: "13:00", endTime: "14:00", description: "Light stretching + foam rolling" },
+        { startTime: "14:00", endTime: "16:00", description: "Free time" },
+        { startTime: "18:00", endTime: "20:00", description: "Nuggets game" },
+      ],
+      bigRocks: ["Finish bathroom renovation"],
+      choresAssigned: ["Clean up renovation supplies", "Mop bathroom floor"],
+      hobbyAssigned: "Crochet — 1 hr",
+    },
+  ],
+};

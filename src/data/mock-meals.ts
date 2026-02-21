@@ -1,0 +1,140 @@
+import { MealsPlanResult } from "@/types";
+
+export const MOCK_MEALS_RESULT: MealsPlanResult = {
+  weekOf: "2026-02-22",
+  proteinTarget: "110g",
+  dailyMeals: [
+    {
+      day: "Sunday",
+      breakfast: "2 scrambled eggs with 1oz cheddar (22g protein)",
+      lunch: "3oz grilled chicken breast over spinach salad with avocado (28g protein)",
+      dinner: "4oz baked salmon with roasted asparagus and lemon (30g protein)",
+      snacks: "Protein shake (30g protein), 1 string cheese (7g protein)",
+    },
+    {
+      day: "Monday",
+      breakfast: "Greek yogurt parfait with protein granola (20g protein)",
+      lunch: "Turkey lettuce wraps, 2.5oz turkey, cream cheese, pickles (24g protein)",
+      dinner: "3oz lean ground turkey taco bowl — rice, cheese, salsa (26g protein)",
+      snacks: "Cottage cheese 1/2 cup (14g protein), beef jerky 1oz (9g protein)",
+    },
+    {
+      day: "Tuesday",
+      breakfast: "Protein shake blended with PB2 and banana (32g protein)",
+      lunch: "3oz tuna salad on cucumber rounds (25g protein)",
+      dinner: "3.5oz chicken thigh, roasted broccoli, quinoa (28g protein)",
+      snacks: "Hard-boiled egg (6g protein), string cheese (7g protein), almonds 1oz (6g protein)",
+    },
+    {
+      day: "Wednesday",
+      breakfast: "2 eggs over easy on a low-carb tortilla with salsa (22g protein)",
+      lunch: "3oz rotisserie chicken with side salad (26g protein)",
+      dinner: "4oz pork tenderloin with sweet potato mash (30g protein)",
+      snacks: "Protein bar (20g protein), cottage cheese 1/2 cup (14g protein)",
+    },
+    {
+      day: "Thursday",
+      breakfast: "Greek yogurt with chia seeds and protein powder (28g protein)",
+      lunch: "2.5oz grilled shrimp over mixed greens (22g protein)",
+      dinner: "3.5oz flank steak, roasted zucchini, rice (30g protein)",
+      snacks: "Turkey roll-ups with cream cheese (18g protein), almonds 1oz (6g protein)",
+    },
+    {
+      day: "Friday",
+      breakfast: "Egg white omelette with ham and swiss, 3 whites + 1oz ham (20g protein)",
+      lunch: "3oz chicken salad with celery and light mayo on romaine (24g protein)",
+      dinner: "3.5oz baked cod with roasted cauliflower and butter (26g protein)",
+      snacks: "Protein shake (30g protein), beef jerky 1oz (9g protein)",
+    },
+    {
+      day: "Saturday",
+      breakfast: "2 scrambled eggs with turkey sausage link (24g protein)",
+      lunch: "3oz pulled pork on a slider bun with coleslaw (22g protein)",
+      dinner: "Nuggets game — 3oz grilled chicken strips, light ranch (24g protein)",
+      snacks: "String cheese (7g protein), protein bar (20g protein)",
+    },
+  ],
+  shoppingList: {
+    fromPantry: [
+      {
+        category: "Proteins",
+        items: ["protein powder", "PB2", "canned tuna", "beef jerky"],
+      },
+      {
+        category: "Pantry Staples",
+        items: [
+          "rice",
+          "quinoa",
+          "low-carb tortillas",
+          "olive oil",
+          "chia seeds",
+          "almonds",
+        ],
+      },
+      {
+        category: "Spices & Sauces",
+        items: ["salsa", "light mayo", "light ranch", "lemon juice"],
+      },
+    ],
+    toBuy: [
+      {
+        category: "Produce",
+        items: [
+          "spinach",
+          "romaine",
+          "avocado (2)",
+          "asparagus",
+          "broccoli",
+          "zucchini",
+          "cauliflower",
+          "sweet potato",
+          "celery",
+          "cucumber",
+          "banana",
+        ],
+      },
+      {
+        category: "Dairy",
+        items: [
+          "Greek yogurt (32oz)",
+          "cottage cheese (16oz)",
+          "string cheese (8 pack)",
+          "cheddar 4oz block",
+          "swiss slices",
+          "cream cheese",
+          "eggs (1 dozen)",
+          "butter",
+        ],
+      },
+      {
+        category: "Meat & Seafood",
+        items: [
+          "chicken breast (1 lb)",
+          "rotisserie chicken",
+          "chicken thighs (1 lb)",
+          "ground turkey (1 lb)",
+          "turkey deli slices",
+          "turkey sausage links",
+          "pork tenderloin",
+          "flank steak (8oz)",
+          "salmon fillets (2)",
+          "cod fillets (2)",
+          "shrimp (1/2 lb)",
+          "ham slices (4oz)",
+          "pulled pork (8oz)",
+          "chicken strips (8oz)",
+        ],
+      },
+      {
+        category: "Other",
+        items: [
+          "protein granola",
+          "protein bars (4 pack)",
+          "slider buns (4 pack)",
+          "coleslaw mix",
+          "pickles",
+        ],
+      },
+    ],
+  },
+};

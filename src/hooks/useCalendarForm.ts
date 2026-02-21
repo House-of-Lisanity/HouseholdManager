@@ -14,22 +14,6 @@ function getCurrentWeekOf(): string {
 
 const DEFAULT_CALENDAR: CalendarFormInput = {
   weekOf: getCurrentWeekOf(),
-  mustDo1: "",
-  mustDo2: "",
-  mustDo3: "",
-  hobby1: "",
-  hobby2: "",
-  hobby3: "",
-  weekendProject1: "",
-  weekendProject2: "",
-  weekendProject3: "",
-  weekendProject1Duration: "2-4 hours",
-  weekendProject2Duration: "2-4 hours",
-  weekendProject3Duration: "2-4 hours",
-  chore1: "",
-  chore2: "",
-  chore3: "",
-  gymSessions: [],
   oneOffItems: [],
   recurringItems: [],
   eventNights: DAYS_SUNDAY_START.map((day) => ({
@@ -37,24 +21,31 @@ const DEFAULT_CALENDAR: CalendarFormInput = {
     isEvent: false,
     drinkNote: "",
   })),
-  scheduleConflicts: "",
+  weeklyNotes: "",
 };
 
 export function useCalendarForm() {
   const [formData, setFormData] = useState<CalendarFormInput>(DEFAULT_CALENDAR);
+  const [weekOf, setWeekOf] = useState(getCurrentWeekOf);
   const [loading, setLoading] = useState(true);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isInitialLoad = useRef(true);
 
-  // Load from MongoDB on mount
+  // Load from MongoDB on mount and when weekOf changes
   useEffect(() => {
+    isInitialLoad.current = true;
+    setLoading(true);
+    setFormData({ ...DEFAULT_CALENDAR, weekOf });
+
     async function load() {
       try {
-        const weekOf = getCurrentWeekOf();
         const res = await fetch(`/api/calendar?weekOf=${weekOf}`);
         if (res.ok) {
           const data = await res.json();
-          if (data) setFormData((prev) => ({ ...prev, ...data }));
+          if (data) {
+            const { weekOf: _, _id, __v, ...calendarData } = data;
+            setFormData((prev) => ({ ...prev, ...calendarData }));
+          }
         }
       } catch (err) {
         console.error("Failed to load calendar:", err);
@@ -64,9 +55,9 @@ export function useCalendarForm() {
       }
     }
     load();
-  }, []);
+  }, [weekOf]);
 
-  // Debounced auto-save to MongoDB
+  // Debounced auto-save
   useEffect(() => {
     if (isInitialLoad.current) return;
 
@@ -76,7 +67,7 @@ export function useCalendarForm() {
         await fetch("/api/calendar", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({ ...formData, weekOf }),
         });
       } catch (err) {
         console.error("Failed to save calendar:", err);
@@ -86,7 +77,7 @@ export function useCalendarForm() {
     return () => {
       if (saveTimer.current) clearTimeout(saveTimer.current);
     };
-  }, [formData]);
+  }, [formData, weekOf]);
 
   const updateField = useCallback(
     (field: keyof CalendarFormInput, value: unknown) => {
@@ -95,27 +86,5 @@ export function useCalendarForm() {
     []
   );
 
-  // Load a different week
-  const loadWeek = useCallback(async (weekOf: string) => {
-    setLoading(true);
-    isInitialLoad.current = true;
-    try {
-      const res = await fetch(`/api/calendar?weekOf=${weekOf}`);
-      if (res.ok) {
-        const data = await res.json();
-        if (data) {
-          setFormData((prev) => ({ ...prev, ...data }));
-        } else {
-          setFormData({ ...DEFAULT_CALENDAR, weekOf });
-        }
-      }
-    } catch (err) {
-      console.error("Failed to load week:", err);
-    } finally {
-      setLoading(false);
-      isInitialLoad.current = false;
-    }
-  }, []);
-
-  return { formData, updateField, loading, loadWeek };
+  return { formData, updateField, weekOf, setWeekOf, loading };
 }

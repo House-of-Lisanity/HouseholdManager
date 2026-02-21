@@ -1,0 +1,113 @@
+// Print styles — clean, paper-friendly output for results pages
+@import "./variables";
+
+@media print {
+  // Hide non-content elements
+  .nav,
+  .submit-button,
+  .new-plan-button,
+  .print-button,
+  .preview-button,
+  .week-nav,
+  .form-section,
+  .form-group,
+  .error,
+  .nav__generate-all,
+  .result-actions,
+  .view-toggle,
+  .section-print-btn {
+    display: none !important;
+  }
+
+  // Reset layout for paper
+  body {
+    background: white;
+    padding: 0 !important;
+    margin: 0;
+    font-size: 11pt;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  // Results container
+  .plan-result {
+    box-shadow: none;
+    padding: 0;
+  }
+
+  // Preserve colored headers for visual hierarchy
+  .plan-header {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    page-break-after: avoid;
+  }
+
+  .day-header {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  // Prevent day sections from splitting across pages
+  .day-section {
+    page-break-inside: avoid;
+    margin-bottom: $spacing-md;
+  }
+
+  // Editable fields render as plain text on paper
+  .editable-field {
+    border: none !important;
+    padding: 2px !important;
+    background: transparent !important;
+    resize: none;
+    box-shadow: none !important;
+  }
+
+  // Keep shopping list columns side-by-side
+  .shopping-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  // Force single-column day content for cleaner paper layout
+  .day-content {
+    grid-template-columns: 1fr;
+  }
+
+  // Results grid — preserve block colors
+  .cal-block,
+  .cal-grid__day-header,
+  .meals-grid__day-header,
+  .workout-card__header,
+  .workout-badge {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .results-section {
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+
+  .results-page__header {
+    page-break-after: avoid;
+  }
+
+  // Section-level print filtering
+  body[data-print-section="calendar"] .results-section--meals,
+  body[data-print-section="calendar"] .results-section--workouts {
+    display: none !important;
+  }
+
+  body[data-print-section="meals"] .results-section--calendar,
+  body[data-print-section="meals"] .results-section--workouts {
+    display: none !important;
+  }
+
+  body[data-print-section="workouts"] .results-section--calendar,
+  body[data-print-section="workouts"] .results-section--meals {
+    display: none !important;
+  }
+}

@@ -93,6 +93,26 @@
   }
 }
 
+// Generate All button
+.nav__generate-all {
+  background-color: $color-secondary;
+  color: #fff;
+  border: none;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-sm;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 44px;
+  transition: background-color $transition-speed;
+
+  &:hover,
+  &:focus-visible {
+    background-color: $color-secondary-dark;
+  }
+}
+
 // Mobile: fixed bottom nav
 @media (max-width: $breakpoint-mobile) {
   .nav {
@@ -136,8 +156,13 @@
     margin: 0 0 $spacing-xs;
   }
 
+  .nav__generate-all {
+    width: 100%;
+    margin-top: $spacing-xs;
+  }
+
   // Add bottom padding to body so content isn't hidden behind nav
   body {
-    padding-bottom: 72px;
+    padding-bottom: 90px;
   }
 }

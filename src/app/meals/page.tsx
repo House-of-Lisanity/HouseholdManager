@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { MealsPlanResult } from "@/types";
 import { useMealsForm } from "@/hooks/useMealsForm";
 import { generateMealsPlan } from "@/lib/api-client";
@@ -9,6 +10,7 @@ import MealsResults from "@/components/results/MealsResults";
 import WeekNavigation from "@/components/shared/WeekNavigation";
 
 export default function MealsPage() {
+  const router = useRouter();
   const { formData, updateField, weekOf, setWeekOf, loading } =
     useMealsForm();
   const [result, setResult] = useState<MealsPlanResult | null>(null);
@@ -79,6 +81,13 @@ export default function MealsPage() {
         disabled={generating}
       >
         {generating ? "Generating..." : "Generate Meal Plan"}
+      </button>
+      <button
+        type="button"
+        className="preview-button"
+        onClick={() => router.push("/results")}
+      >
+        Preview with Sample Data
       </button>
     </div>
   );

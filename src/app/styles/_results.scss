@@ -198,6 +198,24 @@
   }
 }
 
+// Workout result field layout
+.workout-result-field {
+  margin-bottom: $spacing-md;
+
+  strong {
+    display: block;
+    color: $color-dark;
+    margin-bottom: $spacing-xs;
+  }
+}
+
+// Action buttons row (Back + Print)
+.result-actions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-xl;
+}
+
 .new-plan-button {
   background-color: $color-gray;
   color: white;
@@ -207,11 +225,26 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  margin-top: $spacing-xl;
   transition: background-color $transition-speed;
 
   &:hover {
     background-color: $color-gray-dark;
+  }
+}
+
+.print-button {
+  background-color: $color-primary;
+  color: white;
+  padding: 0.75rem $spacing-lg;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color $transition-speed;
+
+  &:hover {
+    background-color: $color-primary-dark;
   }
 }
 

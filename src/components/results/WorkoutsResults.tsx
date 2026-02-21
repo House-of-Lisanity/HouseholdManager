@@ -1,5 +1,5 @@
-import React from "react";
-import { WorkoutsPlanResult } from "@/types";
+import React, { useState } from "react";
+import { WorkoutsPlanResult, WorkoutDayResult } from "@/types";
 
 interface WorkoutsResultsProps {
   result: WorkoutsPlanResult;
@@ -10,58 +10,102 @@ export default function WorkoutsResults({
   result,
   onBack,
 }: WorkoutsResultsProps) {
+  const [data, setData] = useState<WorkoutsPlanResult>(result);
+
+  const updateWorkout = (
+    dayIndex: number,
+    field: keyof WorkoutDayResult,
+    value: string
+  ) => {
+    setData((prev) => ({
+      ...prev,
+      dailyWorkouts: prev.dailyWorkouts.map((day, i) =>
+        i === dayIndex ? { ...day, [field]: value } : day
+      ),
+    }));
+  };
+
   return (
     <div className="plan-result">
       <div className="plan-header">
         <h2>Workout Plan</h2>
-        <p>Week of {result.weekOf}</p>
+        <p>Week of {data.weekOf}</p>
       </div>
 
-      {result.workoutSummary && (
+      {data.workoutSummary && (
         <div className="plan-summary">
-          <p>
-            <strong>Summary:</strong> {result.workoutSummary}
-          </p>
+          <strong>Summary:</strong>
+          <textarea
+            className="editable-field"
+            value={data.workoutSummary}
+            onChange={(e) =>
+              setData((prev) => ({ ...prev, workoutSummary: e.target.value }))
+            }
+            rows={2}
+          />
         </div>
       )}
 
-      {result.dailyWorkouts.map((day, i) => (
-        <div key={i} className="day-section">
+      {data.dailyWorkouts.map((day, dayIndex) => (
+        <div key={dayIndex} className="day-section">
           <h3 className="day-header">{day.day}</h3>
           <div className="day-content">
             <div className="schedule-column">
-              <div className="form-group">
-                <strong>Type:</strong> <span>{day.workoutType}</span>
+              <div className="workout-result-field">
+                <strong>Type:</strong>
+                <input
+                  type="text"
+                  className="editable-field"
+                  value={day.workoutType}
+                  onChange={(e) =>
+                    updateWorkout(dayIndex, "workoutType", e.target.value)
+                  }
+                />
               </div>
-              <div className="form-group">
-                <strong>Location:</strong> <span>{day.location}</span>
+              <div className="workout-result-field">
+                <strong>Location:</strong>
+                <input
+                  type="text"
+                  className="editable-field"
+                  value={day.location}
+                  onChange={(e) =>
+                    updateWorkout(dayIndex, "location", e.target.value)
+                  }
+                />
               </div>
-              {day.focusAreas && (
-                <div className="form-group">
-                  <strong>Focus:</strong> <span>{day.focusAreas}</span>
-                </div>
-              )}
-              <div className="form-group">
+              <div className="workout-result-field">
+                <strong>Focus:</strong>
+                <input
+                  type="text"
+                  className="editable-field"
+                  value={day.focusAreas || ""}
+                  onChange={(e) =>
+                    updateWorkout(dayIndex, "focusAreas", e.target.value)
+                  }
+                />
+              </div>
+              <div className="workout-result-field">
                 <strong>Details:</strong>
                 <textarea
                   className="editable-field"
-                  defaultValue={day.workoutDetails}
-                  rows={3}
+                  value={day.workoutDetails}
+                  onChange={(e) =>
+                    updateWorkout(dayIndex, "workoutDetails", e.target.value)
+                  }
+                  rows={4}
                 />
               </div>
-              {day.suggestedPostWorkoutMeal && (
-                <div className="form-group">
-                  <strong>Post-Workout Meal:</strong>
-                  <textarea
-                    className="editable-field"
-                    defaultValue={day.suggestedPostWorkoutMeal}
-                    rows={2}
-                  />
-                </div>
-              )}
               {day.aiNotes && (
-                <div className="form-group">
-                  <strong>Notes:</strong> <span>{day.aiNotes}</span>
+                <div className="workout-result-field">
+                  <strong>Notes:</strong>
+                  <input
+                    type="text"
+                    className="editable-field"
+                    value={day.aiNotes}
+                    onChange={(e) =>
+                      updateWorkout(dayIndex, "aiNotes", e.target.value)
+                    }
+                  />
                 </div>
               )}
             </div>
@@ -69,9 +113,18 @@ export default function WorkoutsResults({
         </div>
       ))}
 
-      <button className="new-plan-button" onClick={onBack}>
-        Back to Form
-      </button>
+      <div className="result-actions">
+        <button className="new-plan-button" onClick={onBack}>
+          Back to Form
+        </button>
+        <button
+          className="print-button"
+          onClick={() => window.print()}
+          aria-label="Print workout plan"
+        >
+          Print
+        </button>
+      </div>
     </div>
   );
 }

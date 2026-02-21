@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import NavLink from "./NavLink";
 
 interface NavItem {
@@ -37,6 +37,7 @@ const NAV_ENTRIES: NavEntry[] = [
 
 export default function Navigation() {
   const pathname = usePathname();
+  const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLLIElement>(null);
 
@@ -114,6 +115,14 @@ export default function Navigation() {
           );
         })}
       </ul>
+      <button
+        className="nav__generate-all"
+        onClick={() => router.push("/results")}
+        aria-label="Generate all plans"
+        title="Generate all plans for this week"
+      >
+        Generate All
+      </button>
     </nav>
   );
 }

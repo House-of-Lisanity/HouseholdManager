@@ -191,3 +191,21 @@
     cursor: not-allowed;
   }
 }
+
+.preview-button {
+  background-color: $color-gray;
+  color: white;
+  padding: $spacing-md $spacing-xl;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: $spacing-sm;
+  transition: background-color $transition-speed;
+
+  &:hover {
+    background-color: $color-gray-dark;
+  }
+}

@@ -1,0 +1,544 @@
+@import "./variables";
+
+// ==========================================
+// Results Page Layout
+// ==========================================
+
+.results-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: $spacing-md;
+}
+
+.results-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+
+  h1 {
+    font-size: 1.75rem;
+    color: $color-dark;
+    margin: 0;
+  }
+
+  p {
+    color: $color-text-light;
+    margin: $spacing-xs 0 0;
+  }
+}
+
+// ==========================================
+// View Toggle
+// ==========================================
+
+.view-toggle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+  padding: $spacing-sm $spacing-md;
+  background: white;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+}
+
+.view-toggle__modes {
+  display: flex;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  overflow: hidden;
+}
+
+.view-toggle__btn {
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  background: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $color-text-light;
+  cursor: pointer;
+  transition: background-color $transition-speed, color $transition-speed;
+
+  &:not(:last-child) {
+    border-right: 1px solid $color-border;
+  }
+
+  &--active {
+    background: $color-primary;
+    color: white;
+  }
+
+  &:hover:not(&--active) {
+    background: $color-bg-lighter;
+  }
+}
+
+.view-toggle__day-nav {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.view-toggle__arrow {
+  padding: $spacing-xs $spacing-sm;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: white;
+  font-size: 1rem;
+  cursor: pointer;
+  color: $color-text-light;
+
+  &:hover:not(:disabled) {
+    background: $color-bg-lighter;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.view-toggle__pills {
+  display: flex;
+  gap: 2px;
+}
+
+.view-toggle__pill {
+  padding: $spacing-xs $spacing-sm;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: $color-text-light;
+  transition: background-color $transition-speed;
+
+  &--active {
+    background: $color-primary;
+    color: white;
+    border-color: $color-primary;
+  }
+
+  &:hover:not(&--active) {
+    background: $color-bg-lighter;
+  }
+}
+
+// ==========================================
+// Section Shared Styles
+// ==========================================
+
+.results-section {
+  background: white;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+  margin-bottom: $spacing-xl;
+  padding: $spacing-lg;
+  overflow-x: auto;
+}
+
+.results-section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-sm;
+  border-bottom: 2px solid $color-border;
+
+  h2 {
+    font-size: 1.4rem;
+    color: $color-dark;
+    margin: 0;
+  }
+}
+
+.results-section__summary {
+  background: $color-bg-lighter;
+  padding: $spacing-md;
+  border-radius: $radius-sm;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+
+  strong {
+    white-space: nowrap;
+  }
+}
+
+.section-print-btn {
+  padding: $spacing-sm $spacing-md;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $color-text-light;
+  cursor: pointer;
+  transition: background-color $transition-speed;
+
+  &:hover {
+    background: $color-bg-lighter;
+  }
+}
+
+.editable-field--inline {
+  width: auto;
+  max-width: 80px;
+}
+
+// ==========================================
+// Calendar Grid
+// ==========================================
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: 60px repeat(7, 1fr);
+  grid-template-rows: auto repeat(32, 24px); // header + 32 half-hour rows (6AM-10PM)
+  gap: 0;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  position: relative;
+  min-height: 800px;
+
+  &--day {
+    grid-template-columns: 60px 1fr;
+  }
+}
+
+.cal-grid__corner {
+  grid-row: 1;
+  grid-column: 1;
+  background: $color-darker;
+  border-bottom: 1px solid $color-border;
+}
+
+.cal-grid__day-header {
+  grid-row: 1;
+  background: $color-darker;
+  color: white;
+  padding: $spacing-sm;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.cal-grid__time-label {
+  grid-column: 1;
+  padding: 2px $spacing-xs 0 0;
+  text-align: right;
+  font-size: 0.7rem;
+  color: $color-text-lighter;
+  border-right: 1px solid $color-border;
+  position: relative;
+
+  // Horizontal line across all day columns
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -1px;
+    width: 8px;
+    height: 1px;
+    background: $color-border;
+  }
+}
+
+// ==========================================
+// Time Block Colors (muted, sensory-friendly)
+// ==========================================
+
+$block-work-bg: #dbeafe;
+$block-work-border: #3b82f6;
+$block-exercise-bg: #dcfce7;
+$block-exercise-border: #22c55e;
+$block-meal-bg: #fef3c7;
+$block-meal-border: #f59e0b;
+$block-errand-bg: #ede9fe;
+$block-errand-border: #8b5cf6;
+$block-routine-bg: #f3f4f6;
+$block-routine-border: #9ca3af;
+$block-default-bg: #f0f9ff;
+$block-default-border: #64748b;
+
+.cal-block {
+  margin: 1px 2px;
+  padding: 2px $spacing-xs;
+  border-radius: 3px;
+  border-left: 3px solid $block-default-border;
+  background: $block-default-bg;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+
+  &--work { background: $block-work-bg; border-left-color: $block-work-border; }
+  &--exercise { background: $block-exercise-bg; border-left-color: $block-exercise-border; }
+  &--meal { background: $block-meal-bg; border-left-color: $block-meal-border; }
+  &--errand { background: $block-errand-bg; border-left-color: $block-errand-border; }
+  &--routine { background: $block-routine-bg; border-left-color: $block-routine-border; }
+}
+
+.cal-block__time {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: $color-text-lighter;
+  line-height: 1;
+  margin-bottom: 1px;
+}
+
+.cal-block__text {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 0.75rem;
+  font-family: inherit;
+  color: $color-text;
+  resize: none;
+  padding: 0;
+  line-height: 1.3;
+
+  &:focus {
+    outline: 1px solid $color-primary;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.7);
+  }
+}
+
+// ==========================================
+// Calendar Assignments
+// ==========================================
+
+.cal-assignments {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: $spacing-sm;
+  margin-top: $spacing-lg;
+
+  &--day {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cal-assignments__card {
+  background: $color-bg-light;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-sm;
+  padding: $spacing-sm;
+}
+
+.cal-assignments__day {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $color-dark;
+  margin: 0 0 $spacing-xs;
+  padding-bottom: $spacing-xs;
+  border-bottom: 1px solid $color-border-light;
+}
+
+.cal-assignments__group {
+  margin-bottom: $spacing-xs;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  strong {
+    display: block;
+    font-size: 0.75rem;
+    color: $color-text-lighter;
+    margin-bottom: 2px;
+  }
+
+  .editable-field {
+    font-size: 0.8rem;
+    padding: 2px $spacing-xs;
+    margin-bottom: 2px;
+  }
+}
+
+// ==========================================
+// Meals Grid
+// ==========================================
+
+.meals-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr);
+  gap: 0;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+
+  &--day {
+    grid-template-columns: 80px 1fr;
+  }
+}
+
+.meals-grid__corner {
+  background: $color-darker;
+  border-bottom: 1px solid $color-border;
+}
+
+.meals-grid__day-header {
+  background: $color-darker;
+  color: white;
+  padding: $spacing-sm;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.meals-grid__row-label {
+  padding: $spacing-sm;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: $color-text-light;
+  background: $color-bg-lighter;
+  border-bottom: 1px solid $color-border;
+  border-right: 1px solid $color-border;
+  display: flex;
+  align-items: center;
+}
+
+.meals-grid__cell {
+  padding: $spacing-xs;
+  border-bottom: 1px solid $color-border;
+  border-left: 1px solid $color-border-light;
+
+  .editable-field {
+    font-size: 0.8rem;
+    padding: $spacing-xs;
+    min-height: 50px;
+  }
+
+  &:nth-child(even) {
+    background: rgba(0, 0, 0, 0.01);
+  }
+}
+
+// ==========================================
+// Workouts Grid
+// ==========================================
+
+.workouts-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: $spacing-sm;
+
+  &--day {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+}
+
+.workout-card {
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  overflow: hidden;
+}
+
+.workout-card__header {
+  background: $color-darker;
+  color: white;
+  padding: $spacing-sm;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.workout-card__body {
+  padding: $spacing-sm;
+}
+
+.workout-card__field {
+  margin-bottom: $spacing-xs;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  strong {
+    display: block;
+    font-size: 0.75rem;
+    color: $color-text-lighter;
+    margin-bottom: 2px;
+  }
+
+  .editable-field {
+    font-size: 0.8rem;
+    padding: 2px $spacing-xs;
+  }
+}
+
+// Workout type badges
+.workout-badge {
+  display: inline-block;
+  padding: 2px $spacing-sm;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: $spacing-xs;
+  background: $color-bg-lighter;
+  color: $color-text-light;
+
+  &--crossfit {
+    background: $block-exercise-bg;
+    color: #16a34a;
+  }
+
+  &--lifting {
+    background: $block-work-bg;
+    color: #2563eb;
+  }
+
+  &--cardio {
+    background: $block-meal-bg;
+    color: #d97706;
+  }
+
+  &--rest {
+    background: $block-routine-bg;
+    color: $color-gray-dark;
+  }
+
+  &--yoga {
+    background: $block-errand-bg;
+    color: #7c3aed;
+  }
+}
+
+// ==========================================
+// Mobile
+// ==========================================
+
+@media (max-width: $breakpoint-mobile) {
+  .view-toggle__modes .view-toggle__btn:last-child {
+    // Hide week button on mobile — force day view
+    display: none;
+  }
+
+  .cal-grid {
+    grid-template-columns: 50px 1fr;
+    min-height: 600px;
+  }
+
+  .meals-grid {
+    grid-template-columns: 70px 1fr;
+  }
+
+  .workouts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cal-assignments {
+    grid-template-columns: 1fr;
+  }
+
+  .view-toggle__pills {
+    flex-wrap: wrap;
+  }
+}

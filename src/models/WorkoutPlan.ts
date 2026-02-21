@@ -9,6 +9,8 @@ export interface IWorkoutPlan extends Document {
     location: string;
     day: string;
     pinnedToDay: boolean;
+    startTime?: string;
+    endTime?: string;
     details: string;
     notes: string;
   }[];
@@ -26,6 +28,8 @@ const WorkoutPlanSchema = new Schema<IWorkoutPlan>(
         location: String,
         day: String,
         pinnedToDay: { type: Boolean, default: false },
+        startTime: String,
+        endTime: String,
         details: String,
         notes: String,
       },

@@ -4,6 +4,8 @@ export interface WorkoutEntry {
   location: string;
   day: string;
   pinnedToDay: boolean;
+  startTime?: string;
+  endTime?: string;
   details: string;
   notes: string;
 }
