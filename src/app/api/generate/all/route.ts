@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     if (needCalendar) {
       const form = calendarDoc || { ...DEFAULT_CALENDAR_FORM, weekOf };
       const prompt = buildCalendarPrompt(form, profile);
-      tasks.push(generatePlanFromLLM(prompt, { maxTokens: 3500 }));
+      tasks.push(generatePlanFromLLM(prompt, { maxTokens: 8000 }));
       taskOrder.push("calendar");
     }
 

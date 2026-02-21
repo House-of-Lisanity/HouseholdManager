@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
 
     const profile = await loadUserProfile();
     const prompt = buildCalendarPrompt(formData, profile);
-    const llmResponse = await generatePlanFromLLM(prompt, { maxTokens: 3500 });
+    const llmResponse = await generatePlanFromLLM(prompt, { maxTokens: 8000 });
     const result = JSON.parse(llmResponse);
 
     // Persist generated result

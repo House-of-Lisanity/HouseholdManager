@@ -22,6 +22,7 @@ export default function MealsPage() {
   } = useSavedResult<MealsPlanResult>("meals", weekOf);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
 
   const handleGenerate = async () => {
     setGenerating(true);
@@ -45,14 +46,14 @@ export default function MealsPage() {
     );
   }
 
-  if (result) {
+  if (result && !showForm) {
     return (
-      <div className="container">
+      <div className="results-page">
         <WeekNavigation weekOf={weekOf} onChange={setWeekOf} />
         <MealsResults
           key={weekOf}
           result={result}
-          onBack={() => setResult(null)}
+          onBack={() => setShowForm(true)}
           onDataChange={saveResult}
         />
       </div>
@@ -94,13 +95,15 @@ export default function MealsPage() {
       >
         {generating ? "Generating..." : "Generate Meal Plan"}
       </button>
-      <button
-        type="button"
-        className="preview-button"
-        onClick={() => router.push("/results")}
-      >
-        Preview with Sample Data
-      </button>
+      {result && (
+        <button
+          type="button"
+          className="preview-button"
+          onClick={() => setShowForm(false)}
+        >
+          View Results
+        </button>
+      )}
     </div>
   );
 }

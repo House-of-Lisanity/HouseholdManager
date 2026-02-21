@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { WorkoutsPlanResult, WorkoutDayResult } from "@/types";
+import { useViewMode } from "@/hooks/useViewMode";
+import ViewToggle from "./ViewToggle";
+import WorkoutsGrid from "./WorkoutsGrid";
 
 interface WorkoutsResultsProps {
   result: WorkoutsPlanResult;
@@ -13,129 +16,50 @@ export default function WorkoutsResults({
   onDataChange,
 }: WorkoutsResultsProps) {
   const [data, setData] = useState<WorkoutsPlanResult>(result);
+  const { viewMode, setViewMode, selectedDayIndex, goToPrevDay, goToNextDay, goToDay } =
+    useViewMode();
   const isInitial = useRef(true);
 
   useEffect(() => {
-    if (isInitial.current) {
-      isInitial.current = false;
-      return;
-    }
+    if (isInitial.current) { isInitial.current = false; return; }
     onDataChange?.(data);
   }, [data, onDataChange]);
 
-  const updateWorkout = (
-    dayIndex: number,
-    field: keyof WorkoutDayResult,
-    value: string
-  ) => {
+  const updateSummary = (value: string) =>
+    setData((prev) => ({ ...prev, workoutSummary: value }));
+
+  const updateField = (dayIndex: number, field: keyof WorkoutDayResult, value: string) =>
     setData((prev) => ({
       ...prev,
       dailyWorkouts: prev.dailyWorkouts.map((day, i) =>
         i === dayIndex ? { ...day, [field]: value } : day
       ),
     }));
-  };
 
   return (
-    <div className="plan-result">
-      <div className="plan-header">
-        <h2>Workout Plan</h2>
-        <p>Week of {data.weekOf}</p>
-      </div>
+    <>
+      <ViewToggle
+        viewMode={viewMode}
+        onToggle={setViewMode}
+        selectedDayIndex={selectedDayIndex}
+        onSelectDay={goToDay}
+        onPrevDay={goToPrevDay}
+        onNextDay={goToNextDay}
+      />
 
-      {data.workoutSummary && (
-        <div className="plan-summary">
-          <strong>Summary:</strong>
-          <textarea
-            className="editable-field"
-            value={data.workoutSummary}
-            onChange={(e) =>
-              setData((prev) => ({ ...prev, workoutSummary: e.target.value }))
-            }
-            rows={2}
-          />
-        </div>
-      )}
-
-      {data.dailyWorkouts.map((day, dayIndex) => (
-        <div key={dayIndex} className="day-section">
-          <h3 className="day-header">{day.day}</h3>
-          <div className="day-content">
-            <div className="schedule-column">
-              <div className="workout-result-field">
-                <strong>Type:</strong>
-                <input
-                  type="text"
-                  className="editable-field"
-                  value={day.workoutType}
-                  onChange={(e) =>
-                    updateWorkout(dayIndex, "workoutType", e.target.value)
-                  }
-                />
-              </div>
-              <div className="workout-result-field">
-                <strong>Location:</strong>
-                <input
-                  type="text"
-                  className="editable-field"
-                  value={day.location}
-                  onChange={(e) =>
-                    updateWorkout(dayIndex, "location", e.target.value)
-                  }
-                />
-              </div>
-              <div className="workout-result-field">
-                <strong>Focus:</strong>
-                <input
-                  type="text"
-                  className="editable-field"
-                  value={day.focusAreas || ""}
-                  onChange={(e) =>
-                    updateWorkout(dayIndex, "focusAreas", e.target.value)
-                  }
-                />
-              </div>
-              <div className="workout-result-field">
-                <strong>Details:</strong>
-                <textarea
-                  className="editable-field"
-                  value={day.workoutDetails}
-                  onChange={(e) =>
-                    updateWorkout(dayIndex, "workoutDetails", e.target.value)
-                  }
-                  rows={4}
-                />
-              </div>
-              {day.aiNotes && (
-                <div className="workout-result-field">
-                  <strong>Notes:</strong>
-                  <input
-                    type="text"
-                    className="editable-field"
-                    value={day.aiNotes}
-                    onChange={(e) =>
-                      updateWorkout(dayIndex, "aiNotes", e.target.value)
-                    }
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      ))}
+      <WorkoutsGrid
+        data={data}
+        viewMode={viewMode}
+        selectedDayIndex={selectedDayIndex}
+        onUpdateSummary={updateSummary}
+        onUpdateField={updateField}
+      />
 
       <div className="result-actions">
         <button className="new-plan-button" onClick={onBack}>
           Edit Inputs
         </button>
-        <button
-          className="print-button"
-          onClick={() => window.print()}
-          aria-label="Print workout plan"
-        >
-          Print
-        </button>
       </div>
-    </div>
+    </>
   );
 }
