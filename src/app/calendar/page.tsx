@@ -71,11 +71,6 @@ export default function CalendarPage() {
         </div>
       )}
 
-      <EventsSection
-        events={formData.oneOffItems}
-        onUpdate={(events) => updateField("oneOffItems", events)}
-      />
-
       <div className="form-section">
         <h2>Weekly Notes</h2>
         <div className="form-group">
@@ -89,6 +84,39 @@ export default function CalendarPage() {
             onChange={(e) => updateField("weeklyNotes", e.target.value)}
             rows={3}
           />
+        </div>
+      </div>
+
+      <EventsSection
+        events={formData.oneOffItems}
+        onUpdate={(events) => updateField("oneOffItems", events)}
+      />
+
+      <div className="form-section wfh-section">
+        <h2>Work From Home</h2>
+        <div className="wfh-controls">
+          <p className="section-description">
+            Check the days you&apos;ll work from home this week.
+          </p>
+          <div className="wfh-row">
+            {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
+              (day) => (
+                <label key={day} className="wfh-row__day">
+                  <input
+                    type="checkbox"
+                    checked={formData.workFromHomeDays.includes(day)}
+                    onChange={(e) => {
+                      const days = e.target.checked
+                        ? [...formData.workFromHomeDays, day]
+                        : formData.workFromHomeDays.filter((d) => d !== day);
+                      updateField("workFromHomeDays", days);
+                    }}
+                  />
+                  <span>{day.slice(0, 3)}</span>
+                </label>
+              ),
+            )}
+          </div>
         </div>
       </div>
 

@@ -9,18 +9,42 @@ interface MealEntryFormProps {
   onCancel: () => void;
 }
 
+const INITIAL_ENTRY: Partial<MealEntry> = {
+  mealSlot: "Dinner",
+  day: "",
+  pinnedToDay: false,
+  recipeUrl: "",
+  ingredients: "",
+  notes: "",
+};
+
+function buildMeal(
+  draft: Partial<MealEntry>,
+  nutrition: NutritionInfo
+): MealEntry {
+  const hasNutrition = Object.values(nutrition).some((v) => v);
+  return {
+    id: generateId("meal"),
+    mealName: draft.mealName!.trim(),
+    mealSlot: draft.mealSlot || "Dinner",
+    day: draft.day || "",
+    pinnedToDay: draft.pinnedToDay || false,
+    recipeUrl: draft.recipeUrl || undefined,
+    nutrition: hasNutrition ? nutrition : undefined,
+    ingredients: draft.ingredients || undefined,
+    notes: draft.notes || undefined,
+  };
+}
+
+function isValid(draft: Partial<MealEntry>): boolean {
+  return !!draft.mealName?.trim();
+}
+
 export default function MealEntryForm({
   onSave,
   onCancel,
 }: MealEntryFormProps) {
-  const [entry, setEntry] = useState<Partial<MealEntry>>({
-    mealSlot: "Dinner",
-    day: "",
-    pinnedToDay: false,
-    recipeUrl: "",
-    ingredients: "",
-    notes: "",
-  });
+  const [entry, setEntry] = useState<Partial<MealEntry>>(INITIAL_ENTRY);
   const [nutrition, setNutrition] = useState<NutritionInfo>({});
   const [fetching, setFetching] = useState(false);
   const [fetchMessage, setFetchMessage] = useState("");
@@ -28,6 +52,16 @@ export default function MealEntryForm({
   const [parseMessage, setParseMessage] = useState("");
   const [estimating, setEstimating] = useState(false);
   const [estimateMessage, setEstimateMessage] = useState("");
+  const [pending, setPending] = useState<MealEntry[]>([]);
+
+  const resetForm = () => {
+    setEntry({ ...INITIAL_ENTRY });
+    setNutrition({});
+    setFetchMessage("");
+    setNutritionLabelText("");
+    setParseMessage("");
+    setEstimateMessage("");
+  };
 
   const updateNutrition = (field: keyof NutritionInfo, value: string) => {
     setNutrition((prev) => ({ ...prev, [field]: value }));
@@ -68,7 +102,6 @@ export default function MealEntryForm({
     if (!entry.ingredients?.trim()) return;
     setEstimateMessage("");
 
-    // Try parsing as a nutrition label first
     const parsed = parseNutritionLabel(entry.ingredients);
     if (parsed) {
       setNutrition({
@@ -84,7 +117,6 @@ export default function MealEntryForm({
       return;
     }
 
-    // Fall back to AI estimation
     setEstimating(true);
     try {
       const result = await estimateNutrition(entry.ingredients);
@@ -125,26 +157,48 @@ export default function MealEntryForm({
     }
   };
 
+  const handleAddAnother = () => {
+    if (!isValid(entry)) return;
+    setPending((prev) => [...prev, buildMeal(entry, nutrition)]);
+    resetForm();
+  };
+
   const handleSave = () => {
-    if (!entry.mealName?.trim()) return;
+    const all = [...pending];
+    if (isValid(entry)) {
+      all.push(buildMeal(entry, nutrition));
+    }
+    if (all.length === 0) return;
+    all.forEach((item) => onSave(item));
+    onCancel();
+  };
 
-    const hasNutrition = Object.values(nutrition).some((v) => v);
-
-    onSave({
-      id: generateId("meal"),
-      mealName: entry.mealName.trim(),
-      mealSlot: entry.mealSlot || "Dinner",
-      day: entry.day || "",
-      pinnedToDay: entry.pinnedToDay || false,
-      recipeUrl: entry.recipeUrl || undefined,
-      nutrition: hasNutrition ? nutrition : undefined,
-      ingredients: entry.ingredients || undefined,
-      notes: entry.notes || undefined,
-    });
+  const removePending = (index: number) => {
+    setPending((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
     <div className="add-form">
+      {pending.length > 0 && (
+        <ul className="add-form__pending">
+          {pending.map((item, i) => (
+            <li key={i}>
+              <span>
+                {item.mealName} ({item.mealSlot}
+                {item.day ? ` · ${item.day}` : ""})
+              </span>
+              <button
+                type="button"
+                onClick={() => removePending(i)}
+                aria-label="Remove"
+              >
+                ×
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
       <div className="form-grid form-grid--2col">
         <div className="form-group">
           <label htmlFor="meal-name">Meal Name</label>
@@ -351,8 +405,15 @@ export default function MealEntryForm({
       </div>
 
       <div className="form-buttons">
+        <button
+          type="button"
+          className="add-another-button"
+          onClick={handleAddAnother}
+        >
+          + Add Another
+        </button>
         <button type="button" className="save-button" onClick={handleSave}>
-          Save
+          Save{pending.length > 0 ? ` (${pending.length + (isValid(entry) ? 1 : 0)})` : ""}
         </button>
         <button type="button" className="cancel-button" onClick={onCancel}>
           Cancel

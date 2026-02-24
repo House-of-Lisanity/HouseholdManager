@@ -7,15 +7,16 @@ import { useRecurringTasks } from "@/hooks/useRecurringTasks";
 import { getWeekOf } from "@/lib/workout-log-helpers";
 import {
   groupByCategory,
+  groupRecurringByCategory,
   getUniqueCategories,
   getUniqueRooms,
   createEmptyTodoItem,
   createEmptyRecurringTask,
 } from "@/lib/todo-helpers";
 import CategoryGroup from "@/components/todo/CategoryGroup";
+import RecurringCategoryGroup from "@/components/todo/RecurringCategoryGroup";
 import TodoRow from "@/components/todo/TodoRow";
 import TodoForm from "@/components/todo/TodoForm";
-import RecurringTaskCard from "@/components/todo/RecurringTaskCard";
 import RecurringTaskForm from "@/components/todo/RecurringTaskForm";
 
 type ActiveForm =
@@ -52,6 +53,10 @@ export default function TodosPage() {
   const [completedItems, setCompletedItems] = useState<TodoItem[]>([]);
   const [loadingCompleted, setLoadingCompleted] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [expandedTodos, setExpandedTodos] = useState<Set<string>>(new Set());
+  const [expandedRecurring, setExpandedRecurring] = useState<Set<string>>(
+    new Set()
+  );
   const statusTimer = useRef<ReturnType<typeof setTimeout>>();
 
   const currentWeekOf = getWeekOf();
@@ -59,6 +64,60 @@ export default function TodosPage() {
   const categories = useMemo(() => getUniqueCategories(items), [items]);
   const rooms = useMemo(() => getUniqueRooms(items), [items]);
   const grouped = useMemo(() => groupByCategory(items), [items]);
+  const recurringGrouped = useMemo(
+    () => groupRecurringByCategory(recurringItems),
+    [recurringItems]
+  );
+
+  const todoCategories = useMemo(
+    () => Array.from(grouped.keys()),
+    [grouped]
+  );
+  const recurringCategories = useMemo(
+    () => Array.from(recurringGrouped.keys()),
+    [recurringGrouped]
+  );
+
+  const toggleTodoCategory = (cat: string) => {
+    setExpandedTodos((prev) => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
+      return next;
+    });
+  };
+
+  const toggleRecurringCategory = (cat: string) => {
+    setExpandedRecurring((prev) => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
+      return next;
+    });
+  };
+
+  const allTodosExpanded =
+    todoCategories.length > 0 &&
+    todoCategories.every((c) => expandedTodos.has(c));
+  const allRecurringExpanded =
+    recurringCategories.length > 0 &&
+    recurringCategories.every((c) => expandedRecurring.has(c));
+
+  const toggleAllTodos = () => {
+    if (allTodosExpanded) {
+      setExpandedTodos(new Set());
+    } else {
+      setExpandedTodos(new Set(todoCategories));
+    }
+  };
+
+  const toggleAllRecurring = () => {
+    if (allRecurringExpanded) {
+      setExpandedRecurring(new Set());
+    } else {
+      setExpandedRecurring(new Set(recurringCategories));
+    }
+  };
 
   const showStatus = (message: string) => {
     setStatusMessage(message);
@@ -184,12 +243,25 @@ export default function TodosPage() {
       )}
 
       {/* To-do items grouped by category */}
+      {todoCategories.length > 1 && (
+        <div className="todo-section__collapse-controls">
+          <button
+            type="button"
+            className="category-group__expand-all"
+            onClick={toggleAllTodos}
+          >
+            {allTodosExpanded ? "Collapse all" : "Expand all"}
+          </button>
+        </div>
+      )}
       {Array.from(grouped.entries()).map(([category, categoryItems]) => (
         <CategoryGroup
           key={category}
           category={category}
           items={categoryItems}
           currentWeekOf={currentWeekOf}
+          expanded={expandedTodos.has(category)}
+          onToggle={() => toggleTodoCategory(category)}
           onToggleComplete={toggleComplete}
           onSetWeeklyTag={setWeeklyTag}
           onEdit={(i) => setActiveForm({ type: "edit-todo", item: i })}
@@ -205,14 +277,25 @@ export default function TodosPage() {
       <section className="todo-section todo-section--recurring">
         <div className="todo-section__header">
           <h3>Recurring Items</h3>
-          {!activeForm && (
-            <button
-              className="add-button"
-              onClick={() => setActiveForm({ type: "new-recurring" })}
-            >
-              + Add Recurring
-            </button>
-          )}
+          <div className="todo-section__header-actions">
+            {recurringCategories.length > 1 && (
+              <button
+                type="button"
+                className="category-group__expand-all"
+                onClick={toggleAllRecurring}
+              >
+                {allRecurringExpanded ? "Collapse all" : "Expand all"}
+              </button>
+            )}
+            {!activeForm && (
+              <button
+                className="add-button"
+                onClick={() => setActiveForm({ type: "new-recurring" })}
+              >
+                + Add Recurring
+              </button>
+            )}
+          </div>
         </div>
 
         {(activeForm?.type === "new-recurring" ||
@@ -230,15 +313,22 @@ export default function TodosPage() {
           />
         )}
 
-        {recurringItems.map((item) => (
-          <RecurringTaskCard
-            key={item._id}
-            item={item}
-            onMarkDone={handleMarkDone}
-            onEdit={(i) => setActiveForm({ type: "edit-recurring", item: i })}
-            onDelete={handleDeleteRecurring}
-          />
-        ))}
+        {Array.from(recurringGrouped.entries()).map(
+          ([category, categoryItems]) => (
+            <RecurringCategoryGroup
+              key={category}
+              category={category}
+              items={categoryItems}
+              expanded={expandedRecurring.has(category)}
+              onToggle={() => toggleRecurringCategory(category)}
+              onMarkDone={handleMarkDone}
+              onEdit={(i) =>
+                setActiveForm({ type: "edit-recurring", item: i })
+              }
+              onDelete={handleDeleteRecurring}
+            />
+          )
+        )}
 
         {recurringItems.length === 0 && !recurringLoading && (
           <p className="empty-state">No recurring items yet.</p>
@@ -259,12 +349,12 @@ export default function TodosPage() {
                 <thead>
                   <tr>
                     <th className="todo-table__th--check" aria-label="Complete" />
-                    <th>Task</th>
+                    <th className="todo-table__th--task">Task</th>
                     <th>Room</th>
                     <th>Location</th>
-                    <th>This Week</th>
-                    <th>Hrs</th>
-                    <th aria-label="Actions" />
+                    <th className="todo-table__th--priority">This Week</th>
+                    <th className="todo-table__th--hours">Hrs</th>
+                    <th className="todo-table__th--actions" aria-label="Actions" />
                   </tr>
                 </thead>
                 <tbody>

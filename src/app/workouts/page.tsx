@@ -71,15 +71,20 @@ export default function WorkoutsPage() {
         </div>
       )}
 
-      <div className="form-group">
-        <label htmlFor="weekly-focus">Weekly Focus</label>
-        <textarea
-          id="weekly-focus"
-          placeholder="What do you want to focus on this week? e.g., glutes and conditioning, upper body strength..."
-          value={formData.weeklyFocus}
-          onChange={(e) => updateField("weeklyFocus", e.target.value)}
-          rows={3}
-        />
+      <div className="form-section">
+        <h2>Weekly Focus</h2>
+        <div className="form-group">
+          <label htmlFor="weekly-focus">
+            What do you want to focus on this week?
+          </label>
+          <textarea
+            id="weekly-focus"
+            placeholder="e.g., glutes and conditioning, upper body strength..."
+            value={formData.weeklyFocus}
+            onChange={(e) => updateField("weeklyFocus", e.target.value)}
+            rows={3}
+          />
+        </div>
       </div>
 
       <WorkoutScheduleSection

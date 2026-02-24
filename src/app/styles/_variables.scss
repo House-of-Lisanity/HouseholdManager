@@ -1,26 +1,26 @@
-// Colors
-$color-primary: #3498db;
-$color-primary-dark: #2980b9;
-$color-secondary: #27ae60;
-$color-secondary-dark: #229954;
-$color-dark: #2c3e50;
-$color-darker: #34495e;
-$color-danger: #e74c3c;
-$color-danger-dark: #c0392b;
-$color-gray: #95a5a6;
-$color-gray-dark: #7f8c8d;
-$color-text: #333;
-$color-text-light: #555;
-$color-text-lighter: #666;
-$color-border: #ddd;
-$color-border-light: #e0e0e0;
-$color-bg: #f5f5f5;
-$color-bg-light: #f8f9fa;
-$color-bg-lighter: #ecf0f1;
-$color-warning: #fff3cd;
-$color-warning-border: #ffc107;
-$color-warning-text: #d35400;
-$color-success-bg: #e8f8f5;
+// Colors — Paper Planner palette
+$color-primary: #7c6f5e;
+$color-primary-dark: #6b5e50;
+$color-secondary: #6a8f5c;
+$color-secondary-dark: #5a7a4e;
+$color-dark: #3d3632;
+$color-darker: #5c5248;
+$color-danger: #b85c50;
+$color-danger-dark: #9c4a3f;
+$color-gray: #a39686;
+$color-gray-dark: #8d8479;
+$color-text: #3d3632;
+$color-text-light: #6b6259;
+$color-text-lighter: #8d8479;
+$color-border: #d6cfc4;
+$color-border-light: #e8e3db;
+$color-bg: #faf8f5;
+$color-bg-light: #fffef9;
+$color-bg-lighter: #f0ece6;
+$color-warning: #fdf5e6;
+$color-warning-border: #d4a574;
+$color-warning-text: #8b5e3c;
+$color-success-bg: #edf5eb;
 
 // Spacing
 $spacing-xs: 0.25rem;
@@ -33,12 +33,38 @@ $spacing-xl: 2rem;
 $radius-sm: 4px;
 $radius-md: 8px;
 
-// Shadows
-$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-$shadow-md: 0 4px 20px rgba(0, 0, 0, 0.3);
+// Shadows (warm)
+$shadow-sm: 0 1px 3px rgba(60, 50, 40, 0.08);
+$shadow-md: 0 4px 20px rgba(60, 50, 40, 0.2);
+
+// Button sizing (single source of truth)
+$btn-padding: $spacing-sm $spacing-md;
+$btn-font-size: 0.875rem;
+
+// Typography — labels, headings, inputs (single source of truth)
+$input-font-size: 0.875rem;
+$label-font-size: 0.9375rem;
+$label-font-weight: 600;
+$label-color: $color-text-light;
+$heading-card-font-size: 1.25rem;
+$heading-card-color: $color-dark;
 
 // Transitions
 $transition-speed: 0.2s;
 
 // Breakpoints
 $breakpoint-mobile: 768px;
+
+// Time block colors (muted, sensory-friendly)
+$block-work-bg: #e8e4f0;
+$block-work-border: #8b7db8;
+$block-exercise-bg: #dde8d6;
+$block-exercise-border: #6a8f5c;
+$block-meal-bg: #f5ede0;
+$block-meal-border: #b8965c;
+$block-errand-bg: #e4ddd4;
+$block-errand-border: #8b7d6b;
+$block-routine-bg: #e8e5e0;
+$block-routine-border: #9c968d;
+$block-default-bg: #e6e1d8;
+$block-default-border: #7c7567;

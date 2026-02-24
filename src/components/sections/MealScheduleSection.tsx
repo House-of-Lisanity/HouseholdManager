@@ -57,7 +57,6 @@ export default function MealScheduleSection({
 
   const handleAdd = (entry: MealEntry) => {
     onUpdate([...meals, entry]);
-    setShowForm(false);
   };
 
   const handleRemove = (id: string) => {

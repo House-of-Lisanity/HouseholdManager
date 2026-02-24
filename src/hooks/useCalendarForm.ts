@@ -3,17 +3,10 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { CalendarFormInput } from "@/types";
 import { DAYS_SUNDAY_START } from "@/lib/constants";
-
-function getCurrentWeekOf(): string {
-  const now = new Date();
-  const day = now.getDay();
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - ((day + 6) % 7));
-  return monday.toISOString().split("T")[0];
-}
+import { getWeekOf } from "@/lib/workout-log-helpers";
 
 const DEFAULT_CALENDAR: CalendarFormInput = {
-  weekOf: getCurrentWeekOf(),
+  weekOf: getWeekOf(),
   oneOffItems: [],
   recurringItems: [],
   eventNights: DAYS_SUNDAY_START.map((day) => ({
@@ -21,12 +14,13 @@ const DEFAULT_CALENDAR: CalendarFormInput = {
     isEvent: false,
     drinkNote: "",
   })),
+  workFromHomeDays: [],
   weeklyNotes: "",
 };
 
 export function useCalendarForm() {
   const [formData, setFormData] = useState<CalendarFormInput>(DEFAULT_CALENDAR);
-  const [weekOf, setWeekOf] = useState(getCurrentWeekOf);
+  const [weekOf, setWeekOf] = useState(getWeekOf);
   const [loading, setLoading] = useState(true);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isInitialLoad = useRef(true);

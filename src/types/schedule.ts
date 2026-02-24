@@ -33,5 +33,4 @@ export interface BufferRule {
 export interface Location {
   name: string;
   address: string;
-  driveTimeMinutes: number;
 }

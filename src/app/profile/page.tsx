@@ -17,7 +17,7 @@ const TABS: { id: ProfileTab; label: string }[] = [
 ];
 
 export default function ProfilePage() {
-  const { profile, updateProfile, loading } = useProfile();
+  const { profile, updateProfile, loading, saveStatus } = useProfile();
   const [activeTab, setActiveTab] = useState<ProfileTab>("calendar");
 
   if (loading) {
@@ -32,7 +32,12 @@ export default function ProfilePage() {
     <div className="container">
       <div className="profile-header">
         <h2>Profile Settings</h2>
-        <p className="profile-header__subtitle">Changes save automatically</p>
+        <p className="profile-header__subtitle">
+          {saveStatus === "saving" && "Saving..."}
+          {saveStatus === "saved" && "Saved"}
+          {saveStatus === "error" && "Failed to save"}
+          {saveStatus === "idle" && "Changes save automatically"}
+        </p>
       </div>
 
       <div className="profile-tabs" role="tablist" aria-label="Profile settings">

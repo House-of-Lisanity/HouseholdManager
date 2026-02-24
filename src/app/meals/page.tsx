@@ -71,15 +71,20 @@ export default function MealsPage() {
         </div>
       )}
 
-      <div className="form-group">
-        <label htmlFor="meal-weekly-focus">Weekly Focus</label>
-        <textarea
-          id="meal-weekly-focus"
-          placeholder="What's your meal focus this week? e.g., high protein, meal prep Sunday, use up pantry items..."
-          value={formData.weeklyFocus}
-          onChange={(e) => updateField("weeklyFocus", e.target.value)}
-          rows={3}
-        />
+      <div className="form-section">
+        <h2>Weekly Focus</h2>
+        <div className="form-group">
+          <label htmlFor="meal-weekly-focus">
+            What&apos;s your meal focus this week?
+          </label>
+          <textarea
+            id="meal-weekly-focus"
+            placeholder="e.g., high protein, meal prep Sunday, use up pantry items..."
+            value={formData.weeklyFocus}
+            onChange={(e) => updateField("weeklyFocus", e.target.value)}
+            rows={3}
+          />
+        </div>
       </div>
 
       <MealScheduleSection

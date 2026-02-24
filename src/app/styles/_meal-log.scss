@@ -15,9 +15,9 @@
 
   h3 {
     margin: 0 0 $spacing-md 0;
-    font-size: 1.0625rem;
+    font-size: $heading-card-font-size;
     font-weight: 600;
-    color: $color-dark;
+    color: $heading-card-color;
   }
 
   &__list {
@@ -29,7 +29,7 @@
 
 // Planned meal cards
 .planned-meal-card {
-  background-color: white;
+  background-color: $color-bg-light;
   border: 1px solid $color-border-light;
   border-radius: $radius-md;
   padding: $spacing-md $spacing-lg;
@@ -85,7 +85,7 @@
 
 // Meal log form
 .meal-log-form {
-  background-color: white;
+  background-color: $color-bg-light;
   border: 1px solid $color-border-light;
   border-radius: $radius-md;
   padding: $spacing-lg;
@@ -115,7 +115,7 @@
 
 // Logged meal cards
 .logged-meal-card {
-  background-color: white;
+  background-color: $color-bg-light;
   border: 1px solid $color-border-light;
   border-radius: $radius-md;
   padding: $spacing-md $spacing-lg;

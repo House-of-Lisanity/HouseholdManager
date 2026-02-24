@@ -39,7 +39,6 @@ export default function WorkoutScheduleSection({
 
   const handleAdd = (entry: WorkoutEntry) => {
     onUpdate([...workouts, entry]);
-    setShowForm(false);
   };
 
   const handleRemove = (id: string) => {

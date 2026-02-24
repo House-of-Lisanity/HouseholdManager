@@ -47,6 +47,30 @@ export function getUniqueRooms(items: TodoItem[]): string[] {
   return Array.from(preset);
 }
 
+/** Group Home items by room (subcategory), with "Other" as fallback */
+export function groupByRoom(items: TodoItem[]): Map<string, TodoItem[]> {
+  const map = new Map<string, TodoItem[]>();
+  for (const item of items) {
+    const room = item.subcategory || "Other";
+    const list = map.get(room) || [];
+    list.push(item);
+    map.set(room, list);
+  }
+  return map;
+}
+
+export function groupRecurringByCategory(
+  items: RecurringTask[]
+): Map<string, RecurringTask[]> {
+  const map = new Map<string, RecurringTask[]>();
+  for (const item of items) {
+    const list = map.get(item.category) || [];
+    list.push(item);
+    map.set(item.category, list);
+  }
+  return map;
+}
+
 export function createEmptyTodoItem(): Omit<TodoItem, "_id"> {
   return {
     title: "",

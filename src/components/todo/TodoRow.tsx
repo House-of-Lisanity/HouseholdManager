@@ -5,6 +5,7 @@ import { WEEKLY_PRIORITIES } from "@/lib/constants";
 interface TodoRowProps {
   item: TodoItem;
   currentWeekOf: string;
+  showRoom?: boolean;
   onToggleComplete: (item: TodoItem) => void;
   onSetWeeklyTag: (
     item: TodoItem,
@@ -18,6 +19,7 @@ interface TodoRowProps {
 export default function TodoRow({
   item,
   currentWeekOf,
+  showRoom = true,
   onToggleComplete,
   onSetWeeklyTag,
   onEdit,
@@ -64,7 +66,9 @@ export default function TodoRow({
         {item.title}
         {item.isProject && <span className="badge badge--project">Project</span>}
       </td>
-      <td className="todo-row__room">{item.subcategory || "—"}</td>
+      {showRoom && (
+        <td className="todo-row__room">{item.subcategory || "—"}</td>
+      )}
       <td className="todo-row__location">{item.location || "—"}</td>
       <td className="todo-row__priority">
         {!item.completed && (

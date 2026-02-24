@@ -1,15 +1,10 @@
-import React, { useState } from 'react';
-import { PantryItem } from '@/types';
-import FormSection from '../shared/FormSection';
-import ListItem from '../shared/ListItem';
-import PantryForm from '../forms/PantryForm';
-
-const PANTRY_CATEGORIES = [
-  { value: "dry_goods", label: "Dry Goods" },
-  { value: "frozen", label: "Frozen" },
-  { value: "refrigerated", label: "Refrigerated" },
-  { value: "spices", label: "Spices" },
-] as const;
+import React, { useState } from "react";
+import { PantryItem } from "@/types";
+import { PANTRY_CATEGORIES } from "@/lib/constants";
+import { getDefaultPantryItems } from "@/data/default-pantry-items";
+import FormSection from "../shared/FormSection";
+import PantryForm from "../forms/PantryForm";
+import PantryCategoryGroup from "./PantryCategoryGroup";
 
 interface PantrySectionProps {
   items: PantryItem[];
@@ -18,6 +13,39 @@ interface PantrySectionProps {
 
 export default function PantrySection({ items, onUpdate }: PantrySectionProps) {
   const [showForm, setShowForm] = useState(false);
+  const [collapsedCategories, setCollapsedCategories] = useState<Set<string>>(
+    new Set()
+  );
+
+  const nonEmptyCategories = PANTRY_CATEGORIES.filter((cat) =>
+    items.some((i) => i.category === cat.value)
+  );
+
+  const allCollapsed =
+    nonEmptyCategories.length > 0 &&
+    nonEmptyCategories.every((cat) => collapsedCategories.has(cat.value));
+
+  const toggleCategory = (value: string) => {
+    setCollapsedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(value)) {
+        next.delete(value);
+      } else {
+        next.add(value);
+      }
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    if (allCollapsed) {
+      setCollapsedCategories(new Set());
+    } else {
+      setCollapsedCategories(
+        new Set(nonEmptyCategories.map((cat) => cat.value))
+      );
+    }
+  };
 
   const handleAdd = (item: PantryItem) => {
     onUpdate([...items, item]);
@@ -25,51 +53,64 @@ export default function PantrySection({ items, onUpdate }: PantrySectionProps) {
   };
 
   const handleRemove = (id: string) => {
-    onUpdate(items.filter(item => item.id !== id));
+    onUpdate(items.filter((item) => item.id !== id));
+  };
+
+  const handleLoadDefaults = () => {
+    const newItems = getDefaultPantryItems(items);
+    if (newItems.length === 0) return;
+    onUpdate([...items, ...newItems]);
   };
 
   return (
     <FormSection title="Pantry">
-      {items.length > 0 && PANTRY_CATEGORIES.map(cat => {
-        const categoryItems = items.filter(i => i.category === cat.value);
+      {nonEmptyCategories.length > 0 && (
+        <div className="pantry-controls">
+          <button
+            type="button"
+            className="pantry-controls__toggle-all"
+            onClick={toggleAll}
+          >
+            {allCollapsed ? "Expand all" : "Collapse all"}
+          </button>
+        </div>
+      )}
 
-        if (categoryItems.length === 0) return null;
-
+      {nonEmptyCategories.map((cat) => {
+        const categoryItems = items.filter((i) => i.category === cat.value);
         return (
-          <div key={cat.value} className="pantry-category">
-            <h3>{cat.label}</h3>
-            {categoryItems.map(item => (
-              <ListItem
-                key={item.id}
-                onRemove={() => handleRemove(item.id)}
-                className={item.expiresInDays !== undefined && item.expiresInDays <= 3 ? 'expiring' : ''}
-              >
-                <strong>{item.name}</strong>
-                {item.quantity && <span> ({item.quantity}{item.unit ? ` ${item.unit}` : ""})</span>}
-                {item.expiresInDays !== undefined && (
-                  <span className="expires"> Expires in {item.expiresInDays} days</span>
-                )}
-              </ListItem>
-            ))}
-          </div>
+          <PantryCategoryGroup
+            key={cat.value}
+            label={cat.label}
+            items={categoryItems}
+            collapsed={collapsedCategories.has(cat.value)}
+            onToggle={() => toggleCategory(cat.value)}
+            onRemove={handleRemove}
+          />
         );
       })}
-      
-      {!showForm && (
-        <button 
-          type="button" 
-          className="add-button" 
-          onClick={() => setShowForm(true)}
+
+      <div className="pantry-actions">
+        {!showForm && (
+          <button
+            type="button"
+            className="add-button"
+            onClick={() => setShowForm(true)}
+          >
+            + Add Pantry Item
+          </button>
+        )}
+        <button
+          type="button"
+          className="add-button"
+          onClick={handleLoadDefaults}
         >
-          + Add Pantry Item
+          Load Common Items
         </button>
-      )}
-      
+      </div>
+
       {showForm && (
-        <PantryForm 
-          onSave={handleAdd} 
-          onCancel={() => setShowForm(false)} 
-        />
+        <PantryForm onSave={handleAdd} onCancel={() => setShowForm(false)} />
       )}
     </FormSection>
   );

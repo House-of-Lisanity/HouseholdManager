@@ -2,14 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { WorkoutsFormInput } from "@/types";
-
-function getCurrentWeekOf(): string {
-  const now = new Date();
-  const day = now.getDay();
-  const sunday = new Date(now);
-  sunday.setDate(now.getDate() - day);
-  return sunday.toISOString().split("T")[0];
-}
+import { getWeekOf } from "@/lib/workout-log-helpers";
 
 const DEFAULT_WORKOUTS: WorkoutsFormInput = {
   weeklyFocus: "",
@@ -18,7 +11,7 @@ const DEFAULT_WORKOUTS: WorkoutsFormInput = {
 
 export function useWorkoutsForm() {
   const [formData, setFormData] = useState<WorkoutsFormInput>(DEFAULT_WORKOUTS);
-  const [weekOf, setWeekOf] = useState(getCurrentWeekOf);
+  const [weekOf, setWeekOf] = useState(getWeekOf);
   const [loading, setLoading] = useState(true);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isInitialLoad = useRef(true);

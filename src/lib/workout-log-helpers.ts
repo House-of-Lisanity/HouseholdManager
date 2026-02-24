@@ -1,17 +1,25 @@
 import { WorkoutEntry, WorkoutLog, SetLog, ExerciseLog } from "@/types";
 
+/** Format a Date as YYYY-MM-DD in local timezone (avoids UTC shift from toISOString) */
+function toLocalDateString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export function getWeekOf(date: Date = new Date()): string {
   const day = date.getDay();
   const sunday = new Date(date);
   sunday.setDate(date.getDate() - day);
-  return sunday.toISOString().split("T")[0];
+  return toLocalDateString(sunday);
 }
 
 /** Shift a weekOf string by +/- N weeks */
 export function shiftWeek(weekOf: string, direction: number): string {
   const date = new Date(weekOf + "T00:00:00");
   date.setDate(date.getDate() + direction * 7);
-  return date.toISOString().split("T")[0];
+  return toLocalDateString(date);
 }
 
 /** Format a weekOf string for display */
@@ -24,7 +32,7 @@ export function formatWeekLabel(weekOf: string): string {
 }
 
 export function getTodayISO(): string {
-  return new Date().toISOString().split("T")[0];
+  return toLocalDateString(new Date());
 }
 
 export function createEmptySet(setNumber: number): SetLog {

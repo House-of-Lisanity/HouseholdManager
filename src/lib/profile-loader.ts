@@ -7,23 +7,27 @@ const DEFAULT_PROFILE: UserProfile = {
   workEndTime: "3:30 PM",
   wakeTime: "6:00 AM",
   bedTime: "10:00 PM",
+  schedulingPreferences: "",
+  timezone: "",
+  homeAddress: "",
+  workAddress: "",
   bufferRules: [
     { activityType: "gym", minutesBefore: 30, minutesAfter: 15 },
     { activityType: "event", minutesBefore: 120, minutesAfter: 30 },
     { activityType: "appointment", minutesBefore: 15, minutesAfter: 15 },
   ],
   locations: [
-    { name: "Gym", address: "", driveTimeMinutes: 15 },
-    { name: "Nuggets Arena", address: "", driveTimeMinutes: 30 },
+    { name: "Gym", address: "" },
   ],
-  targetProtein: "110",
   targetCalories: "",
-  dailyAlcohol: "1 drink (optional)",
+  targetProtein: "",
+  targetCarbs: "",
+  targetFats: "",
   foodsToAvoid: "",
   cravingsPreferences: "",
   allergies: "",
   dietaryStyle: "none",
-  cookingAppliances: [],
+  cookingAppliances: "",
   gymEquipment: [],
   homeEquipment: [],
   crossfitEquipment: [],
@@ -48,6 +52,6 @@ export async function loadUserProfile(): Promise<UserProfile> {
   if (!doc) return DEFAULT_PROFILE;
 
   // Strip Mongoose fields and merge with defaults
-  const { _id, __v, ...profileData } = doc as Record<string, unknown>;
+  const { _id, __v, ...profileData } = doc as unknown as Record<string, unknown>;
   return { ...DEFAULT_PROFILE, ...profileData } as UserProfile;
 }

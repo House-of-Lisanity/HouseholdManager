@@ -1,24 +1,40 @@
 @import './variables';
 
 .form-section {
-  background-color: white;
+  background-color: $color-bg-light;
   padding: $spacing-xl;
   margin-bottom: $spacing-lg;
   border-radius: $radius-md;
+  border: 1px solid $color-border-light;
   box-shadow: $shadow-sm;
 
   h2 {
     font-size: 1.5rem;
+    font-weight: 400;
     margin-bottom: $spacing-lg;
     color: $color-dark;
-    border-bottom: 2px solid $color-primary;
+    border-bottom: 1px solid $color-border;
     padding-bottom: $spacing-sm;
   }
 
+  &__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: $spacing-sm;
+
+    h2 {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+  }
+
   h3 {
-    font-size: 1.1rem;
+    font-size: $heading-card-font-size;
+    font-weight: 600;
     margin: $spacing-md 0 $spacing-sm 0;
-    color: $color-dark;
+    color: $heading-card-color;
   }
 }
 
@@ -28,15 +44,9 @@
   font-size: 0.95rem;
 }
 
+// .form-group — layout only; label + input appearance inherited from _base.scss
 .form-group {
   margin-bottom: $spacing-lg;
-
-  label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: $spacing-sm;
-    color: $color-text-light;
-  }
 
   input[type="text"],
   input[type="date"],
@@ -44,30 +54,25 @@
   select,
   textarea {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid $color-border;
-    border-radius: $radius-sm;
-    font-size: 1rem;
-    font-family: inherit;
     margin-bottom: $spacing-sm;
-
-    &:focus {
-      outline: none;
-      border-color: $color-primary;
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-    }
-  }
-
-  textarea {
-    min-height: 80px;
-    resize: vertical;
   }
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: $spacing-sm;
+  gap: $spacing-md;
+
+  &--pantry {
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: $spacing-sm;
+  }
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .form-grid--pantry {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .list-item {
@@ -93,10 +98,6 @@
   }
 }
 
-.pantry-category {
-  margin-bottom: $spacing-lg;
-}
-
 .event-group {
   margin-bottom: $spacing-lg;
 
@@ -107,18 +108,21 @@
   }
 }
 
-// Buttons
-.add-button,
+// Buttons — sizing inherited from base button rule in _base.scss
+.add-button {
+  background: transparent;
+  color: $color-primary;
+  border: 1px solid $color-border;
+
+  &:hover {
+    background-color: $color-bg;
+  }
+}
+
 .save-button {
   background-color: $color-secondary;
   color: white;
-  padding: 0.75rem $spacing-lg;
   border: none;
-  border-radius: $radius-sm;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color $transition-speed;
 
   &:hover {
     background-color: $color-secondary-dark;
@@ -128,12 +132,7 @@
 .remove-button {
   background-color: $color-danger;
   color: white;
-  padding: $spacing-sm $spacing-md;
   border: none;
-  border-radius: $radius-sm;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color $transition-speed;
 
   &:hover {
     background-color: $color-danger-dark;
@@ -143,13 +142,7 @@
 .cancel-button {
   background-color: $color-gray;
   color: white;
-  padding: 0.75rem $spacing-lg;
   border: none;
-  border-radius: $radius-sm;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color $transition-speed;
 
   &:hover {
     background-color: $color-gray-dark;
@@ -157,33 +150,89 @@
 }
 
 .add-form {
-  background-color: $color-success-bg;
+  background-color: $color-bg-light;
   padding: $spacing-lg;
-  border-radius: $radius-sm;
+  border-radius: $radius-md;
   margin-top: $spacing-md;
-  border: 1px solid $color-secondary;
+  border: 1px solid $color-border;
+  border-left: 3px solid $color-border;
+
+  .form-group {
+    margin-bottom: $spacing-sm;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="number"],
+  select,
+  textarea {
+    padding: 0.5rem;
+  }
 }
 
 .form-buttons {
   display: flex;
+  align-items: center;
   gap: $spacing-md;
   margin-top: $spacing-md;
+  padding-top: $spacing-md;
+  border-top: 1px solid $color-border-light;
+}
+
+.add-form__pending {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 $spacing-md;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    background: $color-bg;
+    border: 1px solid $color-border-light;
+    border-radius: $radius-sm;
+    padding: $spacing-xs $spacing-sm;
+    font-size: 0.85rem;
+    color: $color-text-light;
+  }
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $color-text-lighter;
+    font-size: 1rem;
+    padding: 0;
+    line-height: 1;
+
+    &:hover {
+      color: $color-danger;
+    }
+  }
+}
+
+.add-another-button {
+  background: transparent;
+  color: $color-primary;
+  border: 1px solid $color-border;
+
+  &:hover {
+    background: $color-bg;
+  }
 }
 
 .submit-button {
-  background-color: $color-primary;
+  display: block;
+  margin: 0 auto;
+  background-color: $color-secondary;
   color: white;
-  padding: $spacing-md $spacing-xl;
   border: none;
-  border-radius: $radius-sm;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color $transition-speed;
 
   &:hover {
-    background-color: $color-primary-dark;
+    background-color: $color-secondary-dark;
   }
 
   &:disabled {
@@ -192,20 +241,59 @@
   }
 }
 
+// Work-from-home section — compact single box
+.wfh-section {
+  h2 {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: $spacing-xs;
+  }
+}
+
+.wfh-controls {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+
+  .section-description {
+    margin-bottom: 0;
+  }
+}
+
+// Work-from-home day checkboxes
+.wfh-row {
+  display: flex;
+  gap: $spacing-md;
+
+  &__day {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: $color-primary;
+      cursor: pointer;
+    }
+
+    span {
+      user-select: none;
+    }
+  }
+}
+
 .preview-button {
-  background-color: $color-gray;
-  color: white;
-  padding: $spacing-md $spacing-xl;
-  border: none;
-  border-radius: $radius-sm;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
+  background: transparent;
+  color: $color-primary;
+  border: 1px solid $color-border;
   width: 100%;
   margin-top: $spacing-sm;
-  transition: background-color $transition-speed;
 
   &:hover {
-    background-color: $color-gray-dark;
+    background-color: $color-bg;
   }
 }

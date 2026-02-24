@@ -68,6 +68,14 @@ export const RECURRING_FREQUENCIES = [
   { value: "quarterly", label: "Quarterly" },
 ] as const;
 
+// Pantry
+export const PANTRY_CATEGORIES = [
+  { value: "dry_goods", label: "Dry Goods" },
+  { value: "frozen", label: "Frozen" },
+  { value: "refrigerated", label: "Refrigerated" },
+  { value: "spices", label: "Spices" },
+] as const;
+
 // Shopping Store Types
 import { StoreConfig } from "@/types/shopping";
 

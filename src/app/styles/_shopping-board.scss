@@ -1,16 +1,16 @@
 @import "./variables";
 
-// Store colors (muted pastels matching calendar block palette)
-$store-big-box-bg: #dbeafe;
-$store-big-box-border: #3b82f6;
-$store-warehouse-bg: #fef3c7;
-$store-warehouse-border: #f59e0b;
-$store-grocery-bg: #dcfce7;
-$store-grocery-border: #22c55e;
-$store-specialty-bg: #ede9fe;
-$store-specialty-border: #8b5cf6;
-$store-unsorted-bg: #f9fafb;
-$store-unsorted-border: #d1d5db;
+// Store colors (warm pastels matching planner palette)
+$store-big-box-bg: $block-work-bg;
+$store-big-box-border: $block-work-border;
+$store-warehouse-bg: $block-meal-bg;
+$store-warehouse-border: $block-meal-border;
+$store-grocery-bg: $block-exercise-bg;
+$store-grocery-border: $block-exercise-border;
+$store-specialty-bg: $block-errand-bg;
+$store-specialty-border: $block-errand-border;
+$store-unsorted-bg: $color-bg-lighter;
+$store-unsorted-border: $color-border;
 
 // ==========================================
 // Board Layout
@@ -33,7 +33,7 @@ $store-unsorted-border: #d1d5db;
   flex: 1;
   border: 1px solid $color-border;
   border-radius: $radius-sm;
-  background: white;
+  background: $color-bg-light;
   display: flex;
   flex-direction: column;
 
@@ -149,13 +149,13 @@ $store-unsorted-border: #d1d5db;
   padding: $spacing-xs $spacing-sm;
   margin-bottom: 2px;
   border-radius: $radius-sm;
-  background: white;
+  background: $color-bg-light;
   border: 1px solid $color-border-light;
   font-size: 0.85rem;
   transition: box-shadow 0.15s ease;
 
   &:hover {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: $shadow-sm;
   }
 
   &--dragging {
@@ -163,8 +163,8 @@ $store-unsorted-border: #d1d5db;
   }
 
   &--overlay {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    background: white;
+    box-shadow: 0 4px 12px rgba(60, 50, 40, 0.15);
+    background: $color-bg-light;
     border: 1px solid $color-border;
     padding: $spacing-xs $spacing-sm;
     border-radius: $radius-sm;
@@ -199,7 +199,7 @@ $store-unsorted-border: #d1d5db;
 
   &:focus {
     outline: none;
-    background: #f9fcff;
+    background: $color-bg-light;
     border-radius: 2px;
   }
 }
@@ -227,7 +227,7 @@ $store-unsorted-border: #d1d5db;
   padding: 2px $spacing-xs;
   border: 1px solid $color-border;
   border-radius: $radius-sm;
-  background: white;
+  background: $color-bg-light;
   font-size: 0.75rem;
   cursor: pointer;
   color: $color-text-lighter;
@@ -252,8 +252,8 @@ $store-unsorted-border: #d1d5db;
   line-height: 1;
 
   &:hover {
-    color: #ef4444;
-    background: #fef2f2;
+    color: $color-danger;
+    background: #fdf2f0;
   }
 }
 
@@ -266,10 +266,10 @@ $store-unsorted-border: #d1d5db;
   top: 100%;
   right: 0;
   z-index: 50;
-  background: white;
+  background: $color-bg-light;
   border: 1px solid $color-border;
   border-radius: $radius-sm;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(60, 50, 40, 0.12);
   padding: $spacing-sm;
   min-width: 200px;
   margin-top: $spacing-xs;
@@ -325,11 +325,8 @@ $store-unsorted-border: #d1d5db;
 
 .store-popover__select {
   width: 100%;
-  padding: $spacing-xs $spacing-sm;
-  border: 1px solid $color-border;
-  border-radius: $radius-sm;
   font-size: 0.85rem;
-  background: white;
+  background: $color-bg-light;
 }
 
 .store-popover__new-cat {

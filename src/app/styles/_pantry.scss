@@ -1,0 +1,91 @@
+// Pantry section — collapsible category groups with sorted items
+
+.pantry-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: $spacing-md;
+}
+
+.pantry-controls__toggle-all {
+  background: none;
+  border: none;
+  color: $color-text-lighter;
+  font-size: 0.75rem;
+  padding: 0;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.pantry-group {
+  margin-bottom: $spacing-md;
+}
+
+.pantry-group__toggle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-sm 0;
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+
+  &:hover .pantry-group__name {
+    color: $color-primary;
+  }
+}
+
+.pantry-group__arrow {
+  font-size: 1rem;
+  color: $color-text-lighter;
+  width: 16px;
+  text-align: center;
+}
+
+.pantry-group__name {
+  font-weight: 600;
+  color: $color-dark;
+  transition: color $transition-speed;
+}
+
+.pantry-group__count {
+  font-size: 0.85rem;
+  color: $color-text-lighter;
+  font-weight: 400;
+}
+
+.pantry-group__items {
+  padding-left: $spacing-md;
+}
+
+.pantry-group__sort {
+  background: none;
+  border: none;
+  color: $color-text-lighter;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: $spacing-xs 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.pantry-actions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .pantry-actions {
+    flex-direction: column;
+  }
+}

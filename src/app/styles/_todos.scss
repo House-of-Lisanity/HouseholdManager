@@ -30,9 +30,9 @@
 
   h3 {
     margin: 0 0 $spacing-md 0;
-    font-size: 1.0625rem;
+    font-size: $heading-card-font-size;
     font-weight: 600;
-    color: $color-dark;
+    color: $heading-card-color;
   }
 }
 
@@ -45,6 +45,18 @@
   h3 {
     margin: 0;
   }
+}
+
+.todo-section__header-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.todo-section__collapse-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: $spacing-xs;
 }
 
 .todo-section--recurring {
@@ -111,6 +123,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
+  table-layout: fixed;
 
   thead {
     border-bottom: 2px solid $color-border-light;
@@ -125,12 +138,16 @@
     text-transform: uppercase;
     letter-spacing: 0.03em;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   td {
     padding: $spacing-xs $spacing-sm;
     vertical-align: middle;
     border-bottom: 1px solid $color-border-light;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   tbody tr:hover {
@@ -142,12 +159,32 @@
   width: 32px;
 }
 
+.todo-table__th--task {
+  width: 35%;
+}
+
+.todo-table__th--priority {
+  width: 110px;
+}
+
+.todo-table__th--hours {
+  width: 75px;
+}
+
+.todo-table__th--actions {
+  width: 80px;
+}
+
 .todo-table__th--sortable {
   cursor: pointer;
   user-select: none;
 
   &:hover {
     color: $color-primary;
+  }
+
+  .sort-arrow {
+    font-size: 0.6rem;
   }
 }
 
@@ -175,6 +212,8 @@
 
 .todo-row__title {
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   .badge {
     margin-left: $spacing-xs;
@@ -182,33 +221,36 @@
   }
 }
 
-.todo-row__room,
+.todo-row__room {
+  color: $color-text-lighter;
+  font-size: 0.85rem;
+}
+
 .todo-row__location {
   color: $color-text-lighter;
   font-size: 0.85rem;
 }
 
 .todo-row__priority {
-  min-width: 100px;
+  white-space: nowrap;
 }
 
 .todo-row__priority-select {
   padding: $spacing-xs;
-  border: 1px solid $color-border-light;
-  border-radius: $radius-sm;
   font-size: 0.85rem;
-  background-color: white;
+  background-color: $color-bg-light;
   cursor: pointer;
   min-height: 36px;
+  width: 100%;
 
   &--must {
-    background-color: #fdecea;
+    background-color: #fdf2f0;
     border-color: $color-danger;
     color: $color-danger-dark;
   }
 
   &--want {
-    background-color: #ebf5fb;
+    background-color: $color-bg-lighter;
     border-color: $color-primary;
     color: $color-primary-dark;
   }
@@ -221,13 +263,11 @@
 }
 
 .todo-row__hours {
-  width: 70px;
+  white-space: nowrap;
 
   input {
-    width: 60px;
+    width: 50px;
     padding: $spacing-xs;
-    border: 1px solid $color-border-light;
-    border-radius: $radius-sm;
     font-size: 0.85rem;
     min-height: 36px;
   }
@@ -235,10 +275,11 @@
 
 .todo-row__actions {
   white-space: nowrap;
+  text-align: right;
 }
 
 .todo-row__btn {
-  padding: $spacing-xs $spacing-sm;
+  padding: $spacing-xs;
   border: none;
   border-radius: $radius-sm;
   cursor: pointer;
@@ -252,7 +293,7 @@
     color: $color-primary;
 
     &:hover {
-      background-color: #ebf5fb;
+      background-color: $color-bg-lighter;
     }
   }
 
@@ -260,14 +301,14 @@
     color: $color-danger;
 
     &:hover {
-      background-color: #fdecea;
+      background-color: #fdf2f0;
     }
   }
 }
 
 // Recurring card
 .recurring-card {
-  background-color: white;
+  background-color: $color-bg-light;
   border: 1px solid $color-border-light;
   border-radius: $radius-md;
   padding: $spacing-md $spacing-lg;
@@ -328,7 +369,7 @@
 
 // To-do form
 .todo-form {
-  background-color: white;
+  background-color: $color-bg-light;
   border: 1px solid $color-border-light;
   border-radius: $radius-md;
   padding: $spacing-lg;
@@ -361,17 +402,17 @@
 
 // Badge variants for to-do priorities and recurring frequencies
 .badge--project {
-  background-color: #e8daef;
-  color: #6c3483;
+  background-color: $block-work-bg;
+  color: $block-work-border;
 }
 
 .badge--must {
-  background-color: #fdecea;
+  background-color: #fdf2f0;
   color: $color-danger-dark;
 }
 
 .badge--want {
-  background-color: #ebf5fb;
+  background-color: $color-bg-lighter;
   color: $color-primary-dark;
 }
 
@@ -386,35 +427,82 @@
 }
 
 .badge--biweekly {
-  background-color: #ebf5fb;
+  background-color: $color-bg-lighter;
   color: $color-primary-dark;
 }
 
 .badge--monthly {
-  background-color: #fef9e7;
-  color: #d4ac0d;
+  background-color: $color-warning;
+  color: $color-warning-text;
 }
 
 .badge--quarterly {
-  background-color: #e8daef;
-  color: #6c3483;
+  background-color: $block-work-bg;
+  color: $block-work-border;
 }
 
-// Add button (shared style for both todo and recurring)
-.add-button {
-  padding: $spacing-sm $spacing-md;
-  background-color: $color-primary;
-  color: white;
+// Category header row (toggle + expand all)
+.category-group__header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.category-group__expand-all {
+  background: none;
   border: none;
-  border-radius: $radius-sm;
-  cursor: pointer;
-  font-size: 0.9rem;
-  min-height: 44px;
-  transition: background-color $transition-speed;
+  color: $color-text-lighter;
+  font-size: 0.75rem;
+  padding: 0;
 
   &:hover {
-    background-color: $color-primary-dark;
+    color: $color-primary;
   }
+}
+
+// Room sub-groups (within Home category)
+.category-group__rooms {
+  padding-left: $spacing-md;
+}
+
+.room-group {
+  margin-bottom: $spacing-sm;
+}
+
+.room-group__toggle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs 0;
+  width: 100%;
+  text-align: left;
+}
+
+.room-group__arrow {
+  font-size: 0.85rem;
+  color: $color-text-lighter;
+  width: 14px;
+  text-align: center;
+}
+
+.room-group__name {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: $color-text-light;
+  transition: color $transition-speed;
+
+  .room-group__toggle:hover & {
+    color: $color-primary;
+  }
+}
+
+.room-group__count {
+  font-size: 0.8rem;
+  color: $color-text-lighter;
+  font-weight: 400;
 }
 
 // Mobile overrides

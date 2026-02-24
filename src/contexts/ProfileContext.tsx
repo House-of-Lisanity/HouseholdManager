@@ -10,10 +10,13 @@ import React, {
 } from "react";
 import { UserProfile } from "@/types";
 
+type SaveStatus = "idle" | "saving" | "saved" | "error";
+
 interface ProfileContextValue {
   profile: UserProfile;
   updateProfile: (field: keyof UserProfile, value: unknown) => void;
   loading: boolean;
+  saveStatus: SaveStatus;
 }
 
 const ProfileContext = createContext<ProfileContextValue | undefined>(undefined);
@@ -24,25 +27,29 @@ const DEFAULT_PROFILE: UserProfile = {
   workEndTime: "3:30 PM",
   wakeTime: "6:00 AM",
   bedTime: "10:00 PM",
+  schedulingPreferences: "",
+  timezone: "",
+  homeAddress: "",
+  workAddress: "",
   bufferRules: [
     { activityType: "gym", minutesBefore: 30, minutesAfter: 15 },
     { activityType: "event", minutesBefore: 120, minutesAfter: 30 },
     { activityType: "appointment", minutesBefore: 15, minutesAfter: 15 },
   ],
   locations: [
-    { name: "Gym", address: "", driveTimeMinutes: 15 },
-    { name: "Nuggets Arena", address: "", driveTimeMinutes: 30 },
+    { name: "Gym", address: "" },
   ],
 
   // Meals
-  targetProtein: "110",
   targetCalories: "",
-  dailyAlcohol: "1 drink (optional)",
+  targetProtein: "",
+  targetCarbs: "",
+  targetFats: "",
   foodsToAvoid: "",
   cravingsPreferences: "",
   allergies: "",
   dietaryStyle: "none",
-  cookingAppliances: [],
+  cookingAppliances: "",
 
   // Workouts — Equipment
   gymEquipment: [],
@@ -71,7 +78,9 @@ const DEFAULT_PROFILE: UserProfile = {
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile>(DEFAULT_PROFILE);
   const [loading, setLoading] = useState(true);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isInitialLoad = useRef(true);
 
   // Load profile from MongoDB on mount
@@ -81,7 +90,17 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         const res = await fetch("/api/profile");
         if (res.ok) {
           const data = await res.json();
-          if (data) setProfile((prev) => ({ ...prev, ...data }));
+          if (data) {
+            if (!data.timezone) {
+              data.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            }
+            setProfile((prev) => ({ ...prev, ...data }));
+          } else {
+            setProfile((prev) => ({
+              ...prev,
+              timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            }));
+          }
         }
       } catch (err) {
         console.error("Failed to load profile:", err);
@@ -97,6 +116,9 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isInitialLoad.current) return;
 
+    setSaveStatus("saving");
+    if (savedTimer.current) clearTimeout(savedTimer.current);
+
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(async () => {
       try {
@@ -105,8 +127,11 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(profile),
         });
+        setSaveStatus("saved");
+        savedTimer.current = setTimeout(() => setSaveStatus("idle"), 2000);
       } catch (err) {
         console.error("Failed to save profile:", err);
+        setSaveStatus("error");
       }
     }, 1000);
 
@@ -123,7 +148,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <ProfileContext.Provider value={{ profile, updateProfile, loading }}>
+    <ProfileContext.Provider value={{ profile, updateProfile, loading, saveStatus }}>
       {children}
     </ProfileContext.Provider>
   );

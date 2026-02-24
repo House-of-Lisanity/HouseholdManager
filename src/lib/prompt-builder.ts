@@ -269,10 +269,11 @@ ${formData.bufferRules
   )
   .join("\n")}
 
-LOCATIONS & DRIVE TIMES:
+LOCATIONS — estimate drive times from these addresses:
 ${formData.locations
-  .map((l) => `- ${l.name}: ${l.driveTimeMinutes} min drive`)
-  .join("\n")}
+  .filter((l) => l.name && l.address)
+  .map((l) => `- ${l.name}: ${l.address}`)
+  .join("\n") || "No locations provided."}
 
 ===== MEALS =====
 

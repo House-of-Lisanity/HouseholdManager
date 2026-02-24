@@ -4,7 +4,11 @@
       "Bash(npm install:*)",
       "Bash(npx next build:*)",
       "Bash(echo:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "WebFetch(domain:spoonacular.com)",
+      "Bash(wc:*)",
+      "WebFetch(domain:docs.perplexity.ai)",
+      "Bash(npx tsx scripts/seed-recurring-chores.ts)"
     ],
     "additionalDirectories": [
       "c:\\Users\\lisaj\\Code\\WeeklyPlanner"

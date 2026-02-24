@@ -57,7 +57,7 @@
 
 // Profile cards (section containers within tabs)
 .profile-card {
-  background-color: white;
+  background-color: $color-bg-light;
   border: 1px solid $color-border-light;
   border-radius: $radius-md;
   padding: $spacing-lg;
@@ -69,8 +69,8 @@
 
   h3 {
     margin: 0 0 $spacing-md 0;
-    color: $color-dark;
-    font-size: 1.0625rem;
+    color: $heading-card-color;
+    font-size: $heading-card-font-size;
     font-weight: 600;
   }
 
@@ -104,6 +104,12 @@
   gap: $spacing-md;
 }
 
+.form-grid--4col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-md;
+}
+
 .form-grid--3col {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -120,6 +126,27 @@
         margin-top: auto;
       }
     }
+  }
+}
+
+// Timezone inline row
+.timezone-inline {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+
+  label {
+    white-space: nowrap;
+    margin-bottom: 0;
+  }
+
+  input {
+    max-width: 240px;
+  }
+
+  .profile-card__hint {
+    margin-bottom: 0;
+    white-space: nowrap;
   }
 }
 
@@ -177,8 +204,18 @@
   }
 
   .form-grid--2col,
-  .form-grid--3col {
-    grid-template-columns: 1fr;
+  .form-grid--3col,
+  .form-grid--4col {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .timezone-inline {
+    flex-wrap: wrap;
+
+    input {
+      max-width: 100%;
+      flex: 1;
+    }
   }
 
   .checkbox-grid {

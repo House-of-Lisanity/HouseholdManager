@@ -6,26 +6,30 @@ export interface IProfile extends Document {
   workEndTime: string;
   wakeTime: string;
   bedTime: string;
+  schedulingPreferences: string;
   bufferRules: {
     activityType: "gym" | "event" | "appointment";
     minutesBefore: number;
     minutesAfter: number;
   }[];
+  timezone: string;
+  homeAddress: string;
+  workAddress: string;
   locations: {
     name: string;
     address: string;
-    driveTimeMinutes: number;
   }[];
 
   // Meals
-  targetProtein: string;
   targetCalories: string;
-  dailyAlcohol: string;
+  targetProtein: string;
+  targetCarbs: string;
+  targetFats: string;
   foodsToAvoid: string;
   cravingsPreferences: string;
   allergies: string;
   dietaryStyle: string;
-  cookingAppliances: string[];
+  cookingAppliances: string;
 
   // Workouts — Equipment
   gymEquipment: string[];
@@ -68,6 +72,7 @@ const ProfileSchema = new Schema<IProfile>(
     workEndTime: { type: String, default: "3:30 PM" },
     wakeTime: { type: String, default: "6:00 AM" },
     bedTime: { type: String, default: "10:00 PM" },
+    schedulingPreferences: { type: String, default: "" },
     bufferRules: [
       {
         activityType: {
@@ -79,23 +84,26 @@ const ProfileSchema = new Schema<IProfile>(
         minutesAfter: { type: Number, required: true },
       },
     ],
+    timezone: { type: String, default: "" },
+    homeAddress: { type: String, default: "" },
+    workAddress: { type: String, default: "" },
     locations: [
       {
         name: { type: String, required: true },
         address: { type: String, default: "" },
-        driveTimeMinutes: { type: Number, required: true },
       },
     ],
 
     // Meals
-    targetProtein: { type: String, default: "110" },
     targetCalories: { type: String, default: "" },
-    dailyAlcohol: { type: String, default: "1 drink (optional)" },
+    targetProtein: { type: String, default: "" },
+    targetCarbs: { type: String, default: "" },
+    targetFats: { type: String, default: "" },
     foodsToAvoid: { type: String, default: "" },
     cravingsPreferences: { type: String, default: "" },
     allergies: { type: String, default: "" },
     dietaryStyle: { type: String, default: "none" },
-    cookingAppliances: { type: [String], default: [] },
+    cookingAppliances: { type: String, default: "" },
 
     // Workouts — Equipment
     gymEquipment: { type: [String], default: [] },
@@ -133,5 +141,9 @@ const ProfileSchema = new Schema<IProfile>(
   { timestamps: true }
 );
 
-export default mongoose.models.Profile ||
-  mongoose.model<IProfile>("Profile", ProfileSchema);
+// Delete cached model so schema changes apply during hot reloading
+if (mongoose.models.Profile) {
+  delete mongoose.models.Profile;
+}
+
+export default mongoose.model<IProfile>("Profile", ProfileSchema);

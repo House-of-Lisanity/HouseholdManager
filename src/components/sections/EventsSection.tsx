@@ -14,7 +14,6 @@ export default function EventsSection({ events, onUpdate }: EventsSectionProps) 
 
   const handleAdd = (event: OneOffItem) => {
     onUpdate([...events, event]);
-    setShowForm(false);
   };
 
   const handleRemove = (id: string) => {

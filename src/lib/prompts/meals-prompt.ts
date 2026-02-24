@@ -14,18 +14,18 @@ export function buildMealsPrompt(
   const pantryText = formatPantryForPrompt(profile.pantryItems);
   const templateJSON = JSON.stringify(WEEKLY_TEMPLATE, null, 2);
 
-  const appliancesList = profile.cookingAppliances.length > 0
-    ? profile.cookingAppliances.join(", ")
+  const appliancesList = profile.cookingAppliances
+    ? profile.cookingAppliances
     : "Standard kitchen appliances";
 
   return `You are a meal planning assistant for someone who is 10 years post-gastric bypass surgery. This person is 48 years old, in menopause, lifts heavy weights, and does CrossFit 5+ days per week. Their goal is to build muscle and lose fat.
 
 CRITICAL CONTEXT:
 - Post-gastric bypass: Small portions (2.5-4 oz protein per meal), high protein, minimal leftovers
-- Protein target: ${profile.targetProtein}g per day
 ${profile.targetCalories ? `- Calorie target: ${profile.targetCalories} per day` : "- Calorie target: Flexible (not strict)"}
-- Prefers salty/savory foods, low fruit/vegetable intake
-- Has ${profile.dailyAlcohol || "1 drink most days"}
+${profile.targetProtein ? `- Protein target: ${profile.targetProtein}g per day` : ""}
+${profile.targetCarbs ? `- Carbs target: ${profile.targetCarbs}g per day` : ""}
+${profile.targetFats ? `- Fats target: ${profile.targetFats}g per day` : ""}
 ${profile.allergies ? `- Allergies: ${profile.allergies}` : ""}
 ${profile.dietaryStyle && profile.dietaryStyle !== "none" ? `- Dietary style: ${profile.dietaryStyle}` : ""}
 - Cooking appliances: ${appliancesList}
@@ -62,7 +62,7 @@ PREFERENCES:
    - When suggesting a recipe-based meal, include the recipe link in brackets: "Meal Name [recipe URL]"
    - Use provided nutrition data for user meals; get nutrition from recipes or verified databases for AI-suggested meals
    - All ingredients for suggested meals should appear in the shopping list (either "from pantry" or "to buy")
-   - Meet daily protein target of ${profile.targetProtein}g
+   - Meet daily macro targets where specified
    - Consider post-workout protein timing (25-30g within 1-2 hours)
 
 2. SHOPPING LIST:
@@ -78,7 +78,7 @@ Return a JSON object with this exact structure:
 
 {
   "weekOf": "${weekOf}",
-  "proteinTarget": "${profile.targetProtein}g",
+  "nutritionTargets": { "calories": "${profile.targetCalories || "flexible"}", "protein": "${profile.targetProtein || "flexible"}g", "carbs": "${profile.targetCarbs || "flexible"}g", "fats": "${profile.targetFats || "flexible"}g" },
   "dailyMeals": [
     {
       "day": "Sunday",

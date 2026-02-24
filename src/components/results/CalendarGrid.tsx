@@ -94,7 +94,6 @@ export default function CalendarGrid({
             className="editable-field"
             value={data.strategyNotes}
             onChange={(e) => onUpdateStrategyNotes(e.target.value)}
-            rows={2}
           />
         </div>
       )}

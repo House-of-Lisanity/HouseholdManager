@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import { PantryItem } from "@/types";
-import { generateId } from "@/lib/constants";
-
-const PANTRY_CATEGORIES = [
-  { value: "dry_goods", label: "Dry Goods" },
-  { value: "frozen", label: "Frozen" },
-  { value: "refrigerated", label: "Refrigerated" },
-  { value: "spices", label: "Spices" },
-] as const;
+import { generateId, PANTRY_CATEGORIES } from "@/lib/constants";
 
 interface PantryFormProps {
   onSave: (item: PantryItem) => void;
@@ -34,7 +27,7 @@ export default function PantryForm({ onSave, onCancel }: PantryFormProps) {
 
   return (
     <div className="add-form">
-      <div className="form-grid">
+      <div className="form-grid form-grid--pantry">
         <input
           type="text"
           placeholder="Item name"

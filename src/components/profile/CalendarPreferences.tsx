@@ -15,7 +15,7 @@ export default function CalendarPreferences({
   const handleBufferRuleChange = (
     index: number,
     field: keyof BufferRule,
-    value: string | number
+    value: string | number,
   ) => {
     const updated = [...profile.bufferRules];
     updated[index] = { ...updated[index], [field]: value };
@@ -25,7 +25,7 @@ export default function CalendarPreferences({
   const handleLocationChange = (
     index: number,
     field: keyof Location,
-    value: string | number
+    value: string,
   ) => {
     const updated = [...profile.locations];
     updated[index] = { ...updated[index], [field]: value };
@@ -42,63 +42,56 @@ export default function CalendarPreferences({
   const removeBufferRule = (index: number) => {
     updateProfile(
       "bufferRules",
-      profile.bufferRules.filter((_, i) => i !== index)
+      profile.bufferRules.filter((_, i) => i !== index),
     );
   };
 
   const addLocation = () => {
     updateProfile("locations", [
       ...profile.locations,
-      { name: "", address: "", driveTimeMinutes: 0 },
+      { name: "", address: "" },
     ]);
   };
 
   const removeLocation = (index: number) => {
     updateProfile(
       "locations",
-      profile.locations.filter((_, i) => i !== index)
+      profile.locations.filter((_, i) => i !== index),
     );
   };
 
   return (
     <div className="profile-tab-content">
-      {/* Work Schedule */}
+      {/* Scheduling Preferences + Schedule */}
       <div className="profile-card">
-        <h3>Work Schedule</h3>
-        <div className="form-grid form-grid--2col">
+        <h3>Scheduling Preferences</h3>
+        <div className="form-grid form-grid--4col">
           <div className="form-group">
-            <label htmlFor="workStart">Work Start Time</label>
+            <label htmlFor="workStart">Work Start</label>
             <input
               id="workStart"
               type="text"
-              placeholder="e.g., 6:30 AM"
+              placeholder="6:30 AM"
               value={profile.workStartTime}
               onChange={(e) => updateProfile("workStartTime", e.target.value)}
             />
           </div>
           <div className="form-group">
-            <label htmlFor="workEnd">Work End Time</label>
+            <label htmlFor="workEnd">Work End</label>
             <input
               id="workEnd"
               type="text"
-              placeholder="e.g., 3:30 PM"
+              placeholder="3:30 PM"
               value={profile.workEndTime}
               onChange={(e) => updateProfile("workEndTime", e.target.value)}
             />
           </div>
-        </div>
-      </div>
-
-      {/* Sleep Schedule */}
-      <div className="profile-card">
-        <h3>Sleep Schedule</h3>
-        <div className="form-grid form-grid--2col">
           <div className="form-group">
             <label htmlFor="wakeTime">Wake Time</label>
             <input
               id="wakeTime"
               type="text"
-              placeholder="e.g., 6:00 AM"
+              placeholder="6:00 AM"
               value={profile.wakeTime}
               onChange={(e) => updateProfile("wakeTime", e.target.value)}
             />
@@ -108,12 +101,99 @@ export default function CalendarPreferences({
             <input
               id="bedTime"
               type="text"
-              placeholder="e.g., 10:00 PM"
+              placeholder="10:00 PM"
               value={profile.bedTime}
               onChange={(e) => updateProfile("bedTime", e.target.value)}
             />
           </div>
         </div>
+        <div className="form-group">
+          <textarea
+            id="schedulingPreferences"
+            rows={4}
+            placeholder={`e.g.,\n- No big projects on workdays\n- Nothing scheduled after 7 PM\n- Errands only on weekends`}
+            value={profile.schedulingPreferences}
+            onChange={(e) =>
+              updateProfile("schedulingPreferences", e.target.value)
+            }
+          />
+        </div>
+      </div>
+
+      {/* Locations */}
+      <div className="profile-card">
+        <h3>Locations</h3>
+        <p className="profile-card__hint">
+          Enter addresses so the AI can estimate drive times automatically.
+        </p>
+
+        {/* Permanent: Home & Work */}
+        <div className="form-grid form-grid--2col">
+          <div className="form-group">
+            <label htmlFor="homeAddress">Home Address</label>
+            <input
+              id="homeAddress"
+              type="text"
+              placeholder="e.g., 123 Main St, Denver CO"
+              value={profile.homeAddress}
+              onChange={(e) => updateProfile("homeAddress", e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="workAddress">Work Address</label>
+            <input
+              id="workAddress"
+              type="text"
+              placeholder="e.g., 456 Office Blvd, Denver CO"
+              value={profile.workAddress}
+              onChange={(e) => updateProfile("workAddress", e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Custom locations */}
+        {profile.locations.length > 0 && (
+          <>
+            <div className="location-rule location-rule-header">
+              <span>Location Name</span>
+              <span>Address</span>
+              <span></span>
+            </div>
+            {profile.locations.map((loc, i) => (
+              <div key={i} className="location-rule">
+                <input
+                  type="text"
+                  aria-label={`Location name ${i + 1}`}
+                  placeholder="e.g., Gym"
+                  value={loc.name}
+                  onChange={(e) =>
+                    handleLocationChange(i, "name", e.target.value)
+                  }
+                />
+                <input
+                  type="text"
+                  aria-label={`Address for location ${i + 1}`}
+                  placeholder="e.g., 789 Fitness Ave, Denver CO"
+                  value={loc.address}
+                  onChange={(e) =>
+                    handleLocationChange(i, "address", e.target.value)
+                  }
+                />
+                <button
+                  type="button"
+                  className="remove-button"
+                  onClick={() => removeLocation(i)}
+                  aria-label={`Remove location ${i + 1}`}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </>
+        )}
+        <button type="button" className="add-button" onClick={addLocation}>
+          + Add Location
+        </button>
       </div>
 
       {/* Buffer Rules */}
@@ -149,7 +229,7 @@ export default function CalendarPreferences({
                 handleBufferRuleChange(
                   i,
                   "minutesBefore",
-                  parseInt(e.target.value) || 0
+                  parseInt(e.target.value) || 0,
                 )
               }
             />
@@ -161,7 +241,7 @@ export default function CalendarPreferences({
                 handleBufferRuleChange(
                   i,
                   "minutesAfter",
-                  parseInt(e.target.value) || 0
+                  parseInt(e.target.value) || 0,
                 )
               }
             />
@@ -180,52 +260,19 @@ export default function CalendarPreferences({
         </button>
       </div>
 
-      {/* Locations */}
-      <div className="profile-card">
-        <h3>Locations</h3>
-        <p className="profile-card__hint">
-          Saved locations for drive time calculations.
-        </p>
-        <div className="location-rule location-rule-header">
-          <span>Location Name</span>
-          <span>Drive Time (min)</span>
-          <span></span>
+      {/* Timezone */}
+      <div className="profile-card profile-card--tight">
+        <div className="timezone-inline">
+          <label htmlFor="timezone">Timezone</label>
+          <input
+            id="timezone"
+            type="text"
+            placeholder="e.g., America/Denver"
+            value={profile.timezone}
+            onChange={(e) => updateProfile("timezone", e.target.value)}
+          />
+          <span className="profile-card__hint">Auto-detected from browser</span>
         </div>
-        {profile.locations.map((loc, i) => (
-          <div key={i} className="location-rule">
-            <input
-              type="text"
-              aria-label={`Location name ${i + 1}`}
-              placeholder="Location name"
-              value={loc.name}
-              onChange={(e) => handleLocationChange(i, "name", e.target.value)}
-            />
-            <input
-              type="number"
-              aria-label={`Drive time for location ${i + 1}`}
-              placeholder="Minutes"
-              value={loc.driveTimeMinutes}
-              onChange={(e) =>
-                handleLocationChange(
-                  i,
-                  "driveTimeMinutes",
-                  parseInt(e.target.value) || 0
-                )
-              }
-            />
-            <button
-              type="button"
-              className="remove-button"
-              onClick={() => removeLocation(i)}
-              aria-label={`Remove location ${i + 1}`}
-            >
-              Remove
-            </button>
-          </div>
-        ))}
-        <button type="button" className="add-button" onClick={addLocation}>
-          + Add Location
-        </button>
       </div>
     </div>
   );

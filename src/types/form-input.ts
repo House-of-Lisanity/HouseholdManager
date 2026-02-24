@@ -18,18 +18,23 @@ export interface UserProfile {
   workEndTime: string;
   wakeTime: string;
   bedTime: string;
+  schedulingPreferences: string;
+  timezone: string;
+  homeAddress: string;
+  workAddress: string;
   bufferRules: BufferRule[];
   locations: Location[];
 
   // Meals
-  targetProtein: string;
   targetCalories: string;
-  dailyAlcohol: string;
+  targetProtein: string;
+  targetCarbs: string;
+  targetFats: string;
   foodsToAvoid: string;
   cravingsPreferences: string;
   allergies: string;
   dietaryStyle: string;
-  cookingAppliances: string[];
+  cookingAppliances: string;
 
   // Workouts — Equipment
   gymEquipment: string[];
@@ -60,6 +65,7 @@ export interface CalendarFormInput {
   oneOffItems: OneOffItem[];
   recurringItems: RecurringItem[];
   eventNights: EventNight[];
+  workFromHomeDays: string[];
   weeklyNotes: string;
 }
 

@@ -98,14 +98,7 @@
   background-color: $color-secondary;
   color: #fff;
   border: none;
-  padding: $spacing-sm $spacing-md;
-  border-radius: $radius-sm;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
   white-space: nowrap;
-  min-height: 44px;
-  transition: background-color $transition-speed;
 
   &:hover,
   &:focus-visible {

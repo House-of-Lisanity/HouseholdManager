@@ -18,6 +18,7 @@
 
   h1 {
     font-size: 1.75rem;
+    font-weight: 400;
     color: $color-dark;
     margin: 0;
   }
@@ -38,7 +39,8 @@
   gap: $spacing-md;
   margin-bottom: $spacing-lg;
   padding: $spacing-sm $spacing-md;
-  background: white;
+  background: $color-bg-light;
+  border: 1px solid $color-border-light;
   border-radius: $radius-md;
   box-shadow: $shadow-sm;
 }
@@ -53,7 +55,7 @@
 .view-toggle__btn {
   padding: $spacing-sm $spacing-md;
   border: none;
-  background: white;
+  background: $color-bg-light;
   font-size: 0.9rem;
   font-weight: 600;
   color: $color-text-light;
@@ -84,7 +86,7 @@
   padding: $spacing-xs $spacing-sm;
   border: 1px solid $color-border;
   border-radius: $radius-sm;
-  background: white;
+  background: $color-bg-light;
   font-size: 1rem;
   cursor: pointer;
   color: $color-text-light;
@@ -108,7 +110,7 @@
   padding: $spacing-xs $spacing-sm;
   border: 1px solid $color-border;
   border-radius: $radius-sm;
-  background: white;
+  background: $color-bg-light;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
@@ -131,7 +133,8 @@
 // ==========================================
 
 .results-section {
-  background: white;
+  background: $color-bg-light;
+  border: 1px solid $color-border-light;
   border-radius: $radius-md;
   box-shadow: $shadow-sm;
   margin-bottom: $spacing-xl;
@@ -145,27 +148,38 @@
   align-items: center;
   margin-bottom: $spacing-md;
   padding-bottom: $spacing-sm;
-  border-bottom: 2px solid $color-border;
+  border-bottom: 1px solid $color-border;
 
   h2 {
     font-size: 1.4rem;
+    font-weight: 400;
     color: $color-dark;
     margin: 0;
   }
 }
 
 .results-section__summary {
-  background: $color-bg-lighter;
+  background: $color-bg;
   padding: $spacing-md;
   border-radius: $radius-sm;
+  border: 1px solid $color-border-light;
+  border-left: 3px solid $color-gray;
   margin-bottom: $spacing-lg;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: $spacing-sm;
   flex-wrap: wrap;
 
   strong {
     white-space: nowrap;
+    color: $color-dark;
+  }
+
+  .editable-field {
+    field-sizing: content;
+    min-height: 2lh;
+    resize: none;
+    overflow: hidden;
   }
 }
 
@@ -173,7 +187,7 @@
   padding: $spacing-sm $spacing-md;
   border: 1px solid $color-border;
   border-radius: $radius-sm;
-  background: white;
+  background: $color-bg-light;
   font-size: 0.85rem;
   font-weight: 600;
   color: $color-text-light;
@@ -200,7 +214,6 @@
   grid-template-rows: auto repeat(32, 24px); // header + 32 half-hour rows (6AM-10PM)
   gap: 0;
   border: 1px solid $color-border;
-  border-radius: $radius-sm;
   position: relative;
   min-height: 800px;
 
@@ -222,21 +235,22 @@
   color: white;
   padding: $spacing-sm;
   text-align: center;
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  font-weight: 400;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cal-grid__time-label {
   grid-column: 1;
   padding: 2px $spacing-xs 0 0;
   text-align: right;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: $color-text-lighter;
   border-right: 1px solid $color-border;
   position: relative;
 
-  // Horizontal line across all day columns
   &::after {
     content: "";
     position: absolute;
@@ -249,26 +263,13 @@
 }
 
 // ==========================================
-// Time Block Colors (muted, sensory-friendly)
+// Time Blocks
 // ==========================================
-
-$block-work-bg: #dbeafe;
-$block-work-border: #3b82f6;
-$block-exercise-bg: #dcfce7;
-$block-exercise-border: #22c55e;
-$block-meal-bg: #fef3c7;
-$block-meal-border: #f59e0b;
-$block-errand-bg: #ede9fe;
-$block-errand-border: #8b5cf6;
-$block-routine-bg: #f3f4f6;
-$block-routine-border: #9ca3af;
-$block-default-bg: #f0f9ff;
-$block-default-border: #64748b;
 
 .cal-block {
   margin: 1px 2px;
   padding: 2px $spacing-xs;
-  border-radius: 3px;
+  border-radius: 2px;
   border: none;
   border-left: 3px solid $block-default-border;
   background: $block-default-bg;
@@ -283,7 +284,7 @@ $block-default-border: #64748b;
   transition: box-shadow $transition-speed;
 
   &:hover {
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 1px 3px rgba(60, 50, 40, 0.12);
   }
 
   &--work { background: $block-work-bg; border-left-color: $block-work-border; }
@@ -295,13 +296,13 @@ $block-default-border: #64748b;
 
 // Grid row lines (subtle horizontal gridlines)
 .cal-grid__row-line {
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(108, 98, 89, 0.1);
   z-index: 0;
   pointer-events: none;
 }
 
 .cal-block__label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: $color-text;
   line-height: 1.2;
@@ -337,7 +338,7 @@ $block-default-border: #64748b;
 .block-detail-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.3);
   z-index: 100;
   display: flex;
   align-items: center;
@@ -346,13 +347,13 @@ $block-default-border: #64748b;
 }
 
 .block-detail {
-  background: white;
+  background: $color-bg-light;
   border: 1px solid $color-border;
   border-radius: $radius-md;
   padding: $spacing-lg;
   width: 100%;
   max-width: 460px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 30px rgba(60, 50, 40, 0.15);
 }
 
 .block-detail__header {
@@ -385,7 +386,7 @@ $block-default-border: #64748b;
   border-radius: 10px;
   font-size: 0.7rem;
   font-weight: 600;
-  background: $color-bg-light;
+  background: $color-bg;
   color: $color-text-lighter;
   border: 1px solid $color-border;
 }
@@ -394,7 +395,7 @@ $block-default-border: #64748b;
   padding: $spacing-sm $spacing-md;
   border: 1px solid $color-border;
   border-radius: $radius-sm;
-  background: white;
+  background: $color-bg-light;
   font-size: 0.85rem;
   font-weight: 600;
   color: $color-text-light;
@@ -421,6 +422,8 @@ $block-default-border: #64748b;
   font-size: 0.8rem;
   font-weight: 600;
   color: $color-text-lighter;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .block-detail__time-inputs {
@@ -455,16 +458,18 @@ $block-default-border: #64748b;
 }
 
 .cal-assignments__card {
-  background: $color-bg-light;
+  background: $color-bg;
   border: 1px solid $color-border-light;
   border-radius: $radius-sm;
   padding: $spacing-sm;
 }
 
 .cal-assignments__day {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 400;
   color: $color-dark;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   margin: 0 0 $spacing-xs;
   padding-bottom: $spacing-xs;
   border-bottom: 1px solid $color-border-light;
@@ -479,8 +484,11 @@ $block-default-border: #64748b;
 
   strong {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 600;
     color: $color-text-lighter;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     margin-bottom: 2px;
   }
 
@@ -503,7 +511,6 @@ $block-default-border: #64748b;
   grid-template-columns: 80px repeat(7, 1fr);
   gap: 0;
   border: 1px solid $color-border;
-  border-radius: $radius-sm;
 
   &--day {
     grid-template-columns: 80px 1fr;
@@ -520,21 +527,25 @@ $block-default-border: #64748b;
   color: white;
   padding: $spacing-sm;
   text-align: center;
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  font-weight: 400;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .meals-grid__row-label {
   padding: $spacing-sm;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: $color-text-light;
   background: $color-bg-lighter;
   border-bottom: 1px solid $color-border;
   border-right: 1px solid $color-border;
   display: flex;
   align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .meals-grid__cell {
@@ -550,7 +561,7 @@ $block-default-border: #64748b;
   }
 
   &:nth-child(even) {
-    background: rgba(0, 0, 0, 0.01);
+    background: rgba(108, 98, 89, 0.02);
   }
 }
 
@@ -579,8 +590,10 @@ $block-default-border: #64748b;
   color: white;
   padding: $spacing-sm;
   text-align: center;
-  font-weight: 600;
-  font-size: 0.9rem;
+  font-weight: 400;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .workout-card__body {
@@ -596,8 +609,11 @@ $block-default-border: #64748b;
 
   strong {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 600;
     color: $color-text-lighter;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     margin-bottom: 2px;
   }
 
@@ -622,17 +638,17 @@ $block-default-border: #64748b;
 
   &--crossfit {
     background: $block-exercise-bg;
-    color: #16a34a;
+    color: #4a7142;
   }
 
   &--lifting {
     background: $block-work-bg;
-    color: #2563eb;
+    color: #6b5f90;
   }
 
   &--cardio {
     background: $block-meal-bg;
-    color: #d97706;
+    color: #8b6d3c;
   }
 
   &--rest {
@@ -642,7 +658,7 @@ $block-default-border: #64748b;
 
   &--yoga {
     background: $block-errand-bg;
-    color: #7c3aed;
+    color: #6b5f50;
   }
 }
 

@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
+import { Inter, Lora } from "next/font/google";
 import "./globals.scss";
 import { ProfileProvider } from "@/contexts/ProfileContext";
 import Navigation from "@/components/navigation/Navigation";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-body" });
+const lora = Lora({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  weight: ["400", "600"],
+});
 
 export const metadata: Metadata = {
   title: "Weekly Planner",
@@ -14,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${lora.variable}`}>
       <body>
         <ProfileProvider>
           <Navigation />

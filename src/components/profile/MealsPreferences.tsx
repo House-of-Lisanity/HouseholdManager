@@ -12,16 +12,6 @@ const DIETARY_STYLES = [
   { value: "vegan", label: "Vegan" },
 ] as const;
 
-const COOKING_APPLIANCES = [
-  "Tovala",
-  "Air Fryer",
-  "Instant Pot",
-  "Oven",
-  "Stovetop",
-  "Grill",
-  "Slow Cooker",
-] as const;
-
 interface MealsPreferencesProps {
   profile: UserProfile;
   updateProfile: (field: keyof UserProfile, value: unknown) => void;
@@ -31,14 +21,6 @@ export default function MealsPreferences({
   profile,
   updateProfile,
 }: MealsPreferencesProps) {
-  const toggleAppliance = (appliance: string) => {
-    const current = profile.cookingAppliances || [];
-    const updated = current.includes(appliance)
-      ? current.filter((a) => a !== appliance)
-      : [...current, appliance];
-    updateProfile("cookingAppliances", updated);
-  };
-
   return (
     <div className="profile-tab-content">
       {/* Dietary Information */}
@@ -84,7 +66,7 @@ export default function MealsPreferences({
           <label htmlFor="cravings">Cravings and Preferences</label>
           <textarea
             id="cravings"
-            placeholder="e.g., craving Mexican food, prefer warm meals..."
+            placeholder="e.g., craving Mexican food, prefer warm meals, 1 drink most days..."
             value={profile.cravingsPreferences}
             onChange={(e) =>
               updateProfile("cravingsPreferences", e.target.value)
@@ -95,21 +77,11 @@ export default function MealsPreferences({
       </div>
 
       {/* Nutrition Targets */}
-      <div className="profile-card">
+      <div className="profile-card profile-card--tight">
         <h3>Nutrition Targets</h3>
-        <div className="form-grid form-grid--3col">
+        <div className="form-grid form-grid--4col">
           <div className="form-group">
-            <label htmlFor="protein">Daily Protein (g)</label>
-            <input
-              id="protein"
-              type="text"
-              placeholder="e.g., 110"
-              value={profile.targetProtein}
-              onChange={(e) => updateProfile("targetProtein", e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="calories">Daily Calories</label>
+            <label htmlFor="calories">Calories</label>
             <input
               id="calories"
               type="text"
@@ -119,35 +91,51 @@ export default function MealsPreferences({
             />
           </div>
           <div className="form-group">
-            <label htmlFor="alcohol">Daily Alcohol</label>
+            <label htmlFor="protein">Protein (g)</label>
             <input
-              id="alcohol"
+              id="protein"
               type="text"
-              placeholder="e.g., 1 drink (optional)"
-              value={profile.dailyAlcohol}
-              onChange={(e) => updateProfile("dailyAlcohol", e.target.value)}
+              placeholder="e.g., 110"
+              value={profile.targetProtein}
+              onChange={(e) => updateProfile("targetProtein", e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="carbs">Carbs (g)</label>
+            <input
+              id="carbs"
+              type="text"
+              placeholder="e.g., 150"
+              value={profile.targetCarbs}
+              onChange={(e) => updateProfile("targetCarbs", e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="fats">Fats (g)</label>
+            <input
+              id="fats"
+              type="text"
+              placeholder="e.g., 60"
+              value={profile.targetFats}
+              onChange={(e) => updateProfile("targetFats", e.target.value)}
             />
           </div>
         </div>
       </div>
 
       {/* Cooking Appliances */}
-      <div className="profile-card">
+      <div className="profile-card profile-card--tight">
         <h3>Cooking Appliances</h3>
-        <p className="profile-card__hint">
-          Select the appliances you have available.
-        </p>
-        <div className="checkbox-grid">
-          {COOKING_APPLIANCES.map((appliance) => (
-            <label key={appliance} className="checkbox-item">
-              <input
-                type="checkbox"
-                checked={(profile.cookingAppliances || []).includes(appliance)}
-                onChange={() => toggleAppliance(appliance)}
-              />
-              <span>{appliance}</span>
-            </label>
-          ))}
+        <div className="form-group">
+          <input
+            id="cookingAppliances"
+            type="text"
+            placeholder="e.g., Air Fryer, Instant Pot, Oven, Stovetop, Grill"
+            value={profile.cookingAppliances}
+            onChange={(e) =>
+              updateProfile("cookingAppliances", e.target.value)
+            }
+          />
         </div>
       </div>
     </div>

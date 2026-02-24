@@ -32,6 +32,6 @@
   transition: background-color $transition-speed;
 
   &:hover {
-    background-color: #6c7a7b;
+    background-color: $color-gray;
   }
 }

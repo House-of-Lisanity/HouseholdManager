@@ -12,37 +12,76 @@ interface WorkoutEntryFormProps {
   onCancel: () => void;
 }
 
+const INITIAL_ENTRY: Partial<WorkoutEntry> = {
+  workoutType: "Lifting",
+  location: "Gym",
+  day: "",
+  pinnedToDay: false,
+  startTime: "",
+  endTime: "",
+  details: "",
+  notes: "",
+};
+
+function buildWorkout(draft: Partial<WorkoutEntry>): WorkoutEntry {
+  return {
+    id: generateId("workout"),
+    workoutType: draft.workoutType || "Lifting",
+    location: draft.location || "Gym",
+    day: draft.day || "",
+    pinnedToDay: draft.pinnedToDay || false,
+    startTime: draft.pinnedToDay ? draft.startTime || "" : "",
+    endTime: draft.pinnedToDay ? draft.endTime || "" : "",
+    details: draft.details || "",
+    notes: draft.notes || "",
+  };
+}
+
 export default function WorkoutEntryForm({
   onSave,
   onCancel,
 }: WorkoutEntryFormProps) {
-  const [entry, setEntry] = useState<Partial<WorkoutEntry>>({
-    workoutType: "Lifting",
-    location: "Gym",
-    day: "",
-    pinnedToDay: false,
-    startTime: "",
-    endTime: "",
-    details: "",
-    notes: "",
-  });
+  const [entry, setEntry] = useState<Partial<WorkoutEntry>>(INITIAL_ENTRY);
+  const [pending, setPending] = useState<WorkoutEntry[]>([]);
+
+  const handleAddAnother = () => {
+    setPending((prev) => [...prev, buildWorkout(entry)]);
+    setEntry({ ...INITIAL_ENTRY });
+  };
 
   const handleSave = () => {
-    onSave({
-      id: generateId("workout"),
-      workoutType: entry.workoutType || "Lifting",
-      location: entry.location || "Gym",
-      day: entry.day || "",
-      pinnedToDay: entry.pinnedToDay || false,
-      startTime: entry.pinnedToDay ? entry.startTime || "" : "",
-      endTime: entry.pinnedToDay ? entry.endTime || "" : "",
-      details: entry.details || "",
-      notes: entry.notes || "",
-    });
+    const all = [...pending, buildWorkout(entry)];
+    if (all.length === 0) return;
+    all.forEach((item) => onSave(item));
+    onCancel();
+  };
+
+  const removePending = (index: number) => {
+    setPending((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
     <div className="add-form">
+      {pending.length > 0 && (
+        <ul className="add-form__pending">
+          {pending.map((item, i) => (
+            <li key={i}>
+              <span>
+                {item.workoutType} · {item.location}
+                {item.day ? ` · ${item.day}` : ""}
+              </span>
+              <button
+                type="button"
+                onClick={() => removePending(i)}
+                aria-label="Remove"
+              >
+                ×
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
       <div className="form-grid form-grid--2col">
         <div className="form-group">
           <label htmlFor="workout-type">Workout Type</label>
@@ -126,7 +165,7 @@ export default function WorkoutEntryForm({
             <input
               id="workout-start-time"
               type="text"
-              placeholder="e.g., 4:00 PM"
+              placeholder="4:00 PM"
               value={entry.startTime || ""}
               onChange={(e) =>
                 setEntry((prev) => ({ ...prev, startTime: e.target.value }))
@@ -138,7 +177,7 @@ export default function WorkoutEntryForm({
             <input
               id="workout-end-time"
               type="text"
-              placeholder="e.g., 5:30 PM"
+              placeholder="5:30 PM"
               value={entry.endTime || ""}
               onChange={(e) =>
                 setEntry((prev) => ({ ...prev, endTime: e.target.value }))
@@ -177,8 +216,15 @@ export default function WorkoutEntryForm({
       </div>
 
       <div className="form-buttons">
+        <button
+          type="button"
+          className="add-another-button"
+          onClick={handleAddAnother}
+        >
+          + Add Another
+        </button>
         <button type="button" className="save-button" onClick={handleSave}>
-          Save
+          Save{pending.length > 0 ? ` (${pending.length + 1})` : ""}
         </button>
         <button type="button" className="cancel-button" onClick={onCancel}>
           Cancel

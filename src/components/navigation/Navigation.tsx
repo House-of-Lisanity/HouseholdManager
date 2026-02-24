@@ -22,17 +22,17 @@ function isDropdown(entry: NavEntry): entry is NavDropdown {
 
 const NAV_ENTRIES: NavEntry[] = [
   { href: "/calendar", label: "Calendar" },
-  { href: "/todos", label: "To Do" },
   { href: "/meals", label: "Meals" },
   { href: "/workouts", label: "Workouts" },
   {
-    label: "Logs",
+    label: "More",
     items: [
+      { href: "/todos", label: "To Do" },
       { href: "/meal-log", label: "Meal Log" },
       { href: "/workout-log", label: "Workout Log" },
+      { href: "/profile", label: "Profile" },
     ],
   },
-  { href: "/profile", label: "Profile" },
 ];
 
 export default function Navigation() {

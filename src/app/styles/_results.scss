@@ -1,9 +1,10 @@
 @import './variables';
 
 .plan-result {
-  background-color: white;
+  background-color: $color-bg-light;
   padding: $spacing-xl;
   border-radius: $radius-md;
+  border: 1px solid $color-border-light;
   box-shadow: $shadow-sm;
 }
 
@@ -51,7 +52,7 @@
   grid-template-columns: 2fr 1fr;
   gap: $spacing-md;
   padding: $spacing-md;
-  background-color: white;
+  background-color: $color-bg-light;
 }
 
 .schedule-column,
@@ -78,7 +79,7 @@
 
   td {
     padding: $spacing-sm;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid $color-border-light;
     vertical-align: top;
   }
 }
@@ -137,21 +138,7 @@
   }
 }
 
-.editable-field {
-  width: 100%;
-  padding: $spacing-sm;
-  border: 1px solid $color-border;
-  border-radius: $radius-sm;
-  font-family: inherit;
-  font-size: 0.95rem;
-  resize: vertical;
-
-  &:focus {
-    outline: none;
-    border-color: $color-primary;
-    background-color: #f9fcff;
-  }
-}
+// .editable-field is defined globally in _base.scss
 
 .shopping-section {
   margin-top: $spacing-xl;
@@ -217,10 +204,10 @@
 }
 
 .new-plan-button {
-  background-color: $color-gray;
-  color: white;
+  background: transparent;
+  color: $color-primary;
   padding: 0.75rem $spacing-lg;
-  border: none;
+  border: 1px solid $color-border;
   border-radius: $radius-sm;
   font-size: 1rem;
   font-weight: 600;
@@ -228,7 +215,7 @@
   transition: background-color $transition-speed;
 
   &:hover {
-    background-color: $color-gray-dark;
+    background-color: $color-bg;
   }
 }
 

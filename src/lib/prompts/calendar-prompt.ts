@@ -27,19 +27,24 @@ export function buildCalendarPrompt(
     )
     .join("\n");
 
-  const locationsText = profile.locations
-    .map((l) => `- ${l.name}: ${l.driveTimeMinutes} min drive`)
+  const allLocations = [
+    ...(profile.homeAddress ? [{ name: "Home", address: profile.homeAddress }] : []),
+    ...(profile.workAddress ? [{ name: "Work", address: profile.workAddress }] : []),
+    ...profile.locations.filter((l) => l.name && l.address),
+  ];
+  const locationsText = allLocations
+    .map((l) => `- ${l.name}: ${l.address}`)
     .join("\n");
 
   return `You are a weekly calendar planning assistant. Create a realistic, balanced weekly schedule.
 
 USER CONTEXT:
+- Timezone: ${profile.timezone || "America/Denver"}
 - Works ${profile.workStartTime} to ${profile.workEndTime} on weekdays
 - Wake time: ${profile.wakeTime}
 - Bed time: ${profile.bedTime}
 - Active lifestyle: lifts heavy weights and does CrossFit 5+ days/week
-- Post-gastric bypass: needs structured meal times for small, frequent portions
-
+${profile.schedulingPreferences ? `\nSCHEDULING PREFERENCES (follow these rules strictly):\n${profile.schedulingPreferences}\n` : ""}
 CALENDAR REQUEST:
 Week of: ${formData.weekOf}
 
@@ -48,6 +53,7 @@ ${formData.weeklyNotes ? `WEEKLY NOTES:\n${formData.weeklyNotes}\n` : ""}
 
 WORK SCHEDULE:
 Monday-Friday: ${profile.workStartTime} - ${profile.workEndTime}
+${formData.workFromHomeDays.length > 0 ? `Work from home: ${formData.workFromHomeDays.join(", ")}\nWork from office: ${["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].filter((d) => !formData.workFromHomeDays.includes(d)).join(", ") || "None"}` : "Works from office every day"}
 
 ONE-OFF ITEMS THIS WEEK:
 ${oneOffText}
@@ -58,49 +64,46 @@ ${recurringText}
 EVENT NIGHTS:
 ${eventNightsText}
 
-===== BUFFER RULES =====
+===== AWARENESS RULES (do NOT create blocks for these) =====
 
-Apply these time buffers around scheduled activities (don't schedule tasks in buffer zones):
+BUFFER TIMES — account for these when scheduling, but do NOT show them as time blocks:
 ${bufferText}
 
-LOCATIONS & DRIVE TIMES:
-${locationsText}
+LOCATIONS — estimate realistic drive times between these addresses; factor into scheduling but do NOT create time blocks for travel:
+${locationsText || "No locations provided."}
+
+MEALS — do NOT schedule meal blocks. Meals are managed separately.
 
 ===== INSTRUCTIONS =====
 
-1. TIME BLOCKING STRATEGY:
-   - Treat work schedule, gym sessions, meetings, appointments, and events as FIXED ANCHORS
-   - Generate dynamic time blocks for each day based on these anchors
-   - Leave some blocks as "flex" or blank — NOT everything needs to be scheduled
-   - Respect buffer times around gym, events, and appointments
-   - Account for drive times to/from locations
-   - Don't over-schedule — leave breathing room
+1. ONLY SCHEDULE ACTIONABLE BLOCKS:
+   - Work, gym sessions, appointments, events, and meetings are FIXED ANCHORS — show these
+   - Chores and tasks assigned for the day — show these
+   - Do NOT create blocks for: meals, commute/drive time, rest, flex time, morning routine, wind-down, or buffer zones
+   - Unscheduled time IS the flex time — leave gaps open rather than labeling them
+   - Fewer blocks is better. A day with 3-5 blocks is ideal.
 
-2. DAILY SCHEDULE STRUCTURE:
-   For each day, create time blocks that show:
-   - Work blocks (based on work schedule)
-   - Gym blocks (with buffers before/after)
-   - Meeting/appointment/event blocks (with buffers)
-   - "Flex / Chores / Hobby" blocks for available time
-   - Some completely blank blocks (don't over-schedule)
+2. SCHEDULING AWARENESS:
+   - Use buffer times and drive times to determine WHEN things can be scheduled, but don't show them
+   - Don't schedule tasks during buffer zones or overlapping with drive times
+   - Respect wake/bed times as boundaries
 
 3. BIG ROCKS ASSIGNMENT:
    For each day, assign:
    - 1-3 "Big Rocks" — the most important tasks or goals for that day
    - 0-2 chores
-   - 0-1 hobby that fits available time blocks
+   - 0-1 hobby
 
 OUTPUT FORMAT:
 Return a JSON object with this exact structure:
 
 {
   "weekOf": "${formData.weekOf}",
-  "strategyNotes": "2-3 sentences about the weekly approach, key priorities, and how the schedule balances",
+  "strategyNotes": "2-3 sentences about the weekly approach and key priorities",
   "dailySchedules": [
     {
       "day": "Sunday",
       "timeBlocks": [
-        { "startTime": "6:30", "endTime": "10:00", "description": "Morning routine + breakfast", "shortLabel": "Morning" },
         { "startTime": "10:00", "endTime": "12:00", "description": "Gym: CrossFit", "shortLabel": "Gym" }
       ],
       "bigRocks": ["Important task 1", "Important task 2"],
@@ -113,11 +116,9 @@ Return a JSON object with this exact structure:
 Include all 7 days (Sunday through Saturday) in dailySchedules.
 
 IMPORTANT:
-- Generate realistic time blocks based on actual schedule anchors
-- Respect all buffer times and drive times
-- Balance workout intensity with rest days
-- Consider travel time for events/appointments
-- Each timeBlock must include startTime, endTime, description, and shortLabel (a brief 1-2 word label)
+- Only include blocks for things the user actually needs to DO or ATTEND
+- Each timeBlock must include startTime, endTime, description, and shortLabel (1-2 words)
+- Keep it sparse — open gaps are intentional breathing room
 
 Return ONLY the JSON object, no other text.`;
 }

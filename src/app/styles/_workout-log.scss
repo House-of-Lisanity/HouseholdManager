@@ -21,9 +21,9 @@
 
   h3 {
     margin: 0 0 $spacing-md 0;
-    font-size: 1.0625rem;
+    font-size: $heading-card-font-size;
     font-weight: 600;
-    color: $color-dark;
+    color: $heading-card-color;
   }
 
   &__list {
@@ -35,7 +35,7 @@
 
 // Planned workout cards
 .planned-workout-card {
-  background-color: white;
+  background-color: $color-bg-light;
   border: 1px solid $color-border-light;
   border-radius: $radius-md;
   padding: $spacing-md $spacing-lg;
@@ -137,7 +137,7 @@
   }
 
   &--modified {
-    background-color: #ebf5fb;
+    background-color: $color-bg-lighter;
     color: $color-primary-dark;
   }
 
@@ -150,7 +150,7 @@
 // Planned comparison box (shows what was planned)
 .planned-comparison {
   border-left: 3px solid $color-primary;
-  background-color: #ebf5fb;
+  background-color: $color-bg-lighter;
   padding: $spacing-sm $spacing-md;
   margin-bottom: $spacing-md;
   border-radius: 0 $radius-sm $radius-sm 0;
@@ -170,7 +170,7 @@
 
 // Workout log form
 .workout-log-form {
-  background-color: white;
+  background-color: $color-bg-light;
   border: 1px solid $color-border-light;
   border-radius: $radius-md;
   padding: $spacing-lg;
@@ -272,7 +272,7 @@
 
 // Logged workout cards
 .logged-workout-card {
-  background-color: white;
+  background-color: $color-bg-light;
   border: 1px solid $color-border-light;
   border-radius: $radius-md;
   padding: $spacing-md $spacing-lg;

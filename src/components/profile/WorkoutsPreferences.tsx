@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { UserProfile } from "@/types";
+import { UserProfile, LiftMax } from "@/types";
 import WorkoutsBodyCard from "./WorkoutsBodyCard";
 
 type EquipmentField = "gymEquipment" | "homeEquipment" | "crossfitEquipment";
@@ -32,6 +32,30 @@ export default function WorkoutsPreferences({
     const current = profile[field] || [];
     updateProfile(field, [...current, ...parsed]);
     setNewItems((prev) => ({ ...prev, [field]: "" }));
+  };
+
+  const handleLiftMaxChange = (
+    index: number,
+    field: keyof LiftMax,
+    value: string
+  ) => {
+    const updated = [...profile.liftMaxes];
+    updated[index] = { ...updated[index], [field]: value };
+    updateProfile("liftMaxes", updated);
+  };
+
+  const addLiftMax = () => {
+    updateProfile("liftMaxes", [
+      ...profile.liftMaxes,
+      { liftName: "", weight: "" },
+    ]);
+  };
+
+  const removeLiftMax = (index: number) => {
+    updateProfile(
+      "liftMaxes",
+      profile.liftMaxes.filter((_, i) => i !== index)
+    );
   };
 
   const removeEquipmentItem = (field: EquipmentField, index: number) => {
@@ -91,7 +115,75 @@ export default function WorkoutsPreferences({
 
   return (
     <div className="profile-tab-content">
-      <WorkoutsBodyCard profile={profile} updateProfile={updateProfile} />
+      <div className="profile-card">
+        <h3>Fitness Goals</h3>
+        <div className="form-group">
+          <textarea
+            id="fitnessGoals"
+            placeholder="e.g., build muscle, improve cardio endurance, lose weight..."
+            value={profile.fitnessGoals}
+            onChange={(e) => updateProfile("fitnessGoals", e.target.value)}
+            rows={3}
+          />
+        </div>
+      </div>
+
+      <div className="profile-card">
+        <h3>Injuries and Limitations</h3>
+        <div className="form-group">
+          <textarea
+            id="injuries"
+            placeholder="e.g., recovering from knee surgery, avoid overhead pressing..."
+            value={profile.injuriesLimitations}
+            onChange={(e) =>
+              updateProfile("injuriesLimitations", e.target.value)
+            }
+            rows={3}
+          />
+        </div>
+      </div>
+
+      <div className="profile-card">
+        <h3>One-Rep Maxes</h3>
+        <p className="profile-card__hint">
+          Track your current maxes. These will auto-update from workout logs in
+          a future release.
+        </p>
+        <div className="lift-max-grid lift-max-header">
+          <span>Lift</span>
+          <span>Weight (lb)</span>
+          <span></span>
+        </div>
+        {(profile.liftMaxes || []).map((lift, i) => (
+          <div key={i} className="lift-max-grid">
+            <input
+              type="text"
+              aria-label={`Lift name ${i + 1}`}
+              placeholder="e.g., Back Squat"
+              value={lift.liftName}
+              onChange={(e) => handleLiftMaxChange(i, "liftName", e.target.value)}
+            />
+            <input
+              type="text"
+              aria-label={`Weight for lift ${i + 1}`}
+              placeholder="e.g., 275"
+              value={lift.weight}
+              onChange={(e) => handleLiftMaxChange(i, "weight", e.target.value)}
+            />
+            <button
+              type="button"
+              className="remove-button"
+              onClick={() => removeLiftMax(i)}
+              aria-label={`Remove lift ${i + 1}`}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+        <button type="button" className="add-button" onClick={addLiftMax}>
+          + Add Lift
+        </button>
+      </div>
 
       {renderEquipmentCard(
         "gymEquipment",
@@ -109,35 +201,7 @@ export default function WorkoutsPreferences({
         "e.g., Dumbbells, Resistance Bands..."
       )}
 
-      <div className="profile-card">
-        <h3>Fitness Goals</h3>
-        <div className="form-group">
-          <label htmlFor="fitnessGoals">Goals</label>
-          <textarea
-            id="fitnessGoals"
-            placeholder="e.g., build muscle, improve cardio endurance, lose weight..."
-            value={profile.fitnessGoals}
-            onChange={(e) => updateProfile("fitnessGoals", e.target.value)}
-            rows={3}
-          />
-        </div>
-      </div>
-
-      <div className="profile-card">
-        <h3>Injuries and Limitations</h3>
-        <div className="form-group">
-          <label htmlFor="injuries">Current Injuries or Limitations</label>
-          <textarea
-            id="injuries"
-            placeholder="e.g., recovering from knee surgery, avoid overhead pressing..."
-            value={profile.injuriesLimitations}
-            onChange={(e) =>
-              updateProfile("injuriesLimitations", e.target.value)
-            }
-            rows={3}
-          />
-        </div>
-      </div>
+      <WorkoutsBodyCard profile={profile} updateProfile={updateProfile} />
     </div>
   );
 }
