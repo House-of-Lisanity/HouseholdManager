@@ -1,14 +1,17 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const FROM_EMAIL = "Weekly Planner <noreply@resend.dev>";
+
+function getResendClient() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 export async function sendPasswordResetEmail(
   email: string,
   resetUrl: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const resend = getResendClient();
     await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
