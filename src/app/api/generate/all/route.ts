@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { TodoItem } from "@/types";
 import { connectToDatabase } from "@/lib/mongodb";
+import { requireAuth, mergeAuthCookies } from "@/lib/apiAuth";
 import { loadUserProfile } from "@/lib/profile-loader";
 import { buildCalendarPrompt } from "@/lib/prompts/calendar-prompt";
 import { buildMealsPrompt } from "@/lib/prompts/meals-prompt";
@@ -11,6 +13,7 @@ import WorkoutPlan from "@/models/WorkoutPlan";
 import CalendarResult from "@/models/CalendarResult";
 import MealsResult from "@/models/MealsResult";
 import WorkoutsResult from "@/models/WorkoutsResult";
+import TodoItemModel from "@/models/TodoItem";
 
 const DEFAULT_CALENDAR_FORM = {
   weekOf: "",
@@ -26,6 +29,11 @@ const DEFAULT_WORKOUTS_FORM = { weeklyFocus: "", workouts: [] };
 type Section = "calendar" | "meals" | "workouts";
 
 export async function POST(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.success) return auth.response;
+
+  const userId = auth.user.userId;
+
   try {
     const { weekOf, skip = [] } = await request.json() as {
       weekOf: string;
@@ -37,26 +45,29 @@ export async function POST(request: NextRequest) {
     const needWorkouts = !skip.includes("workouts");
 
     if (!needCalendar && !needMeals && !needWorkouts) {
-      return NextResponse.json({ calendar: null, meals: null, workouts: null });
+      const response = NextResponse.json({ calendar: null, meals: null, workouts: null });
+      mergeAuthCookies(response, auth);
+      return response;
     }
 
     await connectToDatabase();
 
-    // Load form data and profile in parallel (only for sections we need)
-    const [calendarDoc, mealsDoc, workoutsDoc, profile] = await Promise.all([
-      needCalendar ? CalendarPlan.findOne({ weekOf }).lean() : null,
-      needMeals ? MealPlan.findOne({ weekOf }).lean() : null,
-      needWorkouts ? WorkoutPlan.findOne({ weekOf }).lean() : null,
-      loadUserProfile(),
+    const [calendarDoc, mealsDoc, workoutsDoc, profile, taggedTodos] = await Promise.all([
+      needCalendar ? CalendarPlan.findOne({ userId, weekOf }).lean() : null,
+      needMeals ? MealPlan.findOne({ userId, weekOf }).lean() : null,
+      needWorkouts ? WorkoutPlan.findOne({ userId, weekOf }).lean() : null,
+      loadUserProfile(userId),
+      needCalendar
+        ? TodoItemModel.find({ userId, taggedForWeek: weekOf, completed: false }).lean<TodoItem[]>()
+        : Promise.resolve([] as TodoItem[]),
     ]);
 
-    // Build prompts and generate only for needed sections
     const tasks: Promise<string>[] = [];
     const taskOrder: Section[] = [];
 
     if (needCalendar) {
       const form = calendarDoc || { ...DEFAULT_CALENDAR_FORM, weekOf };
-      const prompt = buildCalendarPrompt(form, profile);
+      const prompt = buildCalendarPrompt(form, profile, taggedTodos);
       tasks.push(generatePlanFromLLM(prompt, { maxTokens: 8000 }));
       taskOrder.push("calendar");
     }
@@ -77,7 +88,6 @@ export async function POST(request: NextRequest) {
 
     const rawResults = await Promise.all(tasks);
 
-    // Parse and save results
     const results: Record<string, unknown> = {
       calendar: null,
       meals: null,
@@ -97,8 +107,8 @@ export async function POST(request: NextRequest) {
 
       saveOps.push(
         Model.findOneAndUpdate(
-          { weekOf: resultWeekOf },
-          { $set: { ...parsed, weekOf: resultWeekOf } },
+          { userId, weekOf: resultWeekOf },
+          { $set: { ...parsed, weekOf: resultWeekOf, userId } },
           { upsert: true }
         )
       );
@@ -106,7 +116,9 @@ export async function POST(request: NextRequest) {
 
     await Promise.all(saveOps);
 
-    return NextResponse.json(results);
+    const response = NextResponse.json(results);
+    mergeAuthCookies(response, auth);
+    return response;
   } catch (error) {
     console.error("Generate all error:", error);
     return NextResponse.json(

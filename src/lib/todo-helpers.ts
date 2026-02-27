@@ -1,7 +1,7 @@
 import { TodoItem, RecurringTask, TodoCategory } from "@/types";
 import { TODO_CATEGORIES, HOME_ROOMS } from "@/lib/constants";
 
-export type SortField = "title" | "subcategory" | "location";
+export type SortField = "title" | "subcategory";
 export type SortDirection = "asc" | "desc";
 
 export function groupByCategory(

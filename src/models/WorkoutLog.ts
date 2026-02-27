@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { CompletionType, SetType } from "@/types";
 
 export interface IWorkoutLog extends Document {
+  userId: string;
   date: string;
   weekOf: string;
   completionType: CompletionType;
@@ -29,6 +30,7 @@ export interface IWorkoutLog extends Document {
 
 const WorkoutLogSchema = new Schema<IWorkoutLog>(
   {
+    userId: { type: String, required: true, index: true },
     date: { type: String, required: true },
     weekOf: { type: String, required: true },
     completionType: {

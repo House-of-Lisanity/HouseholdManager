@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface ICalendarResult extends Document {
+  userId: string;
   weekOf: string;
   strategyNotes: string;
   dailySchedules: {
@@ -21,12 +22,15 @@ export interface ICalendarResult extends Document {
 
 const CalendarResultSchema = new Schema<ICalendarResult>(
   {
-    weekOf: { type: String, required: true, index: true, unique: true },
+    userId: { type: String, required: true },
+    weekOf: { type: String, required: true },
     strategyNotes: { type: String, default: "" },
     dailySchedules: { type: Schema.Types.Mixed, default: [] },
   },
   { timestamps: true }
 );
+
+CalendarResultSchema.index({ userId: 1, weekOf: 1 }, { unique: true });
 
 export default mongoose.models.CalendarResult ||
   mongoose.model<ICalendarResult>("CalendarResult", CalendarResultSchema);

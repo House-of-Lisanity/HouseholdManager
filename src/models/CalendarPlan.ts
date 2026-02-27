@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface ICalendarPlan extends Document {
+  userId: string;
   weekOf: string;
   oneOffItems: {
     id: string;
@@ -30,7 +31,8 @@ export interface ICalendarPlan extends Document {
 
 const CalendarPlanSchema = new Schema<ICalendarPlan>(
   {
-    weekOf: { type: String, required: true, index: true, unique: true },
+    userId: { type: String, required: true },
+    weekOf: { type: String, required: true },
     oneOffItems: [
       {
         id: String,
@@ -63,6 +65,8 @@ const CalendarPlanSchema = new Schema<ICalendarPlan>(
   },
   { timestamps: true }
 );
+
+CalendarPlanSchema.index({ userId: 1, weekOf: 1 }, { unique: true });
 
 export default mongoose.models.CalendarPlan ||
   mongoose.model<ICalendarPlan>("CalendarPlan", CalendarPlanSchema);

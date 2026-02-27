@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IRecurringItem extends Document {
+  userId: string;
   title: string;
   notes: string;
   category: string;
@@ -14,6 +15,7 @@ export interface IRecurringItem extends Document {
 
 const RecurringItemSchema = new Schema<IRecurringItem>(
   {
+    userId: { type: String, required: true, index: true },
     title: { type: String, required: true },
     notes: { type: String, default: "" },
     category: {

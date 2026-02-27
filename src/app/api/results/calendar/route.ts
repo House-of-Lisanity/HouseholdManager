@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
+import { requireAuth, mergeAuthCookies } from "@/lib/apiAuth";
 import CalendarResult from "@/models/CalendarResult";
 
 export async function GET(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.success) return auth.response;
+
   try {
     const weekOf = request.nextUrl.searchParams.get("weekOf");
     if (!weekOf) {
@@ -10,12 +14,18 @@ export async function GET(request: NextRequest) {
     }
 
     await connectToDatabase();
-    const result = await CalendarResult.findOne({ weekOf }).lean();
+    const result = await CalendarResult.findOne({ userId: auth.user.userId, weekOf }).lean();
 
-    if (!result) return NextResponse.json(null);
+    if (!result) {
+      const response = NextResponse.json(null);
+      mergeAuthCookies(response, auth);
+      return response;
+    }
 
     const { _id, __v, ...data } = result as Record<string, unknown>;
-    return NextResponse.json(data);
+    const response = NextResponse.json(data);
+    mergeAuthCookies(response, auth);
+    return response;
   } catch (error) {
     console.error("GET /api/results/calendar error:", error);
     return NextResponse.json(
@@ -25,7 +35,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.success) return auth.response;
+
   try {
     await connectToDatabase();
     const body = await request.json();
@@ -35,12 +48,14 @@ export async function PUT(request: Request) {
     }
 
     const result = await CalendarResult.findOneAndUpdate(
-      { weekOf: body.weekOf },
-      { $set: body },
+      { userId: auth.user.userId, weekOf: body.weekOf },
+      { $set: { ...body, userId: auth.user.userId } },
       { upsert: true, new: true, runValidators: true }
     ).lean();
 
-    return NextResponse.json(result);
+    const response = NextResponse.json(result);
+    mergeAuthCookies(response, auth);
+    return response;
   } catch (error) {
     console.error("PUT /api/results/calendar error:", error);
     return NextResponse.json(

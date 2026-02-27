@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IMealPlan extends Document {
+  userId: string;
   weekOf: string;
   weeklyFocus: string;
   meals: {
@@ -25,7 +26,8 @@ export interface IMealPlan extends Document {
 
 const MealPlanSchema = new Schema<IMealPlan>(
   {
-    weekOf: { type: String, required: true, index: true, unique: true },
+    userId: { type: String, required: true },
+    weekOf: { type: String, required: true },
     weeklyFocus: { type: String, default: "" },
     meals: [
       {
@@ -49,6 +51,8 @@ const MealPlanSchema = new Schema<IMealPlan>(
   },
   { timestamps: true }
 );
+
+MealPlanSchema.index({ userId: 1, weekOf: 1 }, { unique: true });
 
 export default mongoose.models.MealPlan ||
   mongoose.model<IMealPlan>("MealPlan", MealPlanSchema);

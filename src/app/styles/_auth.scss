@@ -1,0 +1,352 @@
+// Auth pages — login, register, forgot password, reset password
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px);
+  padding: $spacing-lg;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: $color-bg-light;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-xl;
+  box-shadow: $shadow-sm;
+
+  h1 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: $color-dark;
+    margin: 0 0 $spacing-xs;
+  }
+}
+
+.auth-subtitle {
+  color: $color-text-light;
+  font-size: 0.875rem;
+  margin: 0 0 $spacing-lg;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+
+  label {
+    font-size: $label-font-size;
+    font-weight: $label-font-weight;
+    color: $label-color;
+    margin-top: $spacing-xs;
+  }
+
+  input {
+    width: 100%;
+    padding: $spacing-sm $spacing-md;
+    font-size: $input-font-size;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    background: $color-bg;
+    color: $color-text;
+    transition: border-color $transition-speed;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+    }
+  }
+
+  .btn-primary {
+    margin-top: $spacing-md;
+    padding: $spacing-sm $spacing-md;
+    font-size: $btn-font-size;
+    font-weight: 600;
+    color: #fff;
+    background: $color-primary;
+    border: none;
+    border-radius: $radius-sm;
+    cursor: pointer;
+    transition: background $transition-speed;
+
+    &:hover:not(:disabled) {
+      background: $color-primary-dark;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.auth-error {
+  background: #fdf0ee;
+  border: 1px solid $color-danger;
+  border-radius: $radius-sm;
+  padding: $spacing-sm $spacing-md;
+  color: $color-danger;
+  font-size: 0.875rem;
+
+  p {
+    margin: 0;
+  }
+
+  ul {
+    margin: $spacing-xs 0 0;
+    padding-left: $spacing-lg;
+    font-size: 0.8125rem;
+  }
+}
+
+.auth-links {
+  margin-top: $spacing-lg;
+  text-align: center;
+  font-size: 0.875rem;
+  color: $color-text-light;
+
+  a {
+    color: $color-primary;
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  p {
+    margin: $spacing-xs 0 0;
+  }
+}
+
+// Password requirements checklist
+.password-requirements {
+  list-style: none;
+  padding: 0;
+  margin: $spacing-xs 0 0;
+  font-size: 0.8125rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs $spacing-md;
+
+  li {
+    &.met {
+      color: $color-secondary;
+    }
+
+    &.unmet {
+      color: $color-text-lighter;
+    }
+  }
+}
+
+// Loading state for auth guard
+.auth-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px);
+  color: $color-text-light;
+  font-size: 1rem;
+}
+
+// Account settings page
+.account-page {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: $spacing-lg;
+
+  h1 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: $color-dark;
+    margin: 0 0 $spacing-lg;
+  }
+
+  h2 {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    color: $color-dark;
+    margin: 0 0 $spacing-sm;
+  }
+}
+
+.account-section {
+  background: $color-bg-light;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+
+  &--info {
+    font-size: 0.875rem;
+    color: $color-text-light;
+
+    p {
+      margin: $spacing-xs 0;
+    }
+  }
+}
+
+.account-success {
+  background: $color-success-bg;
+  border: 1px solid $color-secondary;
+  border-radius: $radius-sm;
+  padding: $spacing-sm $spacing-md;
+  color: $color-secondary-dark;
+  font-size: 0.875rem;
+}
+
+// Admin users page
+.admin-users {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: $spacing-lg;
+
+  h1 {
+    font-family: var(--font-heading);
+    margin-bottom: $spacing-lg;
+  }
+}
+
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: $color-bg-light;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+
+  &--disabled {
+    opacity: 0.6;
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+
+    .user-name {
+      font-weight: 600;
+      color: $color-text;
+    }
+
+    .user-you {
+      font-weight: 400;
+      color: $color-text-lighter;
+      font-size: 0.8125rem;
+    }
+
+    .user-email {
+      font-size: 0.875rem;
+      color: $color-text-light;
+    }
+
+    .user-meta {
+      font-size: 0.75rem;
+      color: $color-text-lighter;
+    }
+
+    .status-disabled {
+      color: $color-danger;
+      font-weight: 600;
+      margin-right: $spacing-xs;
+    }
+  }
+
+  .role-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &.admin {
+      background: $color-warning;
+      color: $color-warning-text;
+      border: 1px solid $color-warning-border;
+    }
+
+    &.user {
+      background: $color-success-bg;
+      color: $color-secondary-dark;
+      border: 1px solid $color-secondary;
+    }
+  }
+}
+
+.user-actions {
+  display: flex;
+  gap: $spacing-xs;
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  padding: $spacing-xs $spacing-sm;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: $color-bg;
+  color: $color-text;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background $transition-speed, border-color $transition-speed;
+
+  &:hover {
+    background: $color-bg-light;
+    border-color: $color-text-lighter;
+  }
+
+  &--danger {
+    color: $color-danger;
+    border-color: $color-danger;
+
+    &:hover {
+      background: #fdf0ee;
+    }
+  }
+}
+
+.btn-primary--danger {
+  background: $color-danger;
+
+  &:hover:not(:disabled) {
+    background: darken($color-danger, 10%);
+  }
+}
+
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  padding: $spacing-lg;
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .user-row {
+    flex-wrap: wrap;
+  }
+
+  .user-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

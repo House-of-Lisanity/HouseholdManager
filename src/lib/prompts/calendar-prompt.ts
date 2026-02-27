@@ -1,4 +1,4 @@
-import { CalendarFormInput, UserProfile } from "@/types";
+import { CalendarFormInput, UserProfile, TodoItem } from "@/types";
 import { formatOneOffItems, formatRecurringItems } from "./format-helpers";
 
 function formatEventNights(
@@ -12,13 +12,47 @@ function formatEventNights(
     .join("\n");
 }
 
+function formatTaggedTodos(todos: TodoItem[]): string {
+  if (todos.length === 0) return "No tagged to-do items this week.";
+
+  const priorityLabels: Record<string, string> = {
+    must: "MUST DO",
+    want: "WANT TO DO",
+    if_time: "IF TIME ALLOWS",
+  };
+
+  const grouped = new Map<string, TodoItem[]>();
+  for (const todo of todos) {
+    const key = todo.weeklyPriority || "if_time";
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key)!.push(todo);
+  }
+
+  const lines: string[] = [];
+  for (const priority of ["must", "want", "if_time"]) {
+    const items = grouped.get(priority);
+    if (!items || items.length === 0) continue;
+    lines.push(`${priorityLabels[priority]}:`);
+    for (const item of items) {
+      const hours = item.weeklyHoursMax
+        ? ` (allocate ~${item.weeklyHoursMax}h this week)`
+        : "";
+      lines.push(`- ${item.title}${hours}`);
+    }
+  }
+
+  return lines.join("\n");
+}
+
 export function buildCalendarPrompt(
   formData: CalendarFormInput,
-  profile: UserProfile
+  profile: UserProfile,
+  taggedTodos: TodoItem[] = []
 ): string {
   const oneOffText = formatOneOffItems(formData.oneOffItems);
   const recurringText = formatRecurringItems(formData.recurringItems);
   const eventNightsText = formatEventNights(formData.eventNights);
+  const taggedTodosText = formatTaggedTodos(taggedTodos);
 
   const bufferText = profile.bufferRules
     .map(
@@ -61,6 +95,9 @@ ${oneOffText}
 RECURRING ITEMS THIS WEEK:
 ${recurringText}
 
+TAGGED TO-DO ITEMS (from backlog, prioritized by the user):
+${taggedTodosText}
+
 EVENT NIGHTS:
 ${eventNightsText}
 
@@ -88,7 +125,14 @@ MEALS — do NOT schedule meal blocks. Meals are managed separately.
    - Don't schedule tasks during buffer zones or overlapping with drive times
    - Respect wake/bed times as boundaries
 
-3. BIG ROCKS ASSIGNMENT:
+3. TAGGED TO-DO ITEMS:
+   - "MUST DO" items MUST be scheduled this week — distribute their hours across available days
+   - "WANT TO DO" items should be scheduled if there's room after must-do items
+   - "IF TIME ALLOWS" items are lowest priority — only include if the week has open space
+   - If an item has hours specified, create time blocks totaling approximately that many hours across the week
+   - If no hours specified, estimate a reasonable amount based on the task
+
+4. BIG ROCKS ASSIGNMENT:
    For each day, assign:
    - 1-3 "Big Rocks" — the most important tasks or goals for that day
    - 0-2 chores

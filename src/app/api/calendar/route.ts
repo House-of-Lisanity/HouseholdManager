@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
+import { requireAuth, mergeAuthCookies } from "@/lib/apiAuth";
 import CalendarPlan from "@/models/CalendarPlan";
 
 export async function GET(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.success) return auth.response;
+
   try {
     await connectToDatabase();
 
@@ -16,9 +20,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let query = CalendarPlan.findOne({ weekOf });
+    let query = CalendarPlan.findOne({ userId: auth.user.userId, weekOf });
 
-    // Support partial field reads for cross-page data sharing
     if (fields) {
       const projection = fields.split(",").reduce(
         (acc, field) => {
@@ -31,7 +34,9 @@ export async function GET(request: NextRequest) {
     }
 
     const plan = await query.lean();
-    return NextResponse.json(plan);
+    const response = NextResponse.json(plan);
+    mergeAuthCookies(response, auth);
+    return response;
   } catch (error) {
     console.error("GET /api/calendar error:", error);
     return NextResponse.json(
@@ -41,7 +46,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.success) return auth.response;
+
   try {
     await connectToDatabase();
     const body = await request.json();
@@ -54,12 +62,14 @@ export async function PUT(request: Request) {
     }
 
     const plan = await CalendarPlan.findOneAndUpdate(
-      { weekOf: body.weekOf },
-      { $set: body },
+      { userId: auth.user.userId, weekOf: body.weekOf },
+      { $set: { ...body, userId: auth.user.userId } },
       { upsert: true, new: true, runValidators: true }
     ).lean();
 
-    return NextResponse.json(plan);
+    const response = NextResponse.json(plan);
+    mergeAuthCookies(response, auth);
+    return response;
   } catch (error) {
     console.error("PUT /api/calendar error:", error);
     return NextResponse.json(

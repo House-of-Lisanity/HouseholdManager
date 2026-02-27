@@ -149,21 +149,6 @@ export default function TodoForm({
         )}
       </div>
 
-      {formData.category === "Errands" && (
-        <div className="form-group">
-          <label htmlFor="todo-location">Location</label>
-          <input
-            id="todo-location"
-            type="text"
-            placeholder="e.g., Target on Main St, West side"
-            value={formData.location || ""}
-            onChange={(e) =>
-              updateField("location", e.target.value || undefined)
-            }
-          />
-        </div>
-      )}
-
       <div className="form-group">
         <label className="todo-form__checkbox-label">
           <input

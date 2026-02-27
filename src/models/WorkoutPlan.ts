@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IWorkoutPlan extends Document {
+  userId: string;
   weekOf: string;
   weeklyFocus: string;
   workouts: {
@@ -19,7 +20,8 @@ export interface IWorkoutPlan extends Document {
 
 const WorkoutPlanSchema = new Schema<IWorkoutPlan>(
   {
-    weekOf: { type: String, required: true, index: true, unique: true },
+    userId: { type: String, required: true },
+    weekOf: { type: String, required: true },
     weeklyFocus: { type: String, default: "" },
     workouts: [
       {
@@ -37,6 +39,8 @@ const WorkoutPlanSchema = new Schema<IWorkoutPlan>(
   },
   { timestamps: true }
 );
+
+WorkoutPlanSchema.index({ userId: 1, weekOf: 1 }, { unique: true });
 
 export default mongoose.models.WorkoutPlan ||
   mongoose.model<IWorkoutPlan>("WorkoutPlan", WorkoutPlanSchema);

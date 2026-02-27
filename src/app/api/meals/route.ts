@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
+import { requireAuth, mergeAuthCookies } from "@/lib/apiAuth";
 import MealPlan from "@/models/MealPlan";
 
 export async function GET(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.success) return auth.response;
+
   try {
     await connectToDatabase();
-
     const weekOf = request.nextUrl.searchParams.get("weekOf");
 
     if (!weekOf) {
@@ -15,8 +18,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const plan = await MealPlan.findOne({ weekOf }).lean();
-    return NextResponse.json(plan);
+    const plan = await MealPlan.findOne({ userId: auth.user.userId, weekOf }).lean();
+    const response = NextResponse.json(plan);
+    mergeAuthCookies(response, auth);
+    return response;
   } catch (error) {
     console.error("GET /api/meals error:", error);
     return NextResponse.json(
@@ -26,7 +31,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.success) return auth.response;
+
   try {
     await connectToDatabase();
     const body = await request.json();
@@ -39,12 +47,14 @@ export async function PUT(request: Request) {
     }
 
     const plan = await MealPlan.findOneAndUpdate(
-      { weekOf: body.weekOf },
-      { $set: body },
+      { userId: auth.user.userId, weekOf: body.weekOf },
+      { $set: { ...body, userId: auth.user.userId } },
       { upsert: true, new: true, runValidators: true }
     ).lean();
 
-    return NextResponse.json(plan);
+    const response = NextResponse.json(plan);
+    mergeAuthCookies(response, auth);
+    return response;
   } catch (error) {
     console.error("PUT /api/meals error:", error);
     return NextResponse.json(

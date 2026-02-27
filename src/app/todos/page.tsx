@@ -351,7 +351,6 @@ export default function TodosPage() {
                     <th className="todo-table__th--check" aria-label="Complete" />
                     <th className="todo-table__th--task">Task</th>
                     <th>Room</th>
-                    <th>Location</th>
                     <th className="todo-table__th--priority">This Week</th>
                     <th className="todo-table__th--hours">Hrs</th>
                     <th className="todo-table__th--actions" aria-label="Actions" />

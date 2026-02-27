@@ -69,7 +69,6 @@ export default function TodoRow({
       {showRoom && (
         <td className="todo-row__room">{item.subcategory || "—"}</td>
       )}
-      <td className="todo-row__location">{item.location || "—"}</td>
       <td className="todo-row__priority">
         {!item.completed && (
           <select
@@ -86,7 +85,7 @@ export default function TodoRow({
         )}
       </td>
       <td className="todo-row__hours">
-        {!item.completed && item.isProject && isTaggedThisWeek && activePriority && (
+        {!item.completed && isTaggedThisWeek && activePriority && (
           <input
             type="number"
             min="0"

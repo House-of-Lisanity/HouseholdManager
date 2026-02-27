@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 import { MealCompletionType } from "@/types";
 
 export interface IMealLog extends Document {
+  userId: string;
   date: string;
   weekOf: string;
   mealSlot: string;
@@ -22,6 +23,7 @@ export interface IMealLog extends Document {
 
 const MealLogSchema = new Schema<IMealLog>(
   {
+    userId: { type: String, required: true, index: true },
     date: { type: String, required: true },
     weekOf: { type: String, required: true },
     mealSlot: {

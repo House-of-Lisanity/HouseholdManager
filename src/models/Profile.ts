@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IProfile extends Document {
+  userId: string;
   // Calendar
   workStartTime: string;
   workEndTime: string;
@@ -67,6 +68,7 @@ export interface IProfile extends Document {
 
 const ProfileSchema = new Schema<IProfile>(
   {
+    userId: { type: String, required: true, unique: true, index: true },
     // Calendar
     workStartTime: { type: String, default: "6:30 AM" },
     workEndTime: { type: String, default: "3:30 PM" },

@@ -121,7 +121,8 @@
 // Table layout for to-do items
 .todo-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 16px 0;
   font-size: 0.9rem;
   table-layout: fixed;
 
@@ -160,15 +161,15 @@
 }
 
 .todo-table__th--task {
-  width: 35%;
+  width: 50%;
 }
 
 .todo-table__th--priority {
-  width: 110px;
+  width: 80px;
 }
 
 .todo-table__th--hours {
-  width: 75px;
+  width: 80px;
 }
 
 .todo-table__th--actions {
@@ -226,11 +227,6 @@
   font-size: 0.85rem;
 }
 
-.todo-row__location {
-  color: $color-text-lighter;
-  font-size: 0.85rem;
-}
-
 .todo-row__priority {
   white-space: nowrap;
 }
@@ -276,6 +272,7 @@
 .todo-row__actions {
   white-space: nowrap;
   text-align: right;
+  overflow: visible;
 }
 
 .todo-row__btn {

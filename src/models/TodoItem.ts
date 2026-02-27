@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface ITodoItem extends Document {
+  userId: string;
   title: string;
   notes: string;
   category: string;
@@ -17,6 +18,7 @@ export interface ITodoItem extends Document {
 
 const TodoItemSchema = new Schema<ITodoItem>(
   {
+    userId: { type: String, required: true, index: true },
     title: { type: String, required: true },
     notes: { type: String, default: "" },
     category: {

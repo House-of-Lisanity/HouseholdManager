@@ -109,13 +109,13 @@ export function useTodos() {
       hoursMax?: number
     ) => {
       const weekOf = getWeekOf();
-      const updated: TodoItem = {
+      const updated = {
         ...item,
-        weeklyPriority: priority,
-        weeklyHoursMax: priority ? hoursMax : undefined,
-        taggedForWeek: priority ? weekOf : undefined,
+        weeklyPriority: priority ?? null,
+        weeklyHoursMax: priority ? (hoursMax ?? null) : null,
+        taggedForWeek: priority ? weekOf : null,
       };
-      await updateItem(updated);
+      await updateItem(updated as TodoItem);
     },
     [updateItem]
   );

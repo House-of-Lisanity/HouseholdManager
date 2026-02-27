@@ -81,12 +81,6 @@ function TodoTable({
                 Room{sortIndicator("subcategory")}
               </th>
             )}
-            <th
-              className="todo-table__th--sortable"
-              onClick={() => handleSort("location")}
-            >
-              Location{sortIndicator("location")}
-            </th>
             <th className="todo-table__th--priority">This Week</th>
             <th className="todo-table__th--hours">Hrs</th>
             <th className="todo-table__th--actions" aria-label="Actions" />

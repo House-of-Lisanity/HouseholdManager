@@ -45,9 +45,9 @@ const DEFAULT_PROFILE: UserProfile = {
   pantryItems: [],
 };
 
-export async function loadUserProfile(): Promise<UserProfile> {
+export async function loadUserProfile(userId: string): Promise<UserProfile> {
   await connectToDatabase();
-  const doc = await Profile.findOne().lean();
+  const doc = await Profile.findOne({ userId }).lean();
 
   if (!doc) return DEFAULT_PROFILE;
 

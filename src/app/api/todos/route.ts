@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
+import { requireAuth, mergeAuthCookies } from "@/lib/apiAuth";
 import TodoItem from "@/models/TodoItem";
 
 export async function GET(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.success) return auth.response;
+
   try {
     await connectToDatabase();
 
     const completedParam = request.nextUrl.searchParams.get("completed");
 
-    const filter: Record<string, boolean> = {};
+    const filter: Record<string, unknown> = { userId: auth.user.userId };
     if (completedParam !== null) {
       filter.completed = completedParam === "true";
     }
@@ -17,7 +21,9 @@ export async function GET(request: NextRequest) {
       .sort({ category: 1, subcategory: 1, createdAt: 1 })
       .lean();
 
-    return NextResponse.json(items);
+    const response = NextResponse.json(items);
+    mergeAuthCookies(response, auth);
+    return response;
   } catch (error) {
     console.error("GET /api/todos error:", error);
     return NextResponse.json(
@@ -27,7 +33,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.success) return auth.response;
+
   try {
     await connectToDatabase();
     const body = await request.json();
@@ -39,8 +48,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const item = await TodoItem.create(body);
-    return NextResponse.json(item.toObject(), { status: 201 });
+    const item = await TodoItem.create({ ...body, userId: auth.user.userId });
+    const response = NextResponse.json(item.toObject(), { status: 201 });
+    mergeAuthCookies(response, auth);
+    return response;
   } catch (error) {
     console.error("POST /api/todos error:", error);
     return NextResponse.json(
@@ -50,7 +61,10 @@ export async function POST(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.success) return auth.response;
+
   try {
     await connectToDatabase();
     const body = await request.json();
@@ -63,9 +77,31 @@ export async function PUT(request: Request) {
     }
 
     const { _id, ...updateData } = body;
-    const item = await TodoItem.findByIdAndUpdate(
-      _id,
-      { $set: updateData },
+
+    const clearableFields = [
+      "weeklyPriority",
+      "weeklyHoursMax",
+      "taggedForWeek",
+      "completedAt",
+      "subcategory",
+      "location",
+    ];
+    const unsetFields: Record<string, 1> = {};
+    for (const field of clearableFields) {
+      if (field in updateData && updateData[field] == null) {
+        unsetFields[field] = 1;
+        delete updateData[field];
+      }
+    }
+
+    const updateOp: Record<string, unknown> = { $set: updateData };
+    if (Object.keys(unsetFields).length > 0) {
+      updateOp.$unset = unsetFields;
+    }
+
+    const item = await TodoItem.findOneAndUpdate(
+      { _id, userId: auth.user.userId },
+      updateOp,
       { new: true, runValidators: true }
     ).lean();
 
@@ -76,7 +112,9 @@ export async function PUT(request: Request) {
       );
     }
 
-    return NextResponse.json(item);
+    const response = NextResponse.json(item);
+    mergeAuthCookies(response, auth);
+    return response;
   } catch (error) {
     console.error("PUT /api/todos error:", error);
     return NextResponse.json(
@@ -86,7 +124,10 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
+  const auth = await requireAuth(request);
+  if (!auth.success) return auth.response;
+
   try {
     await connectToDatabase();
     const { id } = await request.json();
@@ -98,8 +139,10 @@ export async function DELETE(request: Request) {
       );
     }
 
-    await TodoItem.findByIdAndDelete(id);
-    return NextResponse.json({ success: true });
+    await TodoItem.findOneAndDelete({ _id: id, userId: auth.user.userId });
+    const response = NextResponse.json({ success: true });
+    mergeAuthCookies(response, auth);
+    return response;
   } catch (error) {
     console.error("DELETE /api/todos error:", error);
     return NextResponse.json(
